@@ -405,6 +405,55 @@ textarea{resize:vertical;min-height:64px}
   .cell-num{font-size:11px}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* ---------- Rutina: tracker mensual ---------- */
+.rt-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px 18px;box-shadow:var(--shadow-soft);margin-bottom:16px}
+.rt-cardhead{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.rt-cardhead h3{font-size:17px}
+.rt-cardhead .bignum{margin-left:auto;font-family:"Fraunces";font-size:30px;font-weight:600;color:var(--accent-ink)}
+[data-theme="dark"] .rt-cardhead .bignum{color:var(--accent)}
+.rt-hint{font-size:12px;color:var(--ink-faint)}
+.sumlist{display:flex;flex-direction:column;gap:7px;margin-bottom:8px}
+.sumrow{display:flex;align-items:center;gap:9px;font-size:13.5px}
+.sumemo{font-size:16px}
+.sumname{flex:0 0 38%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sumbar{flex:1;height:8px;background:var(--line-2);border-radius:6px;overflow:hidden}
+.sumbar i{display:block;height:100%;background:var(--accent)}
+.sumpct{font-family:"Space Mono";font-size:12px;font-weight:700;color:var(--ink-soft);width:40px;text-align:right}
+.rt-free-img{margin-bottom:10px}
+.rt-free-img img{width:100%;max-height:300px;object-fit:contain;border-radius:10px;border:1px solid var(--line);
+  cursor:zoom-in;background:var(--bg-2)}
+.rt-imgrm{margin-top:8px}
+.rt-caption{width:100%;min-height:80px;resize:vertical}
+.trk-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line-2);border-radius:10px}
+.trk{border-collapse:collapse;font-size:12px;width:max-content;min-width:100%}
+.trk th,.trk td{border:1px solid var(--line-2);text-align:center}
+.trk thead th{background:var(--nav);color:#fff;font-weight:600;padding:6px 4px;font-size:11px;line-height:1.15}
+.trk th.dcol,.trk td.dcol{position:sticky;left:0;z-index:2;min-width:54px;padding:5px 7px;text-align:left;white-space:nowrap;background:var(--panel)}
+.trk thead th.dcol{background:var(--nav);color:#fff;z-index:3}
+.trk td.dcol .wd{color:var(--ink-faint);font-size:10px}
+.trk td.lcol{padding:0}
+.trk td.lcol .lin{width:160px;border:none;background:transparent;font-size:12px;padding:6px 7px;color:var(--ink)}
+.trk td.lcol .lin:focus{outline:none;background:var(--bg-2)}
+.trk .hcol{width:34px}.trk .hemo{font-size:15px}
+.trk td.hit{width:34px;height:31px;cursor:pointer;color:var(--accent-ink);font-weight:700;font-size:14px}
+[data-theme="dark"] .trk td.hit{color:var(--accent)}
+.trk td.hit:hover{background:var(--bg-2)}
+.trk td.hit.on{background:color-mix(in srgb,var(--accent) 28%,transparent)}
+.trk td.hit.na{background:var(--line-2);cursor:default}
+.trk .mcol{min-width:58px}
+.trk td.mit{padding:0}
+.trk td.mit .minp{width:58px;border:none;background:transparent;text-align:center;font-size:12px;padding:6px 2px;color:var(--ink)}
+.trk td.mit .minp:focus{outline:none;background:var(--bg-2)}
+.trk tr.trow-today td{background:color-mix(in srgb,var(--accent) 8%,transparent)}
+.trk tr.trow-today td.dcol{border-left:3px solid var(--accent)}
+.rt-charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-bottom:16px}
+.rt-chartcard{margin-bottom:0}
+.spark{width:100%;height:46px;display:block}
+.rt-metricmeta{font-size:12px;color:var(--ink-soft);margin-top:6px;font-family:"Space Mono"}
+.mgr-list{display:flex;flex-direction:column;gap:7px;max-height:230px;overflow-y:auto}
+.mgr-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:9px}
+.mgr-emo{font-size:17px}.mgr-name{flex:1;font-size:14px}.mgr-freq{font-size:11px;color:var(--ink-faint)}
 </style>
 </head>
 <body>
@@ -484,15 +533,22 @@ textarea{resize:vertical;min-height:64px}
       <div class="title-wrap">
         <div class="eyebrow">Cada día</div>
         <h2>Rutina</h2>
-        <p class="view-sub">Tus hábitos. Marca lo que vas cumpliendo; la barra de cada día muestra cuánto llevas.</p>
+        <p class="view-sub">Tu tracker mensual: marca hábitos, anota lo que te dejó cada día, sigue cantidades y mira tu % del mes.</p>
       </div>
-      <button class="btn btn-primary" id="addRoutine">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-        Nuevo hábito
-      </button>
+      <button class="btn" id="btnHabits"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Hábitos</button>
+      <button class="btn" id="btnMetrics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></svg>Métricas</button>
     </div>
-    <div class="rt-week" id="rtWeek"></div>
-    <div class="rt-list" id="rtList"></div>
+    <div class="month-bar">
+      <button class="nav-btn" id="rtPrev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="month-title" id="rtTitle"></div>
+      <button class="nav-btn" id="rtNext"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+      <button class="btn btn-ghost" id="rtToday">Hoy</button>
+    </div>
+    <div id="rtSummary"></div>
+    <div id="rtFree" class="rt-card"></div>
+    <div id="rtTableWrap" class="rt-card"></div>
+    <div id="rtCharts" class="rt-charts"></div>
+    <div id="rtNotes"></div>
   </section>
 
   <!-- ============ RECUERDOS ============ -->
@@ -685,12 +741,21 @@ function seed(){
     journal:[
       {id:uid(),date:todayISO,title:"Primera entrada",mood:"🙂",body:"Este es el diario. Toca “Nueva entrada” para escribir lo que quieras — cómo estuvo el día, una idea, algo que no quieras olvidar. Puedes borrar esta entrada de ejemplo."},
     ],
+    metrics:[
+      {id:uid(),name:"Pasos",unit:"pasos",color:"#3b6ea5"},
+      {id:uid(),name:"Sueño",unit:"h",color:"#7048b6"},
+    ],
+    metricLog:{},
+    monthly:{},
     ui:{ theme:"light" }
   };
 }
 let store=loadStore()||seed();
 if(!store.ui) store.ui={theme:"light"};
 if(!store.journal) store.journal=[];
+if(!store.metrics) store.metrics=[];
+if(!store.metricLog) store.metricLog={};
+if(!store.monthly) store.monthly={};
 
 /* ============================================================
    Categorías y colores
@@ -749,8 +814,8 @@ function sortForDay(items,timeKey,titleKey){
 /* ============================================================
    Estado de UI
    ============================================================ */
-let agView={y:0,m:0}, rmView={y:0,m:0}, rtSelected=todayISO, panelDate=null, panelMode="agenda";
-{ const t=new Date(); agView={y:t.getFullYear(),m:t.getMonth()}; rmView={y:t.getFullYear(),m:t.getMonth()}; }
+let agView={y:0,m:0}, rmView={y:0,m:0}, rtView={y:0,m:0}, panelDate=null, panelMode="agenda";
+{ const t=new Date(); agView={y:t.getFullYear(),m:t.getMonth()}; rmView={y:t.getFullYear(),m:t.getMonth()}; rtView={y:t.getFullYear(),m:t.getMonth()}; }
 
 /* ============================================================
    Render: grilla de agenda
@@ -847,68 +912,182 @@ function renderMemCal(){
 }
 
 /* ============================================================
-   Render: rutina
+   Rutina — tracker mensual (estilo daily tracker)
    ============================================================ */
 function routineAppliesOn(rt,iso){
-  if(rt.freq==="daily") return true;
   if(rt.freq==="weekdays") return weekdayMon(iso)<5;
   if(Array.isArray(rt.freq)) return rt.freq.includes(weekdayMon(iso));
   return true;
 }
-function isDone(rtId,iso){ return !!(store.routineLog[iso]&&store.routineLog[iso][rtId]); }
-function toggleRoutine(rtId,iso){
+function isDone(id,iso){ return !!(store.routineLog[iso]&&store.routineLog[iso][id]); }
+function toggleRoutine(id,iso){
   if(!store.routineLog[iso]) store.routineLog[iso]={};
-  if(store.routineLog[iso][rtId]) delete store.routineLog[iso][rtId];
-  else store.routineLog[iso][rtId]=true;
+  if(store.routineLog[iso][id]) delete store.routineLog[iso][id];
+  else store.routineLog[iso][id]=true;
   saveStore();
 }
+function daysInMonth(y,m){ return new Date(y,m+1,0).getDate(); }
+function isoOf(y,m,d){ return y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0"); }
+function ymKey(){ return rtView.y+"-"+String(rtView.m+1).padStart(2,"0"); }
+function monthData(){ const k=ymKey(); if(!store.monthly[k]) store.monthly[k]={img:"",caption:"",note:"",lines:{}}; if(!store.monthly[k].lines) store.monthly[k].lines={}; return store.monthly[k]; }
+let _rtSaveT=null;
+function rtSaveSoon(){ clearTimeout(_rtSaveT); _rtSaveT=setTimeout(saveStore,500); }
+
 function renderRoutine(){
-  // semana de rtSelected (lunes a domingo)
-  const wk=document.getElementById("rtWeek"); wk.innerHTML="";
-  const base=parse(rtSelected); const offset=weekdayMon(rtSelected);
-  const monday=addDays(rtSelected,-offset);
-  for(let i=0;i<7;i++){
-    const iso=addDays(monday,i), d=parse(iso);
-    const apply=store.routines.filter(r=>routineAppliesOn(r,iso));
-    const done=apply.filter(r=>isDone(r.id,iso)).length;
-    const pct=apply.length?Math.round(done/apply.length*100):0;
-    const el=document.createElement("div");
-    el.className="rt-day"+(iso===rtSelected?" sel":"")+(iso===todayISO?" today-mark":"");
-    el.innerHTML=`<div class="rt-dow">${["lu","ma","mi","ju","vi","sá","do"][i]}</div>
-      <div class="rt-dnum">${d.getDate()}</div>
-      <div class="rt-ring"><i style="width:${pct}%"></i></div>`;
-    el.addEventListener("click",()=>{ rtSelected=iso; renderRoutine(); });
-    wk.appendChild(el);
-  }
-  const list=document.getElementById("rtList"); list.innerHTML="";
-  const apply=store.routines.filter(r=>routineAppliesOn(r,rtSelected));
-  if(!apply.length){
-    list.innerHTML='<div class="empty">No hay hábitos para este día.<br>Crea uno con “Nuevo hábito”.</div>'; return;
-  }
-  for(const rt of apply){
-    const done=isDone(rt.id,rtSelected);
-    const freqLbl=rt.freq==="daily"?"Todos los días":rt.freq==="weekdays"?"Días de semana":"Días elegidos";
-    // racha últimos 7 días
-    let streak="";
-    for(let k=6;k>=0;k--){ const iso=addDays(rtSelected,-k);
-      const on=routineAppliesOn(rt,iso)&&isDone(rt.id,iso);
-      streak+=`<span class="sdot${on?" on":""}"></span>`; }
-    const el=document.createElement("div");
-    el.className="rt-item"+(done?" done":"");
-    el.innerHTML=`<div class="rt-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div>
-      <div class="rt-emoji">${rt.emoji||"✅"}</div>
-      <div><div class="rt-name">${esc(rt.name)}</div><div class="rt-freq">${freqLbl}</div></div>
-      <div class="rt-streak" title="Últimos 7 días">${streak}</div>
-      <button class="mini-btn rt-del" title="Eliminar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button>`;
-    el.addEventListener("click",e=>{
-      if(e.target.closest(".rt-del")){ 
-        if(confirm(`¿Eliminar "${rt.name}"?`)){ store.routines=store.routines.filter(r=>r.id!==rt.id); saveStore(); renderRoutine(); }
-        return;
-      }
-      toggleRoutine(rt.id,rtSelected); renderRoutine();
+  document.getElementById("rtTitle").textContent=monthTitle(rtView.y,rtView.m);
+  renderRtSummary(); renderFree(); renderTracker(); renderRtCharts(); renderRtNotes();
+}
+
+async function renderFree(){
+  const md=monthData(); const box=document.getElementById("rtFree");
+  box.innerHTML='<div class="rt-cardhead"><h3>Espacio libre</h3><span class="rt-hint">Un dibujo, una demostración, cualquier cosa del mes</span></div>'+
+    '<div id="rtFreeImg" class="rt-free-img"></div>'+
+    '<textarea id="rtCaption" class="rt-caption" placeholder="Escribe aquí lo que quieras dejar del mes…">'+esc(md.caption||"")+'</textarea>';
+  const holder=box.querySelector("#rtFreeImg");
+  if(md.img){
+    const url=await getPhoto(md.img);
+    if(url){
+      holder.innerHTML='<img src="'+url+'" alt=""><button class="btn btn-ghost rt-imgrm" id="rtImgRm">Quitar imagen</button>';
+      holder.querySelector("img").addEventListener("click",()=>lightbox(url));
+      box.querySelector("#rtImgRm").addEventListener("click",()=>{ delPhoto(md.img); md.img=""; saveStore(); renderFree(); });
+    }
+  } else {
+    holder.innerHTML='<div class="ph-drop" id="rtDrop">Subir una imagen (foto de tu dibujo o demostración) 📷</div><input type="file" id="rtFile" accept="image/*" style="display:none">';
+    holder.querySelector("#rtDrop").addEventListener("click",()=>holder.querySelector("#rtFile").click());
+    holder.querySelector("#rtFile").addEventListener("change",e=>{
+      const f=e.target.files[0]; if(!f)return;
+      const r=new FileReader(); r.onload=ev=>resizeImage(ev.target.result,1400,url=>{
+        const id="m_"+ymKey(); putPhoto(id,url).then(()=>{ md.img=id; saveStore(); renderFree(); });
+      }); r.readAsDataURL(f);
     });
-    list.appendChild(el);
   }
+  box.querySelector("#rtCaption").addEventListener("input",e=>{ md.caption=e.target.value; rtSaveSoon(); });
+}
+
+function renderTracker(){
+  const wrap=document.getElementById("rtTableWrap");
+  const y=rtView.y,m=rtView.m,N=daysInMonth(y,m),md=monthData();
+  const habits=store.routines, metrics=store.metrics;
+  if(!habits.length&&!metrics.length){
+    wrap.innerHTML='<div class="rt-cardhead"><h3>Seguimiento diario</h3></div><div class="empty">Aún no tienes nada que seguir.<br>Agrega un hábito o una métrica con los botones de arriba.</div>';
+  } else {
+    let h='<div class="rt-cardhead"><h3>Seguimiento diario</h3><span class="rt-hint">Toca para marcar ✕ · escribe lo del día · anota cantidades</span></div>';
+    h+='<div class="trk-scroll"><table class="trk"><thead><tr><th class="dcol">Día</th><th class="lcol">Del día</th>';
+    habits.forEach(r=>{ h+='<th class="hcol" title="'+esc(r.name)+'"><span class="hemo">'+(r.emoji||"✅")+'</span></th>'; });
+    metrics.forEach(mt=>{ h+='<th class="mcol" title="'+esc(mt.name)+'">'+esc(mt.name)+'<br><small>'+esc(mt.unit||"")+'</small></th>'; });
+    h+='</tr></thead><tbody>';
+    for(let d=1;d<=N;d++){
+      const iso=isoOf(y,m,d), wd=["lu","ma","mi","ju","vi","sá","do"][weekdayMon(iso)], isTod=iso===todayISO;
+      h+='<tr class="'+(isTod?"trow-today":"")+'"><td class="dcol"><b>'+d+'</b> <span class="wd">'+wd+'</span></td>';
+      h+='<td class="lcol"><input class="lin" data-day="'+d+'" value="'+esc((md.lines&&md.lines[d])||"")+'" placeholder="…"></td>';
+      habits.forEach(r=>{ const ap=routineAppliesOn(r,iso), on=isDone(r.id,iso);
+        h+='<td class="hit '+(on?"on":"")+' '+(ap?"":"na")+'" data-habit="'+r.id+'" data-iso="'+iso+'">'+(on?"✕":"")+'</td>'; });
+      metrics.forEach(mt=>{ const v=(store.metricLog[iso]&&store.metricLog[iso][mt.id]);
+        h+='<td class="mit"><input type="number" class="minp" data-metric="'+mt.id+'" data-iso="'+iso+'" value="'+(v!=null?v:"")+'"></td>'; });
+      h+='</tr>';
+    }
+    h+='</tbody></table></div>';
+    wrap.innerHTML=h;
+    wrap.querySelectorAll(".hit").forEach(td=>{ if(td.classList.contains("na")) return;
+      td.addEventListener("click",()=>{ toggleRoutine(td.dataset.habit,td.dataset.iso);
+        const on=isDone(td.dataset.habit,td.dataset.iso); td.classList.toggle("on",on); td.textContent=on?"✕":""; renderRtSummary(); });
+    });
+    wrap.querySelectorAll(".lin").forEach(inp=>inp.addEventListener("input",e=>{ md.lines[e.target.dataset.day]=e.target.value; rtSaveSoon(); }));
+    wrap.querySelectorAll(".minp").forEach(inp=>inp.addEventListener("change",e=>{
+      const iso=e.target.dataset.iso,id=e.target.dataset.metric,v=e.target.value;
+      if(!store.metricLog[iso]) store.metricLog[iso]={};
+      if(v==="") delete store.metricLog[iso][id]; else store.metricLog[iso][id]=parseFloat(v);
+      saveStore(); renderRtCharts(); renderRtSummary();
+    }));
+  }
+}
+
+function habitStats(r){
+  const y=rtView.y,m=rtView.m,N=daysInMonth(y,m); let ap=0,ok=0;
+  for(let d=1;d<=N;d++){ const iso=isoOf(y,m,d); if(iso>todayISO) break;
+    if(routineAppliesOn(r,iso)){ ap++; if(isDone(r.id,iso)) ok++; } }
+  return {ap,ok,pct: ap?Math.round(ok/ap*100):0};
+}
+function renderRtSummary(){
+  const box=document.getElementById("rtSummary");
+  if(!store.routines.length){ box.innerHTML=""; return; }
+  let totAp=0,totOk=0;
+  const rows=store.routines.map(r=>{ const s=habitStats(r); totAp+=s.ap; totOk+=s.ok;
+    return '<div class="sumrow"><span class="sumemo">'+(r.emoji||"✅")+'</span><span class="sumname">'+esc(r.name)+
+      '</span><span class="sumbar"><i style="width:'+s.pct+'%"></i></span><span class="sumpct">'+s.pct+'%</span></div>'; }).join("");
+  const overall= totAp?Math.round(totOk/totAp*100):0;
+  const now=new Date();
+  const past=(rtView.y<now.getFullYear())||(rtView.y===now.getFullYear()&&rtView.m<now.getMonth());
+  box.innerHTML='<div class="rt-card"><div class="rt-cardhead"><h3>Cumplimiento del mes</h3><span class="bignum">'+overall+'%</span></div>'+
+    '<div class="sumlist">'+rows+'</div><div class="rt-hint">'+(past?"Mes cerrado: este es tu total final.":"Va contando solo los días transcurridos.")+'</div></div>';
+}
+
+function renderRtCharts(){
+  const box=document.getElementById("rtCharts");
+  if(!store.metrics.length){ box.innerHTML=""; return; }
+  const y=rtView.y,m=rtView.m,N=daysInMonth(y,m);
+  box.innerHTML=store.metrics.map(mt=>{
+    const pts=[]; for(let d=1;d<=N;d++){ const iso=isoOf(y,m,d); const v=(store.metricLog[iso]&&store.metricLog[iso][mt.id]); if(v!=null) pts.push([d-1,v]); }
+    let inner;
+    if(pts.length<2){ inner='<div class="rt-hint" style="padding:10px 0">Marca al menos dos días para ver el gráfico.</div>'; }
+    else{
+      const ys=pts.map(p=>p[1]); const minY=Math.min.apply(null,ys),maxY=Math.max.apply(null,ys),rng=(maxY-minY)||1;
+      const W=100,H=34;
+      const path=pts.map(p=>{ const x=(p[0]/(N-1))*W; const yv=H-((p[1]-minY)/rng)*H; return x.toFixed(1)+","+yv.toFixed(1); }).join(" ");
+      const avg=ys.reduce((a,b)=>a+b,0)/ys.length;
+      inner='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" class="spark"><polyline points="'+path+'" fill="none" stroke="'+(mt.color||"#3b6ea5")+'" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg>'+
+        '<div class="rt-metricmeta">prom. '+(avg%1?avg.toFixed(1):avg)+' '+esc(mt.unit||"")+' · máx. '+maxY+'</div>';
+    }
+    return '<div class="rt-card rt-chartcard"><div class="rt-cardhead"><h3>'+esc(mt.name)+'</h3><span class="dot" style="--c:'+(mt.color||"#3b6ea5")+'"></span></div>'+inner+'</div>';
+  }).join("");
+}
+
+function renderRtNotes(){
+  const md=monthData();
+  document.getElementById("rtNotes").innerHTML='<div class="rt-card"><div class="rt-cardhead"><h3>Notas para próximos meses</h3></div>'+
+    '<textarea id="rtNote" class="rt-caption" placeholder="Cosas a considerar más adelante…">'+esc(md.note||"")+'</textarea></div>';
+  document.getElementById("rtNote").addEventListener("input",e=>{ md.note=e.target.value; rtSaveSoon(); });
+}
+
+function openHabitsManager(){
+  const list=store.routines.map(r=>'<div class="mgr-row"><span class="mgr-emo">'+(r.emoji||"✅")+'</span><span class="mgr-name">'+esc(r.name)+
+    '</span><span class="mgr-freq">'+(r.freq==="weekdays"?"L-V":"Diario")+'</span><button class="mini-btn" data-del="'+r.id+
+    '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button></div>').join("")||'<div class="rt-hint">Aún no hay hábitos.</div>';
+  openModal("Hábitos a seguir",
+    '<div class="mgr-list">'+list+'</div><hr style="border:none;border-top:1px solid var(--line);margin:4px 0">'+
+    '<div class="field row2"><div class="field"><label>Emoji</label><input id="f_emoji" value="✅" maxlength="4" style="text-align:center;font-size:20px"></div>'+
+    '<div class="field"><label>Nombre</label><input id="f_name" placeholder="Ej: Meditar"></div></div>'+
+    '<div class="field"><label>¿Cuándo aplica?</label><select id="f_freq"><option value="daily">Todos los días</option><option value="weekdays">Días de semana (L-V)</option></select></div>',
+  ()=>{
+    const name=val("f_name").trim(); if(!name){ toast("Ponle un nombre"); return; }
+    store.routines.push({id:uid(),name,emoji:val("f_emoji")||"✅",freq:val("f_freq")});
+    saveStore(); closeModal(); renderRoutine(); toast("Hábito agregado");
+  });
+  document.querySelectorAll("#mBody [data-del]").forEach(b=>b.addEventListener("click",()=>{
+    const r=store.routines.find(x=>x.id===b.dataset.del);
+    if(confirm('¿Eliminar "'+r.name+'"? Se conservan las marcas anteriores.')){
+      store.routines=store.routines.filter(x=>x.id!==b.dataset.del); saveStore(); closeModal(); renderRoutine(); }
+  }));
+}
+function openMetricsManager(){
+  const colors=["#3b6ea5","#2a8f4e","#7048b6","#c77d1a","#d1495b","#2a8f8f"];
+  const list=store.metrics.map(mt=>'<div class="mgr-row"><span class="dot" style="--c:'+(mt.color||"#3b6ea5")+'"></span><span class="mgr-name">'+esc(mt.name)+
+    ' <small style="color:var(--ink-faint)">'+esc(mt.unit||"")+'</small></span><button class="mini-btn" data-del="'+mt.id+
+    '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button></div>').join("")||'<div class="rt-hint">Aún no hay métricas.</div>';
+  openModal("Métricas por cantidad",
+    '<div class="mgr-list">'+list+'</div><hr style="border:none;border-top:1px solid var(--line);margin:4px 0">'+
+    '<div class="field row2"><div class="field"><label>Nombre</label><input id="f_name" placeholder="Ej: Pasos"></div>'+
+    '<div class="field"><label>Unidad</label><input id="f_unit" placeholder="pasos, h, km…"></div></div>'+
+    '<div class="field"><label>Color</label><select id="f_color">'+colors.map(c=>'<option value="'+c+'">'+c+'</option>').join("")+'</select></div>',
+  ()=>{
+    const name=val("f_name").trim(); if(!name){ toast("Ponle un nombre"); return; }
+    store.metrics.push({id:uid(),name,unit:val("f_unit").trim(),color:val("f_color")});
+    saveStore(); closeModal(); renderRoutine(); toast("Métrica agregada");
+  });
+  document.querySelectorAll("#mBody [data-del]").forEach(b=>b.addEventListener("click",()=>{
+    const mt=store.metrics.find(x=>x.id===b.dataset.del);
+    if(confirm('¿Eliminar "'+mt.name+'"?')){ store.metrics=store.metrics.filter(x=>x.id!==b.dataset.del); saveStore(); closeModal(); renderRoutine(); }
+  }));
 }
 
 /* ============================================================
@@ -1363,6 +1542,9 @@ document.getElementById("agToday").addEventListener("click",()=>{ const t=new Da
 document.getElementById("rmPrev").addEventListener("click",()=>{ shift(rmView,-1); renderMemCal(); });
 document.getElementById("rmNext").addEventListener("click",()=>{ shift(rmView,1); renderMemCal(); });
 document.getElementById("rmToday").addEventListener("click",()=>{ const t=new Date(); rmView={y:t.getFullYear(),m:t.getMonth()}; renderMemCal(); });
+document.getElementById("rtPrev").addEventListener("click",()=>{ shift(rtView,-1); renderRoutine(); });
+document.getElementById("rtNext").addEventListener("click",()=>{ shift(rtView,1); renderRoutine(); });
+document.getElementById("rtToday").addEventListener("click",()=>{ const t=new Date(); rtView={y:t.getFullYear(),m:t.getMonth()}; renderRoutine(); });
 function shift(v,n){ let m=v.m+n,y=v.y; if(m<0){m=11;y--;} if(m>11){m=0;y++;} v.m=m; v.y=y; }
 
 document.getElementById("yearToggle").addEventListener("click",()=>{
@@ -1373,7 +1555,8 @@ document.getElementById("yearToggle").addEventListener("click",()=>{
   if(show) renderYear();
 });
 
-document.getElementById("addRoutine").addEventListener("click",openRoutineForm);
+document.getElementById("btnHabits").addEventListener("click",openHabitsManager);
+document.getElementById("btnMetrics").addEventListener("click",openMetricsManager);
 document.getElementById("addMemory").addEventListener("click",()=>openMemForm(null));
 document.getElementById("pClose").addEventListener("click",closePanel);
 document.getElementById("scrim").addEventListener("click",closePanel);
@@ -1381,30 +1564,12 @@ document.getElementById("pAdd").addEventListener("click",()=>{
   if(panelMode==="recuerdos") openMemForm(null); else openEventForm(null);
 });
 document.getElementById("fab").addEventListener("click",()=>{
-  if(currentView==="rutina") openRoutineForm();
+  if(currentView==="rutina") openHabitsManager();
   else if(currentView==="recuerdos") openMemForm(null);
   else if(currentView==="diario") openEntryForm(null);
   else openEventForm(null);
 });
 
-function openRoutineForm(){
-  openModal("Nuevo hábito",`
-    <div class="field row2">
-      <div class="field"><label>Emoji</label><input id="f_emoji" value="✅" maxlength="4" style="text-align:center;font-size:20px"></div>
-      <div class="field"><label>Nombre</label><input id="f_name" placeholder="Ej: Meditar"></div>
-    </div>
-    <div class="field"><label>¿Cuándo?</label>
-      <select id="f_freq">
-        <option value="daily">Todos los días</option>
-        <option value="weekdays">Días de semana (lun–vie)</option>
-      </select>
-    </div>
-  `,()=>{
-    const name=val("f_name").trim(); if(!name){ toast("Ponle un nombre al hábito"); return; }
-    store.routines.push({id:uid(),name,emoji:val("f_emoji")||"✅",freq:val("f_freq")});
-    saveStore(); closeModal(); renderRoutine(); toast("Hábito agregado");
-  });
-}
 
 /* ---- Tema ---- */
 function applyTheme(){ document.documentElement.setAttribute("data-theme",store.ui.theme);
@@ -1447,9 +1612,7 @@ document.getElementById("importBtn").addEventListener("click",()=>{
 });
 
 async function exportData(){
-  const photos={};
-  for(const m of store.memories){ for(const pid of (m.photos||[])){ const u=await getPhoto(pid); if(u) photos[pid]=u; } }
-  const blob=new Blob([JSON.stringify({store,photos},null,2)],{type:"application/json"});
+  const blob=new Blob([JSON.stringify({store,photos:await collectPhotos()},null,2)],{type:"application/json"});
   downloadBlob(blob,"mi-calendario-respaldo.json"); toast("Respaldo descargado");
 }
 let importKind="json";
@@ -1577,6 +1740,7 @@ async function driveDownload(id){
 async function collectPhotos(){
   const photos={};
   for(const m of store.memories){ for(const pid of (m.photos||[])){ const u=await getPhoto(pid); if(u) photos[pid]=u; } }
+  for(const k in (store.monthly||{})){ const id=store.monthly[k].img; if(id){ const u=await getPhoto(id); if(u) photos[id]=u; } }
   return photos;
 }
 async function buildPayload(){
@@ -1597,7 +1761,7 @@ async function driveUpdate(id,payload){
 }
 async function applyCloud(cloud){
   if(!cloud||!cloud.store) return;
-  store=cloud.store; if(!store.ui) store.ui={theme:"light"}; if(!store.journal) store.journal=[];
+  store=cloud.store; if(!store.ui) store.ui={theme:"light"}; if(!store.journal) store.journal=[]; if(!store.metrics) store.metrics=[]; if(!store.metricLog) store.metricLog={}; if(!store.monthly) store.monthly={};
   if(cloud.updatedAt) store.ui.updatedAt=cloud.updatedAt;
   if(cloud.photos) for(const kv of Object.entries(cloud.photos)) await putPhoto(kv[0],kv[1]);
   try{ localStorage.setItem(LS_KEY,JSON.stringify(store)); }catch(e){}
