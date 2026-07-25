@@ -352,6 +352,36 @@ textarea{resize:vertical;min-height:64px}
 .mini-grid i.today{outline:2px solid var(--today);outline-offset:-1px}
 
 /* ---------- Responsive ---------- */
+/* ---------- Frase del día ---------- */
+.quote{display:flex;gap:14px;align-items:flex-start;background:var(--panel);
+  border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:var(--radius);
+  padding:15px 18px;margin-bottom:18px;box-shadow:var(--shadow-soft)}
+.quote .qmark{font-family:"Fraunces",serif;font-size:40px;line-height:.7;color:var(--accent);
+  font-weight:700;flex:0 0 auto;margin-top:2px}
+.quote .qbody{flex:1;min-width:0}
+.quote .qtext{font-family:"Fraunces",serif;font-size:16.5px;font-weight:500;line-height:1.45;
+  font-style:italic}
+.quote .qauth{font-size:12.5px;color:var(--ink-soft);margin-top:5px;font-weight:600}
+.quote .qref{margin-left:auto;flex:0 0 auto}
+
+/* ---------- Diario ---------- */
+.jr-list{display:flex;flex-direction:column;gap:14px}
+.jr-entry{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px 20px;box-shadow:var(--shadow-soft);position:relative}
+.jr-top{display:flex;align-items:center;gap:12px;margin-bottom:9px}
+.jr-mood{font-size:26px;line-height:1;flex:0 0 auto}
+.jr-date{font-family:"Space Mono";font-size:12px;font-weight:700;color:var(--accent-ink);
+  text-transform:uppercase;letter-spacing:.05em}
+[data-theme="dark"] .jr-date{color:var(--accent)}
+.jr-acts{margin-left:auto;display:flex;gap:5px}
+.jr-title{font-family:"Fraunces",serif;font-size:20px;font-weight:600;margin:0 0 6px;line-height:1.2}
+.jr-body{font-size:14.5px;line-height:1.65;color:var(--ink);white-space:pre-wrap;word-break:break-word}
+.jr-count{font-size:12px;color:var(--ink-faint);margin-top:12px}
+.mood-pick{display:flex;gap:6px;flex-wrap:wrap}
+.mood-pick button{width:42px;height:42px;border-radius:11px;border:1px solid var(--line);
+  background:var(--panel);font-size:21px;cursor:pointer;transition:all .12s}
+.mood-pick button.sel{border-color:var(--nav);background:color-mix(in srgb,var(--nav) 12%,transparent);transform:scale(1.05)}
+
 @media(max-width:720px){
   .tab-lbl{display:none}
   .tab{padding:12px 14px}
@@ -406,12 +436,24 @@ textarea{resize:vertical;min-height:64px}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 012-2h12a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><circle cx="9" cy="9" r="2"/><path d="M4 17l5-5 4 4 3-3 4 4"/></svg>
       <span class="tab-lbl">Recuerdos</span>
     </button>
+    <button class="tab" data-view="diario">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4a2 2 0 012-2h11l3 3v15a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M8 7h6M8 11h8M8 15h5"/></svg>
+      <span class="tab-lbl">Diario</span>
+    </button>
   </div>
 </div>
 
 <main>
   <!-- ============ AGENDA ============ -->
   <section class="view active" id="view-agenda">
+    <div class="quote" id="quoteBox">
+      <div class="qmark">“</div>
+      <div class="qbody">
+        <div class="qtext" id="qText">…</div>
+        <div class="qauth" id="qAuth"></div>
+      </div>
+      <button class="mini-btn qref" id="qRefresh" title="Otra frase"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.5 9a9 9 0 0114.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0020.5 15"/></svg></button>
+    </div>
     <div class="view-head">
       <div class="title-wrap">
         <div class="eyebrow">Lo que se viene</div>
@@ -499,6 +541,22 @@ textarea{resize:vertical;min-height:64px}
         <div class="globe-empty" id="globeEmpty">Aún no hay recuerdos con lugar.<br>Agrega uno con coordenadas para verlo aquí.</div>
       </div>
     </div>
+  </section>
+
+  <!-- ============ DIARIO ============ -->
+  <section class="view" id="view-diario">
+    <div class="view-head">
+      <div class="title-wrap">
+        <div class="eyebrow">En tus palabras</div>
+        <h2>Diario</h2>
+        <p class="view-sub">Un espacio para escribir cómo va el día, lo que piensas o lo que no quieres olvidar. Solo tú lo lees.</p>
+      </div>
+      <button class="btn btn-primary" id="addEntry">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        Nueva entrada
+      </button>
+    </div>
+    <div class="jr-list" id="jrList"></div>
   </section>
 </main>
 
@@ -619,11 +677,15 @@ function seed(){
       {id:uid(),date:"2026-01-12",title:"Almuerzo familiar",cat:"Familia",place:"Casa de la abuela",lat:-33.45,lng:-70.66,notes:"Pastel de choclo y sobremesa larga.",photos:[]},
       {id:uid(),date:"2025-11-20",title:"Paseo a Valparaíso",cat:"Paseo",place:"Cerro Alegre, Valparaíso",lat:-33.04,lng:-71.63,notes:"Subimos los ascensores y comimos frente al mar.",photos:[]},
     ],
+    journal:[
+      {id:uid(),date:todayISO,title:"Primera entrada",mood:"🙂",body:"Este es el diario. Toca “Nueva entrada” para escribir lo que quieras — cómo estuvo el día, una idea, algo que no quieras olvidar. Puedes borrar esta entrada de ejemplo."},
+    ],
     ui:{ theme:"light" }
   };
 }
 let store=loadStore()||seed();
 if(!store.ui) store.ui={theme:"light"};
+if(!store.journal) store.journal=[];
 
 /* ============================================================
    Categorías y colores
@@ -1183,12 +1245,125 @@ function animate(){
 }
 
 /* ============================================================
+   Frase del día — lista local en español (siempre funciona,
+   sin depender de internet). Con botón para ver otra.
+   ============================================================ */
+const FRASES=[
+  ["El mejor momento para plantar un árbol fue hace veinte años; el segundo mejor es hoy.","Proverbio chino"],
+  ["No cuentes los días, haz que los días cuenten.","Muhammad Ali"],
+  ["Lo que haces cada día importa más que lo que haces de vez en cuando.","Gretchen Rubin"],
+  ["Cae siete veces, levántate ocho.","Proverbio japonés"],
+  ["La disciplina es elegir entre lo que quieres ahora y lo que quieres más.","Anónimo"],
+  ["No es la montaña lo que conquistas, sino a ti mismo.","Edmund Hillary"],
+  ["Un viaje de mil kilómetros comienza con un solo paso.","Lao Tsé"],
+  ["Hazlo con miedo, pero hazlo.","Anónimo"],
+  ["La constancia vence lo que la dicha no alcanza.","Simón Bolívar"],
+  ["Quien tiene un porqué para vivir puede soportar casi cualquier cómo.","Friedrich Nietzsche"],
+  ["El que se levanta temprano encuentra la mañana entera por delante.","Anónimo"],
+  ["Pequeños progresos siguen siendo progresos.","Anónimo"],
+  ["No dejes para mañana lo que puedas disfrutar hoy.","Anónimo"],
+  ["La calma es también una forma de avanzar.","Anónimo"],
+  ["Sé el cambio que quieres ver en el mundo.","Mahatma Gandhi"],
+  ["El único modo de hacer un gran trabajo es amar lo que haces.","Steve Jobs"],
+  ["Nuestra mayor gloria no está en no caer nunca, sino en levantarnos cada vez que caemos.","Confucio"],
+  ["La suerte es lo que sucede cuando la preparación se encuentra con la oportunidad.","Séneca"],
+  ["Vive como si fueras a morir mañana; aprende como si fueras a vivir siempre.","Mahatma Gandhi"],
+  ["La felicidad no es algo hecho. Viene de tus propias acciones.","Dalái Lama"],
+  ["Empieza donde estás, usa lo que tienes, haz lo que puedas.","Arthur Ashe"],
+  ["El futuro pertenece a quienes creen en la belleza de sus sueños.","Eleanor Roosevelt"],
+  ["Todo parece imposible hasta que se hace.","Nelson Mandela"],
+  ["No hay atajos para ningún lugar que valga la pena.","Beverly Sills"],
+  ["Haz de cada día tu obra maestra.","John Wooden"],
+  ["La paciencia es amarga, pero su fruto es dulce.","Aristóteles"],
+  ["Un poco cada día lleva lejos.","Anónimo"],
+  ["Respira. Estás exactamente donde necesitas empezar.","Anónimo"],
+  ["El descanso también es parte del trabajo.","Anónimo"],
+  ["Lo simple, bien hecho, es suficiente.","Anónimo"],
+  ["No compares tu capítulo uno con el capítulo veinte de otra persona.","Anónimo"],
+  ["Cada día es una página en blanco; escríbela bien.","Anónimo"],
+  ["Lo que riegas, florece.","Anónimo"],
+  ["Hoy es un buen día para intentarlo de nuevo.","Anónimo"],
+  ["La gratitud convierte lo que tenemos en suficiente.","Anónimo"],
+  ["El esfuerzo de hoy es la tranquilidad de mañana.","Anónimo"],
+];
+function dayOfYear(d){ const s=new Date(d.getFullYear(),0,0); return Math.floor((d-s)/864e5); }
+let quoteIdx=dayOfYear(new Date())%FRASES.length;
+function renderQuote(){
+  const [t,a]=FRASES[quoteIdx];
+  document.getElementById("qText").textContent=t;
+  document.getElementById("qAuth").textContent="— "+a;
+}
+document.getElementById("qRefresh").addEventListener("click",()=>{
+  let n; do{ n=Math.floor(Math.random()*FRASES.length); }while(n===quoteIdx&&FRASES.length>1);
+  quoteIdx=n; renderQuote();
+});
+
+/* ============================================================
+   Diario
+   ============================================================ */
+const MOODS=["😄","🙂","😐","😔","😩","😡","🥳","😌","🤔","😴"];
+function renderJournal(){
+  const list=document.getElementById("jrList"); list.innerHTML="";
+  const entries=[...store.journal].sort((a,b)=> b.date===a.date ? 0 : (a.date<b.date?1:-1));
+  if(!entries.length){ list.innerHTML=emptyBlock("Tu diario está vacío.","Toca “Nueva entrada” para escribir la primera."); return; }
+  for(const e of entries){
+    const d=parse(e.date);
+    const words=e.body?e.body.trim().split(/\s+/).filter(Boolean).length:0;
+    const div=document.createElement("div"); div.className="jr-entry";
+    div.innerHTML=`<div class="jr-top">
+        ${e.mood?`<span class="jr-mood">${e.mood}</span>`:""}
+        <span class="jr-date">${DOW[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()].slice(0,3)} ${d.getFullYear()}</span>
+        <span class="jr-acts">
+          <button class="mini-btn" data-edit="${e.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg></button>
+          <button class="mini-btn" data-del="${e.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button>
+        </span>
+      </div>
+      ${e.title?`<h3 class="jr-title">${esc(e.title)}</h3>`:""}
+      <div class="jr-body">${esc(e.body||"")}</div>
+      ${words?`<div class="jr-count">${words} ${words===1?"palabra":"palabras"}</div>`:""}`;
+    list.appendChild(div);
+  }
+  list.querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>openEntryForm(b.dataset.edit)));
+  list.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click",()=>{
+    if(confirm("¿Eliminar esta entrada?")){ store.journal=store.journal.filter(x=>x.id!==b.dataset.del); saveStore(); renderJournal(); }
+  }));
+}
+let moodPick="";
+function openEntryForm(id){
+  const e=id?store.journal.find(x=>x.id===id):null;
+  moodPick=e?(e.mood||""):"";
+  openModal(e?"Editar entrada":"Nueva entrada",`
+    <div class="field row2">
+      <div class="field"><label>Fecha</label><input type="date" id="f_date" value="${e?e.date:todayISO}"></div>
+      <div class="field"><label>Título (opcional)</label><input id="f_title" value="${e?esc(e.title||""):""}" placeholder="Ej: Un día tranquilo"></div>
+    </div>
+    <div class="field"><label>¿Cómo te sientes?</label>
+      <div class="mood-pick" id="moodPick">${MOODS.map(m=>`<button type="button" data-m="${m}" class="${m===moodPick?"sel":""}">${m}</button>`).join("")}</div>
+    </div>
+    <div class="field"><label>Escribe</label><textarea id="f_body" style="min-height:180px" placeholder="Lo que quieras dejar registrado…">${e?esc(e.body||""):""}</textarea></div>
+  `,()=>{
+    const body=val("f_body").trim();
+    if(!body){ toast("Escribe algo antes de guardar"); return; }
+    const obj={ date:val("f_date"), title:val("f_title").trim(), mood:moodPick, body };
+    if(e) Object.assign(e,obj); else store.journal.push({id:uid(),...obj});
+    saveStore(); closeModal(); renderJournal(); toast(e?"Entrada actualizada":"Entrada guardada");
+  });
+  document.getElementById("moodPick").addEventListener("click",ev=>{
+    const b=ev.target.closest("[data-m]"); if(!b)return;
+    const m=b.dataset.m; moodPick = moodPick===m ? "" : m;
+    document.querySelectorAll("#moodPick button").forEach(x=>x.classList.toggle("sel",x.dataset.m===moodPick));
+  });
+}
+document.getElementById("addEntry").addEventListener("click",()=>openEntryForm(null));
+
+/* ============================================================
    Navegación general
    ============================================================ */
 let currentView="agenda";
 function refreshCurrent(){
   if(currentView==="agenda") renderAgenda();
   else if(currentView==="rutina") renderRoutine();
+  else if(currentView==="diario") renderJournal();
   else { renderMemCal(); }
 }
 document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
@@ -1234,6 +1409,7 @@ document.getElementById("pAdd").addEventListener("click",()=>{
 document.getElementById("fab").addEventListener("click",()=>{
   if(currentView==="rutina") openRoutineForm();
   else if(currentView==="recuerdos") openMemForm(null);
+  else if(currentView==="diario") openEntryForm(null);
   else openEventForm(null);
 });
 
@@ -1357,9 +1533,11 @@ function toast(msg){ const el=document.getElementById("toast"); el.textContent=m
 (async function init(){
   await openDB();
   applyTheme();
+  renderQuote();
   renderAgenda();
   renderRoutine();
   renderMemCal();
+  renderJournal();
   if(memoryOnly) toast("Vista previa: los cambios no se guardarán aquí");
 })();
 </script>
