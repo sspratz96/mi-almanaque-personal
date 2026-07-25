@@ -600,6 +600,7 @@ textarea{resize:vertical;min-height:64px}
 <input type="file" id="importFile" accept="application/json,.json,.csv" style="display:none">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="frases.js"></script>
 <script>
 "use strict";
 /* ============================================================
@@ -1248,43 +1249,12 @@ function animate(){
    Frase del día — lista local en español (siempre funciona,
    sin depender de internet). Con botón para ver otra.
    ============================================================ */
-const FRASES=[
-  ["El mejor momento para plantar un árbol fue hace veinte años; el segundo mejor es hoy.","Proverbio chino"],
-  ["No cuentes los días, haz que los días cuenten.","Muhammad Ali"],
-  ["Lo que haces cada día importa más que lo que haces de vez en cuando.","Gretchen Rubin"],
-  ["Cae siete veces, levántate ocho.","Proverbio japonés"],
-  ["La disciplina es elegir entre lo que quieres ahora y lo que quieres más.","Anónimo"],
-  ["No es la montaña lo que conquistas, sino a ti mismo.","Edmund Hillary"],
-  ["Un viaje de mil kilómetros comienza con un solo paso.","Lao Tsé"],
-  ["Hazlo con miedo, pero hazlo.","Anónimo"],
-  ["La constancia vence lo que la dicha no alcanza.","Simón Bolívar"],
-  ["Quien tiene un porqué para vivir puede soportar casi cualquier cómo.","Friedrich Nietzsche"],
-  ["El que se levanta temprano encuentra la mañana entera por delante.","Anónimo"],
-  ["Pequeños progresos siguen siendo progresos.","Anónimo"],
-  ["No dejes para mañana lo que puedas disfrutar hoy.","Anónimo"],
-  ["La calma es también una forma de avanzar.","Anónimo"],
-  ["Sé el cambio que quieres ver en el mundo.","Mahatma Gandhi"],
-  ["El único modo de hacer un gran trabajo es amar lo que haces.","Steve Jobs"],
-  ["Nuestra mayor gloria no está en no caer nunca, sino en levantarnos cada vez que caemos.","Confucio"],
-  ["La suerte es lo que sucede cuando la preparación se encuentra con la oportunidad.","Séneca"],
-  ["Vive como si fueras a morir mañana; aprende como si fueras a vivir siempre.","Mahatma Gandhi"],
-  ["La felicidad no es algo hecho. Viene de tus propias acciones.","Dalái Lama"],
-  ["Empieza donde estás, usa lo que tienes, haz lo que puedas.","Arthur Ashe"],
-  ["El futuro pertenece a quienes creen en la belleza de sus sueños.","Eleanor Roosevelt"],
-  ["Todo parece imposible hasta que se hace.","Nelson Mandela"],
-  ["No hay atajos para ningún lugar que valga la pena.","Beverly Sills"],
-  ["Haz de cada día tu obra maestra.","John Wooden"],
-  ["La paciencia es amarga, pero su fruto es dulce.","Aristóteles"],
-  ["Un poco cada día lleva lejos.","Anónimo"],
-  ["Respira. Estás exactamente donde necesitas empezar.","Anónimo"],
-  ["El descanso también es parte del trabajo.","Anónimo"],
-  ["Lo simple, bien hecho, es suficiente.","Anónimo"],
-  ["No compares tu capítulo uno con el capítulo veinte de otra persona.","Anónimo"],
-  ["Cada día es una página en blanco; escríbela bien.","Anónimo"],
-  ["Lo que riegas, florece.","Anónimo"],
+// La lista de frases vive en el archivo aparte "frases.js" (edítalo libremente).
+// Si ese archivo falta o está vacío, se usa este pequeño respaldo para no romper la app.
+const FRASES=(window.FRASES&&window.FRASES.length)?window.FRASES:[
   ["Hoy es un buen día para intentarlo de nuevo.","Anónimo"],
-  ["La gratitud convierte lo que tenemos en suficiente.","Anónimo"],
-  ["El esfuerzo de hoy es la tranquilidad de mañana.","Anónimo"],
+  ["Pequeños progresos siguen siendo progresos.","Anónimo"],
+  ["Un poco cada día lleva lejos.","Anónimo"],
 ];
 function dayOfYear(d){ const s=new Date(d.getFullYear(),0,0); return Math.floor((d-s)/864e5); }
 let quoteIdx=dayOfYear(new Date())%FRASES.length;
