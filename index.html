@@ -600,6 +600,7 @@ textarea{resize:vertical;min-height:64px}
 <input type="file" id="importFile" accept="application/json,.json,.csv" style="display:none">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="frases.js"></script>
 <script>
 "use strict";
@@ -617,9 +618,12 @@ function loadStore(){
   return null;
 }
 function saveStore(){
-  if(memoryOnly) return;
-  try{ localStorage.setItem(LS_KEY,JSON.stringify(store)); }
-  catch(e){ memoryOnly=true; toast("Sin espacio para guardar — revisa tus fotos"); }
+  if(store.ui) store.ui.updatedAt=Date.now();
+  if(!memoryOnly){
+    try{ localStorage.setItem(LS_KEY,JSON.stringify(store)); }
+    catch(e){ memoryOnly=true; toast("Sin espacio para guardar — revisa tus fotos"); }
+  }
+  scheduleDrivePush();
 }
 const uid=()=>Math.random().toString(36).slice(2,10);
 
@@ -1417,6 +1421,14 @@ document.getElementById("importBtn").addEventListener("click",()=>{
   openModal("Datos y respaldo",`
     <p style="font-size:13.5px;color:var(--ink-soft);line-height:1.5;margin:0">
       Todo se guarda en este navegador. Descarga un respaldo para no perderlo o llevarlo a otro dispositivo.</p>
+    <div class="field"><label>Sincronizar con Google Drive</label>
+      <div class="hint" id="syncStatus" style="margin-bottom:6px">No conectado</div>
+      <button class="btn btn-primary" id="syncConnectBtn" style="justify-content:center">Conectar con Google</button>
+      <button class="btn" id="syncNowBtn" style="justify-content:center">Sincronizar ahora</button>
+      <button class="btn btn-ghost" id="syncDisconnectBtn" style="justify-content:center">Desconectar</button>
+      <div class="hint">Guarda una copia en tu Drive y la mantiene igual entre tus dispositivos. La app solo puede ver su propio archivo, nada más de tu Drive.</div>
+    </div>
+    <hr style="border:none;border-top:1px solid var(--line);margin:0">
     <button class="btn btn-primary" id="doExport" style="justify-content:center">Descargar respaldo (.json)</button>
     <div class="field"><label>Restaurar respaldo</label>
       <button class="btn" id="doImportJson" style="justify-content:center">Cargar archivo .json</button></div>
@@ -1425,6 +1437,10 @@ document.getElementById("importBtn").addEventListener("click",()=>{
       <div class="hint">Exporta la hoja “Eventos” como CSV y cárgala aquí. Se leen las columnas Fecha inicio, Fecha fin, Hora, Evento, Categoría, Lugar, Notas, Estado.</div></div>
   `,null);
   document.getElementById("mSave").style.display="none";
+  updateSyncUI();
+  document.getElementById("syncConnectBtn").addEventListener("click",()=>driveConnect(true));
+  document.getElementById("syncDisconnectBtn").addEventListener("click",driveDisconnect);
+  document.getElementById("syncNowBtn").addEventListener("click",()=>{ if(!(store.ui&&store.ui.driveConnected)){ toast("Primero contéctate"); return;} driveConnect(false); });
   document.getElementById("doExport").addEventListener("click",exportData);
   document.getElementById("doImportJson").addEventListener("click",()=>{ importKind="json"; document.getElementById("importFile").click(); });
   document.getElementById("doImportCsv").addEventListener("click",()=>{ importKind="csv"; document.getElementById("importFile").click(); });
@@ -1500,6 +1516,149 @@ function toast(msg){ const el=document.getElementById("toast"); el.textContent=m
 /* ============================================================
    Arranque
    ============================================================ */
+/* ============================================================
+   Sincronización con Google Drive (opcional)
+   ------------------------------------------------------------
+   Tu Client ID NO es secreto: puede ir en el repositorio.
+   Si algún día lo regeneras, cámbialo en esta línea:
+   ============================================================ */
+const GOOGLE_CLIENT_ID="337107389419-fbm65en61eiieeb744jr48i77oecfabt.apps.googleusercontent.com";
+const DRIVE_FILE_NAME="mi-calendario-datos.json";
+const DRIVE_SCOPE="https://www.googleapis.com/auth/drive.file";
+let tokenClient=null, accessToken=null, tokenExpiry=0, driveBusy=false, pushTimer=null;
+
+function gisReady(){ return window.google && google.accounts && google.accounts.oauth2; }
+function ensureGis(){
+  return new Promise((res,rej)=>{
+    if(gisReady()) return res();
+    let n=0; const t=setInterval(()=>{ if(gisReady()){clearInterval(t);res();}
+      else if(++n>60){clearInterval(t);rej(new Error("no-gis"));} },100);
+  });
+}
+async function initTokenClient(){
+  await ensureGis();
+  if(!tokenClient){
+    tokenClient=google.accounts.oauth2.initTokenClient({
+      client_id:GOOGLE_CLIENT_ID, scope:DRIVE_SCOPE, callback:()=>{} });
+  }
+}
+function requestToken(interactive){
+  return new Promise((resolve,reject)=>{
+    initTokenClient().then(()=>{
+      tokenClient.callback=(resp)=>{
+        if(resp&&resp.error) return reject(resp);
+        accessToken=resp.access_token;
+        tokenExpiry=Date.now()+((resp.expires_in||3600)*1000)-60000;
+        resolve(accessToken);
+      };
+      try{ tokenClient.requestAccessToken({prompt: interactive?"consent":""}); }
+      catch(e){ reject(e); }
+    }).catch(reject);
+  });
+}
+function tokenValid(){ return accessToken && Date.now()<tokenExpiry; }
+async function dfetch(url,opts){
+  if(!tokenValid()) await requestToken(false);
+  opts=opts||{}; opts.headers=Object.assign({Authorization:"Bearer "+accessToken},opts.headers||{});
+  let r=await fetch(url,opts);
+  if(r.status===401){ accessToken=null; await requestToken(false);
+    opts.headers.Authorization="Bearer "+accessToken; r=await fetch(url,opts); }
+  return r;
+}
+async function driveFind(){
+  const q=encodeURIComponent("name='"+DRIVE_FILE_NAME+"' and trashed=false");
+  const r=await dfetch("https://www.googleapis.com/drive/v3/files?q="+q+"&spaces=drive&fields=files(id,modifiedTime)");
+  const d=await r.json(); return (d.files&&d.files[0])||null;
+}
+async function driveDownload(id){
+  const r=await dfetch("https://www.googleapis.com/drive/v3/files/"+id+"?alt=media");
+  return await r.json();
+}
+async function collectPhotos(){
+  const photos={};
+  for(const m of store.memories){ for(const pid of (m.photos||[])){ const u=await getPhoto(pid); if(u) photos[pid]=u; } }
+  return photos;
+}
+async function buildPayload(){
+  return JSON.stringify({v:1, updatedAt:(store.ui&&store.ui.updatedAt)||Date.now(), store, photos:await collectPhotos()});
+}
+async function driveCreate(payload){
+  const boundary="mcal"+Date.now();
+  const meta={name:DRIVE_FILE_NAME, mimeType:"application/json"};
+  const body="--"+boundary+"\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n"+JSON.stringify(meta)+
+    "\r\n--"+boundary+"\r\nContent-Type: application/json\r\n\r\n"+payload+"\r\n--"+boundary+"--";
+  const r=await dfetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",{
+    method:"POST", headers:{"Content-Type":"multipart/related; boundary="+boundary}, body});
+  const d=await r.json(); return d.id;
+}
+async function driveUpdate(id,payload){
+  await dfetch("https://www.googleapis.com/upload/drive/v3/files/"+id+"?uploadType=media",{
+    method:"PATCH", headers:{"Content-Type":"application/json"}, body:payload});
+}
+async function applyCloud(cloud){
+  if(!cloud||!cloud.store) return;
+  store=cloud.store; if(!store.ui) store.ui={theme:"light"}; if(!store.journal) store.journal=[];
+  if(cloud.updatedAt) store.ui.updatedAt=cloud.updatedAt;
+  if(cloud.photos) for(const kv of Object.entries(cloud.photos)) await putPhoto(kv[0],kv[1]);
+  try{ localStorage.setItem(LS_KEY,JSON.stringify(store)); }catch(e){}
+  applyTheme(); renderQuote(); refreshCurrent(); if(globeReady) rebuildMarkers();
+}
+async function driveConnect(interactive){
+  if(driveBusy) return;
+  driveBusy=true; updateSyncUI("Conectando…");
+  try{
+    await requestToken(interactive);
+    const file=await driveFind();
+    if(file){
+      store.ui.driveFileId=file.id;
+      const cloud=await driveDownload(file.id);
+      const localAt=(store.ui&&store.ui.updatedAt)||0;
+      if((cloud.updatedAt||0)>localAt){ await applyCloud(cloud); toast("Datos traídos desde Drive"); }
+      else { await driveUpdate(file.id, await buildPayload()); toast("Datos guardados en Drive"); }
+    } else {
+      store.ui.driveFileId=await driveCreate(await buildPayload());
+      toast("Copia creada en tu Drive");
+    }
+    store.ui.driveConnected=true; store.ui.lastSync=Date.now();
+    try{ localStorage.setItem(LS_KEY,JSON.stringify(store)); }catch(e){}
+  }catch(e){
+    console.error(e);
+    if(e&&(e.type==="popup_closed"||e.error==="access_denied"||e.type==="popup_failed_to_open")) toast("Conexión cancelada");
+    else toast("No se pudo conectar con Drive");
+  }finally{ driveBusy=false; updateSyncUI(); }
+}
+function driveDisconnect(){
+  store.ui.driveConnected=false; accessToken=null; tokenExpiry=0;
+  try{ localStorage.setItem(LS_KEY,JSON.stringify(store)); }catch(e){}
+  updateSyncUI(); toast("Sincronización desconectada");
+}
+function scheduleDrivePush(){
+  if(!store.ui||!store.ui.driveConnected||!store.ui.driveFileId) return;
+  if(!tokenValid()){ updateSyncUI("Conéctate para sincronizar los cambios"); return; }
+  clearTimeout(pushTimer);
+  pushTimer=setTimeout(async ()=>{
+    try{ await driveUpdate(store.ui.driveFileId, await buildPayload());
+      store.ui.lastSync=Date.now(); try{localStorage.setItem(LS_KEY,JSON.stringify(store));}catch(e){}
+      updateSyncUI();
+    }catch(e){ /* se reintenta al próximo cambio */ }
+  },2500);
+}
+function updateSyncUI(msg){
+  const el=document.getElementById("syncStatus");
+  const cb=document.getElementById("syncConnectBtn"), db=document.getElementById("syncDisconnectBtn"), nb=document.getElementById("syncNowBtn");
+  if(el){
+    if(msg) el.textContent=msg;
+    else if(store.ui&&store.ui.driveConnected){
+      const t=store.ui.lastSync?new Date(store.ui.lastSync):null;
+      el.textContent="Conectado a Drive"+(t?" · última sync "+t.getHours()+":"+String(t.getMinutes()).padStart(2,"0"):"");
+    } else el.textContent="No conectado";
+  }
+  const on=!!(store.ui&&store.ui.driveConnected);
+  if(cb) cb.style.display=on?"none":"";
+  if(db) db.style.display=on?"":"none";
+  if(nb) nb.style.display=on?"":"none";
+}
+
 (async function init(){
   await openDB();
   applyTheme();

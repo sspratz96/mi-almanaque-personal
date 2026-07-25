@@ -47,6 +47,21 @@ Hora, Evento, Categoría, Lugar, Notas y Estado.
 - Coordenadas del globo: en Google Maps, clic derecho sobre el lugar copia
   `latitud, longitud`. Pégalas en los campos Latitud y Longitud del recuerdo.
 
+## Sincronización con Google Drive (opcional)
+
+La app puede guardar una copia de tus datos en tu propio Google Drive y mantenerla
+igual entre tus dispositivos. Abre el menú de datos (ícono ↧) → **Conectar con Google**.
+
+- Usa el permiso `drive.file`: la app **solo ve el archivo que ella misma crea**
+  (`mi-calendario-datos.json`), nada más de tu Drive.
+- El **Client ID** de Google va escrito en `index.html` (constante `GOOGLE_CLIENT_ID`).
+  No es secreto, puede estar en el repo. Si lo regeneras, cámbialo ahí.
+- Requiere que tu dirección de GitHub Pages esté en los "Orígenes de JavaScript"
+  autorizados de tu credencial, y que tu correo esté como "usuario de prueba".
+- El acceso dura ~1 hora: cada vez que abres la app y quieres sincronizar, pulsa
+  **Conectar** una vez. Mientras la sesión está activa, los cambios se suben solos.
+- Solo funciona en la app **publicada** (GitHub Pages o local), no en vistas previas.
+
 ## Las frases inspiradoras
 
 Viven en el archivo aparte **`frases.js`**, no dentro de `index.html`. Ábrelo con
