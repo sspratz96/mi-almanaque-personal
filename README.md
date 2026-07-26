@@ -1,9 +1,10 @@
 # Mi calendario
 
-App web personal para organizar tu tiempo en cuatro secciones: **Agenda** (lo que se
-viene), **Rutina** (tu tracker mensual de hábitos), **Recuerdos** (lo que ya viviste,
-con fotos y un globo) y **Diario** (entradas de texto). Incluye tema claro/oscuro,
-diseño responsive y sincronización opcional con Google Drive.
+App web personal para organizar tu tiempo en cinco secciones: **Agenda** (lo que se
+viene), **Rutina** (tu tracker mensual de hábitos), **Pendientes** (tus listas por tema,
+como notas que te mandas a ti mismo), **Recuerdos** (lo que ya viviste, con fotos y un
+globo) y **Diario** (entradas de texto). Incluye tema claro/oscuro, diseño responsive y
+sincronización opcional con Google Drive.
 
 Son archivos estáticos (`index.html` + `frases.js`), sin backend y sin instalación.
 
@@ -32,7 +33,7 @@ con Drive (ver más abajo). Por eso:
 - **Cargar eventos (.csv):** solo *agrega* eventos a la Agenda desde la hoja "Eventos" de
   la planilla de Excel. No reemplaza nada.
 
-## Las cuatro secciones
+## Las cinco secciones
 
 - **Agenda:** vista de mes con colores según cuántas cosas hay cada día. Toca un día para
   ver el detalle ordenado por hora (los de "todo el día" primero). Botón "Ver el año" con
@@ -40,7 +41,13 @@ con Drive (ver más abajo). Por eso:
 - **Rutina:** tu tracker mensual. Marca hábitos con ✕ por día, anota una línea de lo que te
   dejó cada día, sigue cantidades (pasos, sueño…) con gráfico automático, y mira tu % de
   cumplimiento del mes. Tiene un "espacio libre" para subir un dibujo o demostración, y
-  notas para próximos meses. Los botones "Hábitos" y "Métricas" gestionan lo que sigues.
+  notas para próximos meses. Los botones "Hábitos" y "Métricas" gestionan lo que sigues:
+  desde ahí puedes **editar** cada hábito o métrica (nombre, emoji, frecuencia, unidad,
+  color) sin tener que borrarlo, y **reordenarlos** libremente con las flechas ↑/↓.
+- **Pendientes:** tus listas por tema, al estilo de esos grupos de WhatsApp que te mandas a
+  ti mismo. Crea "grupos" (Trabajo, Casa, Personal… los que quieras, con su emoji y color) y
+  dentro de cada uno anota lo que tengas que hacer. Marca cada pendiente como hecho, edítalo
+  tocándolo, bórralo, limpia los completados de una vez, y reordena los grupos con ↑/↓.
 - **Recuerdos:** lo que ya pasó, por categoría y color, con fotos. La sub-pestaña "Globo"
   muestra tus recuerdos como puntos sobre la Tierra (necesitan coordenadas).
 - **Diario:** entradas de texto con fecha, ánimo y título opcional.

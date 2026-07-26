@@ -451,9 +451,68 @@ textarea{resize:vertical;min-height:64px}
 .rt-chartcard{margin-bottom:0}
 .spark{width:100%;height:46px;display:block}
 .rt-metricmeta{font-size:12px;color:var(--ink-soft);margin-top:6px;font-family:"Space Mono"}
-.mgr-list{display:flex;flex-direction:column;gap:7px;max-height:230px;overflow-y:auto}
+.mgr-list{display:flex;flex-direction:column;gap:7px;max-height:300px;overflow-y:auto}
 .mgr-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:9px}
-.mgr-emo{font-size:17px}.mgr-name{flex:1;font-size:14px}.mgr-freq{font-size:11px;color:var(--ink-faint)}
+.mgr-row.editing{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+.mgr-emo{font-size:17px}.mgr-name{flex:1;font-size:14px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mgr-freq{font-size:11px;color:var(--ink-faint)}
+.mgr-acts{display:flex;align-items:center;gap:3px;flex:0 0 auto}
+.mgr-move{display:flex;flex-direction:column;gap:1px;margin-right:2px}
+.mgr-mv{width:22px;height:16px;border:1px solid var(--line);background:var(--bg-2);color:var(--ink-soft);
+  border-radius:5px;cursor:pointer;display:grid;place-items:center;padding:0}
+.mgr-mv svg{width:12px;height:12px}
+.mgr-mv:hover:not(:disabled){color:var(--ink);border-color:var(--ink-faint)}
+.mgr-mv:disabled{opacity:.3;cursor:default}
+.mgr-editrow{border:1px dashed var(--accent);border-radius:9px;padding:10px;margin-bottom:4px;
+  background:color-mix(in srgb,var(--accent) 6%,transparent)}
+.mgr-editrow .mgr-editlbl{font-size:11px;color:var(--accent-ink);font-weight:700;margin-bottom:6px;
+  text-transform:uppercase;letter-spacing:.06em}
+[data-theme="dark"] .mgr-editrow .mgr-editlbl{color:var(--accent)}
+
+/* ---------- Pendientes ---------- */
+.pend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;align-items:start}
+.pend-empty{grid-column:1/-1;text-align:center;color:var(--ink-faint);padding:50px 20px;font-size:14px;
+  background:var(--panel);border:1px dashed var(--line);border-radius:var(--radius)}
+.pend-empty svg{width:40px;height:40px;opacity:.5;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto}
+.pend-card{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--gc,#3b6ea5);
+  border-radius:var(--radius);box-shadow:var(--shadow-soft);display:flex;flex-direction:column;overflow:hidden}
+.pend-head{display:flex;align-items:center;gap:9px;padding:13px 15px 10px}
+.pend-head .pemo{font-size:19px;line-height:1;flex:0 0 auto}
+.pend-head .pname{font-family:"Fraunces",serif;font-size:18px;font-weight:600;flex:1;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pend-head .pcount{font-family:"Space Mono";font-size:11px;font-weight:700;color:var(--ink-faint);flex:0 0 auto}
+.pend-head .pacts{display:flex;gap:4px;flex:0 0 auto}
+.pend-items{list-style:none;padding:0 15px;margin:0;display:flex;flex-direction:column}
+.pend-item{display:flex;align-items:flex-start;gap:9px;padding:8px 0;border-top:1px solid var(--line-2)}
+.pend-item:first-child{border-top:none}
+.pend-check{flex:0 0 auto;width:20px;height:20px;border-radius:6px;border:1.6px solid var(--ink-faint);
+  background:var(--panel);cursor:pointer;display:grid;place-items:center;margin-top:1px;transition:all .12s}
+.pend-check:hover{border-color:var(--gc,#3b6ea5)}
+.pend-check svg{width:12px;height:12px;opacity:0;stroke:#fff}
+.pend-item.done .pend-check{background:var(--gc,#3b6ea5);border-color:var(--gc,#3b6ea5)}
+.pend-item.done .pend-check svg{opacity:1}
+.pend-txt{flex:1;font-size:14px;line-height:1.45;color:var(--ink);word-break:break-word;cursor:text;min-width:0}
+.pend-item.done .pend-txt{color:var(--ink-faint);text-decoration:line-through}
+.pend-txt-edit{flex:1;font-size:14px;line-height:1.45;border:1px solid var(--line);border-radius:7px;
+  padding:4px 7px;background:var(--bg-2);color:var(--ink);font-family:inherit;resize:none}
+.pend-x{flex:0 0 auto;width:24px;height:24px;border:none;background:none;color:var(--ink-faint);cursor:pointer;
+  border-radius:6px;display:grid;place-items:center;opacity:0;transition:opacity .12s}
+.pend-item:hover .pend-x{opacity:1}
+.pend-x:hover{color:var(--danger,#d1495b);background:var(--bg-2)}
+.pend-x svg{width:14px;height:14px}
+.pend-add{display:flex;gap:7px;padding:11px 15px 14px;margin-top:auto}
+.pend-add input{flex:1;font-size:13.5px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;
+  background:var(--bg-2);color:var(--ink);font-family:inherit}
+.pend-add input:focus{outline:none;border-color:var(--gc,#3b6ea5);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--gc,#3b6ea5) 15%,transparent)}
+.pend-add button{flex:0 0 auto;width:36px;height:36px;border-radius:8px;border:none;
+  background:var(--gc,#3b6ea5);color:#fff;cursor:pointer;display:grid;place-items:center}
+.pend-add button:hover{filter:brightness(1.08)}
+.pend-add button svg{width:17px;height:17px}
+.pend-clear{font-size:11.5px;color:var(--ink-faint);background:none;border:none;cursor:pointer;
+  padding:0 15px 12px;text-align:left;font-family:inherit}
+.pend-clear:hover{color:var(--ink-soft);text-decoration:underline}
+@media(max-width:720px){ .pend-grid{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
@@ -480,6 +539,10 @@ textarea{resize:vertical;min-height:64px}
     <button class="tab" data-view="rutina">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
       <span class="tab-lbl">Rutina</span>
+    </button>
+    <button class="tab" data-view="pendientes">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12l2 2 4-4"/></svg>
+      <span class="tab-lbl">Pendientes</span>
     </button>
     <button class="tab" data-view="recuerdos">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 012-2h12a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><circle cx="9" cy="9" r="2"/><path d="M4 17l5-5 4 4 3-3 4 4"/></svg>
@@ -549,6 +612,22 @@ textarea{resize:vertical;min-height:64px}
     <div id="rtTableWrap" class="rt-card"></div>
     <div id="rtCharts" class="rt-charts"></div>
     <div id="rtNotes"></div>
+  </section>
+
+  <!-- ============ PENDIENTES ============ -->
+  <section class="view" id="view-pendientes">
+    <div class="view-head">
+      <div class="title-wrap">
+        <div class="eyebrow">Por hacer</div>
+        <h2>Pendientes</h2>
+        <p class="view-sub">Tus listas por tema, como esas notas que te mandas a ti mismo. Crea grupos (trabajo, casa, personal…) y anota lo que tengas que hacer en cada uno.</p>
+      </div>
+      <button class="btn btn-primary" id="addGroup">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        Nuevo grupo
+      </button>
+    </div>
+    <div class="pend-grid" id="pendGrid"></div>
   </section>
 
   <!-- ============ RECUERDOS ============ -->
@@ -747,6 +826,19 @@ function seed(){
     ],
     metricLog:{},
     monthly:{},
+    pending:[
+      {id:uid(),name:"Trabajo",emoji:"💼",color:"#3b6ea5",items:[
+        {id:uid(),text:"Responder correo del cliente",done:false,ts:Date.now()},
+        {id:uid(),text:"Preparar informe semanal",done:false,ts:Date.now()},
+      ]},
+      {id:uid(),name:"Casa",emoji:"🏠",color:"#2a8f4e",items:[
+        {id:uid(),text:"Comprar detergente",done:false,ts:Date.now()},
+        {id:uid(),text:"Llamar al gasfíter",done:true,ts:Date.now()},
+      ]},
+      {id:uid(),name:"Personal",emoji:"🌱",color:"#7048b6",items:[
+        {id:uid(),text:"Renovar el carnet",done:false,ts:Date.now()},
+      ]},
+    ],
     ui:{ theme:"light" }
   };
 }
@@ -756,6 +848,7 @@ if(!store.journal) store.journal=[];
 if(!store.metrics) store.metrics=[];
 if(!store.metricLog) store.metricLog={};
 if(!store.monthly) store.monthly={};
+if(!store.pending) store.pending=[];
 
 /* ============================================================
    Categorías y colores
@@ -1049,45 +1142,231 @@ function renderRtNotes(){
   document.getElementById("rtNote").addEventListener("input",e=>{ md.note=e.target.value; rtSaveSoon(); });
 }
 
+/* mover un elemento por id dentro de un arreglo (dir: -1 sube, +1 baja) */
+function moveArr(arr,id,dir){ const i=arr.findIndex(x=>x.id===id); if(i<0)return false; const j=i+dir;
+  if(j<0||j>=arr.length)return false; [arr[i],arr[j]]=[arr[j],arr[i]]; return true; }
+
+const ICO_UP='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>';
+const ICO_DOWN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+const ICO_EDIT='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>';
+const ICO_DEL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>';
+
+function moveRow(id){
+  return '<span class="mgr-move">'+
+    '<button class="mgr-mv" data-up="'+id+'" title="Subir">'+ICO_UP+'</button>'+
+    '<button class="mgr-mv" data-down="'+id+'" title="Bajar">'+ICO_DOWN+'</button></span>';
+}
+
 function openHabitsManager(){
-  const list=store.routines.map(r=>'<div class="mgr-row"><span class="mgr-emo">'+(r.emoji||"✅")+'</span><span class="mgr-name">'+esc(r.name)+
-    '</span><span class="mgr-freq">'+(r.freq==="weekdays"?"L-V":"Diario")+'</span><button class="mini-btn" data-del="'+r.id+
-    '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button></div>').join("")||'<div class="rt-hint">Aún no hay hábitos.</div>';
-  openModal("Hábitos a seguir",
-    '<div class="mgr-list">'+list+'</div><hr style="border:none;border-top:1px solid var(--line);margin:4px 0">'+
-    '<div class="field row2"><div class="field"><label>Emoji</label><input id="f_emoji" value="✅" maxlength="4" style="text-align:center;font-size:20px"></div>'+
-    '<div class="field"><label>Nombre</label><input id="f_name" placeholder="Ej: Meditar"></div></div>'+
-    '<div class="field"><label>¿Cuándo aplica?</label><select id="f_freq"><option value="daily">Todos los días</option><option value="weekdays">Días de semana (L-V)</option></select></div>',
-  ()=>{
+  let editId=null;
+  openModal("Hábitos a seguir","",addNew);
+  function addNew(){
     const name=val("f_name").trim(); if(!name){ toast("Ponle un nombre"); return; }
     store.routines.push({id:uid(),name,emoji:val("f_emoji")||"✅",freq:val("f_freq")});
-    saveStore(); closeModal(); renderRoutine(); toast("Hábito agregado");
-  });
-  document.querySelectorAll("#mBody [data-del]").forEach(b=>b.addEventListener("click",()=>{
-    const r=store.routines.find(x=>x.id===b.dataset.del);
-    if(confirm('¿Eliminar "'+r.name+'"? Se conservan las marcas anteriores.')){
-      store.routines=store.routines.filter(x=>x.id!==b.dataset.del); saveStore(); closeModal(); renderRoutine(); }
-  }));
+    saveStore(); renderRoutine(); paint(); toast("Hábito agregado");
+  }
+  function paint(){
+    const N=store.routines.length;
+    const rows=store.routines.map((r,i)=>{
+      if(r.id===editId){
+        return '<div class="mgr-editrow"><div class="mgr-editlbl">Editando</div>'+
+          '<div class="field row2"><div class="field"><label>Emoji</label><input id="e_emoji" value="'+esc(r.emoji||"✅")+'" maxlength="4" style="text-align:center;font-size:20px"></div>'+
+          '<div class="field"><label>Nombre</label><input id="e_name" value="'+esc(r.name)+'"></div></div>'+
+          '<div class="field"><label>¿Cuándo aplica?</label><select id="e_freq"><option value="daily" '+(r.freq==="daily"?"selected":"")+'>Todos los días</option><option value="weekdays" '+(r.freq==="weekdays"?"selected":"")+'>Días de semana (L-V)</option></select></div>'+
+          '<div style="display:flex;gap:8px"><button class="btn btn-primary" data-savee="'+r.id+'" style="flex:1;justify-content:center">Guardar cambios</button><button class="btn btn-ghost" data-cancele="1" style="justify-content:center">Cancelar</button></div></div>';
+      }
+      return '<div class="mgr-row">'+moveRow(r.id)+
+        '<span class="mgr-emo">'+(r.emoji||"✅")+'</span><span class="mgr-name">'+esc(r.name)+'</span>'+
+        '<span class="mgr-freq">'+(r.freq==="weekdays"?"L-V":"Diario")+'</span>'+
+        '<span class="mgr-acts"><button class="mini-btn" data-edit="'+r.id+'" title="Editar">'+ICO_EDIT+'</button>'+
+        '<button class="mini-btn" data-del="'+r.id+'" title="Eliminar">'+ICO_DEL+'</button></span></div>';
+    }).join("")||'<div class="rt-hint">Aún no hay hábitos.</div>';
+    document.getElementById("mBody").innerHTML=
+      '<div class="mgr-list">'+rows+'</div><hr style="border:none;border-top:1px solid var(--line);margin:8px 0 4px">'+
+      '<div class="mgr-editlbl" style="color:var(--ink-faint);margin-bottom:2px">Agregar nuevo</div>'+
+      '<div class="field row2"><div class="field"><label>Emoji</label><input id="f_emoji" value="✅" maxlength="4" style="text-align:center;font-size:20px"></div>'+
+      '<div class="field"><label>Nombre</label><input id="f_name" placeholder="Ej: Meditar"></div></div>'+
+      '<div class="field"><label>¿Cuándo aplica?</label><select id="f_freq"><option value="daily">Todos los días</option><option value="weekdays">Días de semana (L-V)</option></select></div>';
+    document.getElementById("mSave").style.display=editId?"none":"";
+    wire();
+  }
+  function wire(){
+    const mb=document.getElementById("mBody");
+    mb.querySelectorAll("[data-up]").forEach(b=>b.onclick=()=>{ if(moveArr(store.routines,b.dataset.up,-1)){ saveStore(); renderRoutine(); paint(); } });
+    mb.querySelectorAll("[data-down]").forEach(b=>b.onclick=()=>{ if(moveArr(store.routines,b.dataset.down,1)){ saveStore(); renderRoutine(); paint(); } });
+    mb.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>{ editId=b.dataset.edit; paint(); });
+    mb.querySelectorAll("[data-cancele]").forEach(b=>b.onclick=()=>{ editId=null; paint(); });
+    mb.querySelectorAll("[data-savee]").forEach(b=>b.onclick=()=>{
+      const r=store.routines.find(x=>x.id===b.dataset.savee); const name=val("e_name").trim();
+      if(!name){ toast("Ponle un nombre"); return; }
+      r.name=name; r.emoji=val("e_emoji")||"✅"; r.freq=val("e_freq"); editId=null;
+      saveStore(); renderRoutine(); paint(); toast("Hábito actualizado");
+    });
+    mb.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{
+      const r=store.routines.find(x=>x.id===b.dataset.del);
+      if(confirm('¿Eliminar "'+r.name+'"? Se conservan las marcas anteriores.')){
+        store.routines=store.routines.filter(x=>x.id!==b.dataset.del); if(editId===b.dataset.del)editId=null;
+        saveStore(); renderRoutine(); paint(); }
+    });
+  }
+  paint();
 }
 function openMetricsManager(){
   const colors=["#3b6ea5","#2a8f4e","#7048b6","#c77d1a","#d1495b","#2a8f8f"];
-  const list=store.metrics.map(mt=>'<div class="mgr-row"><span class="dot" style="--c:'+(mt.color||"#3b6ea5")+'"></span><span class="mgr-name">'+esc(mt.name)+
-    ' <small style="color:var(--ink-faint)">'+esc(mt.unit||"")+'</small></span><button class="mini-btn" data-del="'+mt.id+
-    '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button></div>').join("")||'<div class="rt-hint">Aún no hay métricas.</div>';
-  openModal("Métricas por cantidad",
-    '<div class="mgr-list">'+list+'</div><hr style="border:none;border-top:1px solid var(--line);margin:4px 0">'+
-    '<div class="field row2"><div class="field"><label>Nombre</label><input id="f_name" placeholder="Ej: Pasos"></div>'+
-    '<div class="field"><label>Unidad</label><input id="f_unit" placeholder="pasos, h, km…"></div></div>'+
-    '<div class="field"><label>Color</label><select id="f_color">'+colors.map(c=>'<option value="'+c+'">'+c+'</option>').join("")+'</select></div>',
-  ()=>{
+  let editId=null;
+  openModal("Métricas por cantidad","",addNew);
+  function colorSelect(id,sel){ return '<select id="'+id+'">'+colors.map(c=>'<option value="'+c+'" '+(c===sel?"selected":"")+'>'+c+'</option>').join("")+'</select>'; }
+  function addNew(){
     const name=val("f_name").trim(); if(!name){ toast("Ponle un nombre"); return; }
     store.metrics.push({id:uid(),name,unit:val("f_unit").trim(),color:val("f_color")});
-    saveStore(); closeModal(); renderRoutine(); toast("Métrica agregada");
+    saveStore(); renderRoutine(); paint(); toast("Métrica agregada");
+  }
+  function paint(){
+    const rows=store.metrics.map((mt)=>{
+      if(mt.id===editId){
+        return '<div class="mgr-editrow"><div class="mgr-editlbl">Editando</div>'+
+          '<div class="field row2"><div class="field"><label>Nombre</label><input id="e_name" value="'+esc(mt.name)+'"></div>'+
+          '<div class="field"><label>Unidad</label><input id="e_unit" value="'+esc(mt.unit||"")+'"></div></div>'+
+          '<div class="field"><label>Color</label>'+colorSelect("e_color",mt.color)+'</div>'+
+          '<div style="display:flex;gap:8px"><button class="btn btn-primary" data-savee="'+mt.id+'" style="flex:1;justify-content:center">Guardar cambios</button><button class="btn btn-ghost" data-cancele="1" style="justify-content:center">Cancelar</button></div></div>';
+      }
+      return '<div class="mgr-row">'+moveRow(mt.id)+
+        '<span class="dot" style="--c:'+(mt.color||"#3b6ea5")+'"></span>'+
+        '<span class="mgr-name">'+esc(mt.name)+' <small style="color:var(--ink-faint)">'+esc(mt.unit||"")+'</small></span>'+
+        '<span class="mgr-acts"><button class="mini-btn" data-edit="'+mt.id+'" title="Editar">'+ICO_EDIT+'</button>'+
+        '<button class="mini-btn" data-del="'+mt.id+'" title="Eliminar">'+ICO_DEL+'</button></span></div>';
+    }).join("")||'<div class="rt-hint">Aún no hay métricas.</div>';
+    document.getElementById("mBody").innerHTML=
+      '<div class="mgr-list">'+rows+'</div><hr style="border:none;border-top:1px solid var(--line);margin:8px 0 4px">'+
+      '<div class="mgr-editlbl" style="color:var(--ink-faint);margin-bottom:2px">Agregar nueva</div>'+
+      '<div class="field row2"><div class="field"><label>Nombre</label><input id="f_name" placeholder="Ej: Pasos"></div>'+
+      '<div class="field"><label>Unidad</label><input id="f_unit" placeholder="pasos, h, km…"></div></div>'+
+      '<div class="field"><label>Color</label>'+colorSelect("f_color",colors[0])+'</div>';
+    document.getElementById("mSave").style.display=editId?"none":"";
+    wire();
+  }
+  function wire(){
+    const mb=document.getElementById("mBody");
+    mb.querySelectorAll("[data-up]").forEach(b=>b.onclick=()=>{ if(moveArr(store.metrics,b.dataset.up,-1)){ saveStore(); renderRoutine(); paint(); } });
+    mb.querySelectorAll("[data-down]").forEach(b=>b.onclick=()=>{ if(moveArr(store.metrics,b.dataset.down,1)){ saveStore(); renderRoutine(); paint(); } });
+    mb.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>{ editId=b.dataset.edit; paint(); });
+    mb.querySelectorAll("[data-cancele]").forEach(b=>b.onclick=()=>{ editId=null; paint(); });
+    mb.querySelectorAll("[data-savee]").forEach(b=>b.onclick=()=>{
+      const mt=store.metrics.find(x=>x.id===b.dataset.savee); const name=val("e_name").trim();
+      if(!name){ toast("Ponle un nombre"); return; }
+      mt.name=name; mt.unit=val("e_unit").trim(); mt.color=val("e_color"); editId=null;
+      saveStore(); renderRoutine(); paint(); toast("Métrica actualizada");
+    });
+    mb.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{
+      const mt=store.metrics.find(x=>x.id===b.dataset.del);
+      if(confirm('¿Eliminar "'+mt.name+'"?')){ store.metrics=store.metrics.filter(x=>x.id!==b.dataset.del);
+        if(editId===b.dataset.del)editId=null; saveStore(); renderRoutine(); paint(); }
+    });
+  }
+  paint();
+}
+
+/* ============================================================
+   Pendientes — grupos de notas por tema (como chats contigo mismo)
+   ============================================================ */
+const PEND_COLORS=["#3b6ea5","#2a8f4e","#7048b6","#c77d1a","#d1495b","#2a8f8f","#c0399a","#5a6b7b"];
+
+function renderPending(){
+  const grid=document.getElementById("pendGrid"); if(!grid) return;
+  if(!store.pending) store.pending=[];
+  if(!store.pending.length){
+    grid.innerHTML='<div class="pend-empty">'+
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>'+
+      'Aún no tienes grupos.<br>Crea uno con “Nuevo grupo” — por ejemplo Trabajo, Casa o Personal.</div>';
+    return;
+  }
+  grid.innerHTML=store.pending.map((g,gi)=>{
+    const c=g.color||"#3b6ea5", items=g.items||[];
+    const pend=items.filter(it=>!it.done).length, doneCount=items.filter(it=>it.done).length;
+    const itemsHtml=items.length? items.map(it=>
+      '<li class="pend-item'+(it.done?" done":"")+'" data-i="'+it.id+'">'+
+        '<button class="pend-check" data-toggle="1" title="Marcar hecho"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></button>'+
+        '<span class="pend-txt" data-edittxt="1" title="Toca para editar">'+esc(it.text)+'</span>'+
+        '<button class="pend-x" data-delitem="1" title="Borrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>'+
+      '</li>').join("")
+      : '<li class="pend-item" style="border:none"><span class="pend-txt" style="color:var(--ink-faint);cursor:default">Sin pendientes 🎉</span></li>';
+    return '<div class="pend-card" style="--gc:'+c+'" data-g="'+g.id+'">'+
+      '<div class="pend-head"><span class="pemo">'+(g.emoji||"📌")+'</span>'+
+        '<span class="pname">'+esc(g.name)+'</span><span class="pcount">'+pend+'</span>'+
+        '<span class="pacts">'+
+          (gi>0?'<button class="mini-btn" data-mvg="up" title="Mover arriba">'+ICO_UP+'</button>':'')+
+          (gi<store.pending.length-1?'<button class="mini-btn" data-mvg="down" title="Mover abajo">'+ICO_DOWN+'</button>':'')+
+          '<button class="mini-btn" data-editg="1" title="Editar grupo">'+ICO_EDIT+'</button>'+
+        '</span></div>'+
+      '<ul class="pend-items">'+itemsHtml+'</ul>'+
+      (doneCount?'<button class="pend-clear" data-clear="1">Borrar '+doneCount+' completada'+(doneCount>1?"s":"")+'</button>':'')+
+      '<div class="pend-add"><input type="text" placeholder="Agregar pendiente…" data-newitem="1">'+
+        '<button data-additem="1" title="Agregar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>'+
+    '</div>';
+  }).join("");
+}
+
+function pGroupOf(el){ const card=el.closest(".pend-card"); return card?store.pending.find(g=>g.id===card.dataset.g):null; }
+function pItemOf(el,g){ const li=el.closest(".pend-item"); return (li&&g)?(g.items||[]).find(x=>x.id===li.dataset.i):null; }
+
+function addPendItem(g,input){
+  const v=(input.value||"").trim(); if(!v) return;
+  g.items=g.items||[]; g.items.push({id:uid(),text:v,done:false,ts:Date.now()});
+  saveStore(); renderPending();
+  const el=document.querySelector('.pend-card[data-g="'+g.id+'"] [data-newitem]'); if(el) el.focus();
+}
+
+function startEditItem(span){
+  const g=pGroupOf(span); const it=pItemOf(span,g); if(!it) return;
+  const inp=document.createElement("textarea");
+  inp.className="pend-txt-edit"; inp.value=it.text; inp.rows=1;
+  span.replaceWith(inp); inp.focus(); inp.setSelectionRange(inp.value.length,inp.value.length);
+  const grow=()=>{ inp.style.height="auto"; inp.style.height=inp.scrollHeight+"px"; }; grow();
+  let done=false;
+  const commit=save=>{ if(done)return; done=true; if(save){ const v=inp.value.trim(); if(v)it.text=v; saveStore(); } renderPending(); };
+  inp.addEventListener("blur",()=>commit(true));
+  inp.addEventListener("input",grow);
+  inp.addEventListener("keydown",ev=>{
+    if(ev.key==="Enter"&&!ev.shiftKey){ ev.preventDefault(); commit(true); }
+    else if(ev.key==="Escape"){ ev.preventDefault(); commit(false); }
   });
-  document.querySelectorAll("#mBody [data-del]").forEach(b=>b.addEventListener("click",()=>{
-    const mt=store.metrics.find(x=>x.id===b.dataset.del);
-    if(confirm('¿Eliminar "'+mt.name+'"?')){ store.metrics=store.metrics.filter(x=>x.id!==b.dataset.del); saveStore(); closeModal(); renderRoutine(); }
-  }));
+}
+
+function openGroupForm(g){
+  const ed=!!g;
+  openModal(ed?"Editar grupo":"Nuevo grupo",
+    '<div class="field row2"><div class="field"><label>Emoji</label><input id="f_emoji" value="'+esc(ed?(g.emoji||"📌"):"📌")+'" maxlength="4" style="text-align:center;font-size:20px"></div>'+
+    '<div class="field"><label>Nombre</label><input id="f_name" placeholder="Ej: Trabajo" value="'+esc(ed?g.name:"")+'"></div></div>'+
+    '<div class="field"><label>Color</label><select id="f_color">'+PEND_COLORS.map(c=>'<option value="'+c+'" '+((ed&&g.color===c)?"selected":"")+'>'+c+'</option>').join("")+'</select></div>'+
+    (ed?'<hr style="border:none;border-top:1px solid var(--line);margin:2px 0"><button class="btn btn-ghost" id="delGroup" style="justify-content:center;color:var(--danger,#d1495b)">Eliminar grupo</button>':''),
+  ()=>{
+    const name=val("f_name").trim(); if(!name){ toast("Ponle un nombre"); return; }
+    if(ed){ g.name=name; g.emoji=val("f_emoji")||"📌"; g.color=val("f_color"); }
+    else{ store.pending.push({id:uid(),name,emoji:val("f_emoji")||"📌",color:val("f_color"),items:[]}); }
+    saveStore(); closeModal(); renderPending(); toast(ed?"Grupo actualizado":"Grupo creado");
+  });
+  if(ed){ const d=document.getElementById("delGroup"); if(d) d.addEventListener("click",()=>{
+    if(confirm('¿Eliminar el grupo "'+g.name+'" y todos sus pendientes?')){
+      store.pending=store.pending.filter(x=>x.id!==g.id); saveStore(); closeModal(); renderPending(); toast("Grupo eliminado"); }
+  }); }
+}
+
+function initPendingEvents(){
+  const grid=document.getElementById("pendGrid"); if(!grid) return;
+  grid.addEventListener("click",e=>{
+    const t=e.target;
+    if(t.closest("[data-additem]")){ const g=pGroupOf(t); const inp=t.closest(".pend-card").querySelector("[data-newitem]"); if(g)addPendItem(g,inp); return; }
+    if(t.closest("[data-toggle]")){ const g=pGroupOf(t); const it=pItemOf(t,g); if(it){ it.done=!it.done; saveStore(); renderPending(); } return; }
+    if(t.closest("[data-delitem]")){ const g=pGroupOf(t); const li=t.closest(".pend-item"); if(g){ g.items=(g.items||[]).filter(x=>x.id!==li.dataset.i); saveStore(); renderPending(); } return; }
+    if(t.closest("[data-clear]")){ const g=pGroupOf(t); const n=(g.items||[]).filter(x=>x.done).length;
+      if(n&&confirm("¿Borrar "+n+" pendiente"+(n>1?"s":"")+" completado"+(n>1?"s":"")+"?")){ g.items=g.items.filter(x=>!x.done); saveStore(); renderPending(); } return; }
+    if(t.closest("[data-editg]")){ openGroupForm(pGroupOf(t)); return; }
+    const mv=t.closest("[data-mvg]"); if(mv){ const g=pGroupOf(t); if(moveArr(store.pending,g.id,mv.dataset.mvg==="up"?-1:1)){ saveStore(); renderPending(); } return; }
+    const span=t.closest("[data-edittxt]"); if(span){ startEditItem(span); return; }
+  });
+  grid.addEventListener("keydown",e=>{
+    if(e.target.matches("[data-newitem]")&&e.key==="Enter"){ e.preventDefault(); const g=pGroupOf(e.target); if(g)addPendItem(g,e.target); }
+  });
 }
 
 /* ============================================================
@@ -1516,6 +1795,7 @@ let currentView="agenda";
 function refreshCurrent(){
   if(currentView==="agenda") renderAgenda();
   else if(currentView==="rutina") renderRoutine();
+  else if(currentView==="pendientes") renderPending();
   else if(currentView==="diario") renderJournal();
   else { renderMemCal(); }
 }
@@ -1557,6 +1837,7 @@ document.getElementById("yearToggle").addEventListener("click",()=>{
 
 document.getElementById("btnHabits").addEventListener("click",openHabitsManager);
 document.getElementById("btnMetrics").addEventListener("click",openMetricsManager);
+document.getElementById("addGroup").addEventListener("click",()=>openGroupForm(null));
 document.getElementById("addMemory").addEventListener("click",()=>openMemForm(null));
 document.getElementById("pClose").addEventListener("click",closePanel);
 document.getElementById("scrim").addEventListener("click",closePanel);
@@ -1565,6 +1846,7 @@ document.getElementById("pAdd").addEventListener("click",()=>{
 });
 document.getElementById("fab").addEventListener("click",()=>{
   if(currentView==="rutina") openHabitsManager();
+  else if(currentView==="pendientes") openGroupForm(null);
   else if(currentView==="recuerdos") openMemForm(null);
   else if(currentView==="diario") openEntryForm(null);
   else openEventForm(null);
@@ -1623,7 +1905,7 @@ document.getElementById("importFile").addEventListener("change",async e=>{
   else{
     try{
       const data=JSON.parse(text);
-      if(data.store){ store=data.store; if(!store.ui) store.ui={theme:"light"};
+      if(data.store){ store=data.store; if(!store.ui) store.ui={theme:"light"}; if(!store.pending) store.pending=[];
         if(data.photos) for(const [id,url] of Object.entries(data.photos)) await putPhoto(id,url);
         saveStore(); applyTheme(); refreshCurrent(); if(globeReady) rebuildMarkers(); closeModal(); toast("Respaldo restaurado");
       } else toast("Archivo no reconocido");
@@ -1761,7 +2043,7 @@ async function driveUpdate(id,payload){
 }
 async function applyCloud(cloud){
   if(!cloud||!cloud.store) return;
-  store=cloud.store; if(!store.ui) store.ui={theme:"light"}; if(!store.journal) store.journal=[]; if(!store.metrics) store.metrics=[]; if(!store.metricLog) store.metricLog={}; if(!store.monthly) store.monthly={};
+  store=cloud.store; if(!store.ui) store.ui={theme:"light"}; if(!store.journal) store.journal=[]; if(!store.metrics) store.metrics=[]; if(!store.metricLog) store.metricLog={}; if(!store.monthly) store.monthly={}; if(!store.pending) store.pending=[];
   if(cloud.updatedAt) store.ui.updatedAt=cloud.updatedAt;
   if(cloud.photos) for(const kv of Object.entries(cloud.photos)) await putPhoto(kv[0],kv[1]);
   try{ localStorage.setItem(LS_KEY,JSON.stringify(store)); }catch(e){}
@@ -1831,6 +2113,8 @@ function updateSyncUI(msg){
   renderRoutine();
   renderMemCal();
   renderJournal();
+  renderPending();
+  initPendingEvents();
   if(memoryOnly) toast("Vista previa: los cambios no se guardarán aquí");
 })();
 </script>
