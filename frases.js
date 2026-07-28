@@ -58,5 +58,8 @@ window.FRASES = [
   ["El esfuerzo de hoy es la tranquilidad de mañana.", "Anónimo"],
 
   // ↓↓↓ Agrega tus frases nuevas desde aquí ↓↓↓
-
+  ["One way to increase the probability that things will unfold for you properly is to not lie.", "Jordan Peterson"],
+  ["Figure out what you want. Block out the noise. Then do so much work that it would be unreasonable that you fail.", "Alex Hormozi"],
+  ["Then I heard the voice of the Lord saying, 'Whom shall I send? And who will go for us?' And I said, 'Here am I. Send me!", "Isaiah 6:8"],
+  ["Oh Heavenly Father, bear witness as I show you the strength of your creation.", "Anónimo"]
 ];
