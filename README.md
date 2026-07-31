@@ -3,8 +3,9 @@
 App web personal para organizar tu tiempo en cinco secciones: **Agenda** (lo que se
 viene), **Rutina** (tu tracker mensual de hábitos), **Pendientes** (tus listas por tema,
 como notas que te mandas a ti mismo), **Recuerdos** (lo que ya viviste, con fotos y un
-globo) y **Diario** (entradas de texto). Incluye tema claro/oscuro, diseño responsive y
-sincronización opcional con Google Drive.
+globo con mapa mundi) y **Diario** (entradas de texto). La Agenda y los Recuerdos están
+conectados, para no escribir la misma salida dos veces. Incluye tema claro/oscuro, diseño
+responsive y sincronización opcional con Google Drive.
 
 Son archivos estáticos (`index.html` + `frases.js`), sin backend y sin instalación.
 
@@ -38,19 +39,83 @@ con Drive (ver más abajo). Por eso:
 - **Agenda:** vista de mes con colores según cuántas cosas hay cada día. Toca un día para
   ver el detalle ordenado por hora (los de "todo el día" primero). Botón "Ver el año" con
   las 12 miniaturas. Los eventos pueden durar varios días (fecha fin) o ser de todo el día.
+  Lo que ya pasó tiene un botón ★ para **guardarlo como recuerdo sin escribirlo de nuevo**
+  (ver más abajo).
 - **Rutina:** tu tracker mensual. Marca hábitos con ✕ por día, anota una línea de lo que te
   dejó cada día, sigue cantidades (pasos, sueño…) con gráfico automático, y mira tu % de
   cumplimiento del mes. Tiene un "espacio libre" para subir un dibujo o demostración, y
-  notas para próximos meses. Los botones "Hábitos" y "Métricas" gestionan lo que sigues:
-  desde ahí puedes **editar** cada hábito o métrica (nombre, emoji, frecuencia, unidad,
-  color) sin tener que borrarlo, y **reordenarlos** libremente con las flechas ↑/↓.
+  notas para próximos meses. **Cada mes sigue sus propias cosas** (ver más abajo). Los
+  botones "Hábitos" y "Métricas" gestionan lo del mes que estés viendo: desde ahí puedes
+  **editar** cada hábito o métrica (nombre, emoji, frecuencia, unidad, color) sin tener que
+  borrarlo, y **reordenarlos** libremente con las flechas ↑/↓.
 - **Pendientes:** tus listas por tema, al estilo de esos grupos de WhatsApp que te mandas a
   ti mismo. Crea "grupos" (Trabajo, Casa, Personal… los que quieras, con su emoji y color) y
   dentro de cada uno anota lo que tengas que hacer. Marca cada pendiente como hecho, edítalo
   tocándolo, bórralo, limpia los completados de una vez, y reordena los grupos con ↑/↓.
-- **Recuerdos:** lo que ya pasó, por categoría y color, con fotos. La sub-pestaña "Globo"
-  muestra tus recuerdos como puntos sobre la Tierra (necesitan coordenadas).
+- **Recuerdos:** lo que ya pasó, por categoría y color, con fotos. Botón "Ver el año" con
+  las 12 miniaturas del año (y flechas para saltar a años anteriores). Los días con algo
+  pendiente de rescatar desde tu agenda salen marcados con un recuadro punteado 📅. La
+  sub-pestaña "Globo" muestra tus recuerdos como puntos sobre el mapa mundi (necesitan
+  coordenadas).
 - **Diario:** entradas de texto con fecha, ánimo y título opcional.
+
+## De la Agenda a los Recuerdos (sin escribir dos veces)
+
+Antes había que anotar una misma salida dos veces: una en Agenda cuando la planeabas y otra
+en Recuerdos cuando ya había pasado. Ahora las dos secciones están conectadas.
+
+- En **Agenda**, cualquier evento cuya fecha ya llegó muestra una **estrella ★** al lado de
+  los botones de editar y borrar. Al tocarla se abre el formulario de recuerdo ya lleno con
+  el título, la fecha, el lugar y las notas del evento. Solo revisas, le agregas fotos o
+  coordenadas si quieres, y guardas.
+- En **Recuerdos**, al abrir un día aparece abajo el bloque *"Ese día en tu agenda"* con lo
+  que tenías anotado y todavía no pasas a recuerdos. Cada uno con su ★ para convertirlo.
+- En el calendario de Recuerdos, esos días se marcan con un **chip de borde punteado 📅**,
+  así ves de una mirada qué te falta por rescatar.
+- Una vez convertido, el evento queda con la **estrella rellena** (que te lleva al recuerdo)
+  y desaparece de la lista de pendientes por convertir: no se ofrece dos veces.
+- La categoría se traduce sola (un evento de "Viaje" llega como recuerdo de "Viaje", uno de
+  "Cumpleaños" como "Familia"…). Puedes cambiarla antes de guardar.
+- Si borras el recuerdo, el evento se desvincula y vuelve a ofrecerse. Si borras el evento,
+  el recuerdo se queda: lo vivido no se pierde.
+
+Los eventos **futuros** no aparecen en Recuerdos, solo los que ya pasaron.
+
+## Cada mes puede seguir cosas distintas
+
+En Rutina, los hábitos y métricas ya no son los mismos para siempre: **cada mes tiene su
+propia lista**, con su propio orden. Puedes seguir "Ir al gym" en marzo, dejarlo en abril y
+retomarlo en mayo, sin perder nada de lo marcado.
+
+- Un **mes nuevo empieza en blanco** y te ofrece un botón **"Importar de \<mes anterior\>"**,
+  que copia los hábitos y métricas del último mes que tuviera algo. También está siempre
+  disponible arriba, junto a "Hábitos" y "Métricas".
+- Importar **agrega** lo que falte; nunca duplica ni borra lo que ya pusiste ese mes.
+- En el gestor de Hábitos (o de Métricas), el título te recuerda qué mes estás editando. El
+  botón de basurero **quita del mes**, no borra: **las marcas de los meses anteriores se
+  conservan** y el hábito baja a una fila de fichas *"Ya los has usado antes"* desde donde lo
+  puedes volver a sumar de un toque. El ✕ de cada ficha sí lo borra definitivamente de todos
+  los meses, y avisa antes.
+- El nombre y el emoji sí son compartidos: si renombras un hábito, cambia en todos los meses
+  donde lo uses.
+- El % de cumplimiento y los gráficos de cada mes se calculan solo con lo que ese mes seguía.
+
+**Si ya venías usando la app:** todos los meses en los que tengas algo marcado reciben
+automáticamente tu lista de hábitos y métricas actual, así que los ves exactamente igual que
+antes. El cambio solo se nota de aquí en adelante, en los meses nuevos.
+
+## El globo
+
+El globo de Recuerdos dibuja la Tierra con continentes y fronteras, y pone tus recuerdos como
+puntos de color (el de su categoría) sobre el lugar donde ocurrieron. Arrastra para girarlo y
+toca un punto para ver de qué recuerdo se trata.
+
+El mapa va **dentro de `index.html`**: son los contornos de Natural Earth (escala 1:110m,
+dominio público) simplificados y comprimidos a unos 20 KB. Por eso el globo se ve completo
+**sin conexión** y sin depender de ninguna imagen externa. Se redibuja solo al cambiar entre
+tema claro y oscuro.
+
+Recuerda que un recuerdo solo aparece en el globo si tiene **latitud y longitud**.
 
 ## Subirlo a GitHub Pages
 
@@ -110,5 +175,7 @@ funcionando.
   pueden borrar cuando quieras.
 - Coordenadas del globo: en Google Maps, clic derecho sobre el lugar copia `latitud, longitud`.
   Pégalas en los campos Latitud y Longitud del recuerdo.
-- Funciona sin conexión una vez cargada; las frases y tus datos no dependen de internet
-  (la sincronización con Drive sí la necesita).
+- Funciona sin conexión una vez cargada; las frases, el mapa del globo y tus datos no
+  dependen de internet (la sincronización con Drive sí la necesita).
+- El mapa del globo usa datos de [Natural Earth](https://www.naturalearthdata.com/), de
+  dominio público. Están embebidos y simplificados dentro de `index.html`.

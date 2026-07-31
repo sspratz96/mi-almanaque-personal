@@ -334,6 +334,13 @@ textarea{resize:vertical;min-height:64px}
 
 /* year mini panel */
 .year-toggle{margin-top:14px}
+.year-head{display:flex;align-items:center;gap:10px;font-family:"Fraunces",serif;font-size:20px;font-weight:600}
+.year-head .year-count{font-family:"Space Mono",monospace;font-size:12px;color:var(--ink-soft);margin-left:auto}
+.mini-grid i.mem{background:var(--c,#8a8f98)}
+.chip.ghost{background:transparent;border:1px dashed var(--c,var(--ink-faint));color:var(--ink-soft);opacity:.85}
+.mini-btn.mk-mem{color:var(--accent-ink);border-color:var(--accent)}
+[data-theme="dark"] .mini-btn.mk-mem{color:var(--accent)}
+.ev-link{font-size:11.5px;color:var(--ink-faint);margin-top:4px;display:flex;align-items:center;gap:5px}
 .year-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:12px}
 .mini{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:10px;
   cursor:pointer;transition:border-color .15s,transform .1s;box-shadow:var(--shadow-soft)}
@@ -451,6 +458,16 @@ textarea{resize:vertical;min-height:64px}
 .rt-chartcard{margin-bottom:0}
 .spark{width:100%;height:46px;display:block}
 .rt-metricmeta{font-size:12px;color:var(--ink-soft);margin-top:6px;font-family:"Space Mono"}
+/* mes en blanco + reutilizar hábitos ya usados */
+.rt-setup{border-style:dashed}
+.rt-setup-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.mgr-chips{display:flex;flex-wrap:wrap;gap:7px}
+.mgr-chip{display:inline-flex;align-items:stretch;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:var(--bg-2)}
+.mgr-chip button{border:none;background:transparent;color:var(--ink-soft);font:inherit;font-size:12.5px;
+  padding:5px 10px;cursor:pointer;transition:color .15s,background .15s}
+.mgr-chip button:hover{background:var(--line-2);color:var(--ink)}
+.mgr-chip .mgr-chip-x{padding:5px 8px;color:var(--ink-faint);border-left:1px solid var(--line);font-size:14px;line-height:1}
+.mgr-chip .mgr-chip-x:hover{color:#d1495b;background:transparent}
 .mgr-list{display:flex;flex-direction:column;gap:7px;max-height:300px;overflow-y:auto}
 .mgr-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:9px}
 .mgr-row.editing{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
@@ -600,6 +617,7 @@ textarea{resize:vertical;min-height:64px}
       </div>
       <button class="btn" id="btnHabits"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Hábitos</button>
       <button class="btn" id="btnMetrics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></svg>Métricas</button>
+      <button class="btn btn-ghost" id="rtImport" title="Copiar los hábitos y métricas del mes anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>Importar mes anterior</button>
     </div>
     <div class="month-bar">
       <button class="nav-btn" id="rtPrev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
@@ -607,6 +625,7 @@ textarea{resize:vertical;min-height:64px}
       <button class="nav-btn" id="rtNext"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
       <button class="btn btn-ghost" id="rtToday">Hoy</button>
     </div>
+    <div id="rtSetup"></div>
     <div id="rtSummary"></div>
     <div id="rtFree" class="rt-card"></div>
     <div id="rtTableWrap" class="rt-card"></div>
@@ -660,12 +679,23 @@ textarea{resize:vertical;min-height:64px}
         <div class="month-title" id="rmTitle"></div>
         <button class="nav-btn" id="rmNext"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
         <button class="btn btn-ghost" id="rmToday">Hoy</button>
+        <div class="spacer"></div>
+        <button class="btn btn-ghost" id="rmYearToggle">Ver el año</button>
       </div>
       <div class="cal">
         <div class="dow"><div>Lun</div><div>Mar</div><div>Mié</div><div>Jue</div><div>Vie</div><div>Sáb</div><div>Dom</div></div>
         <div class="grid" id="rmGrid"></div>
       </div>
       <div class="legend" id="rmLegend"></div>
+      <div class="year-toggle" id="rmYearPanel" style="display:none">
+        <div class="year-head">
+          <button class="nav-btn" id="rmYearPrev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <span id="rmYearTitle"></span>
+          <button class="nav-btn" id="rmYearNext"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+          <span class="year-count" id="rmYearCount"></span>
+        </div>
+        <div class="year-grid" id="rmYearGrid"></div>
+      </div>
     </div>
 
     <div class="sub-view" id="sub-globe">
@@ -843,12 +873,21 @@ function seed(){
   };
 }
 let store=loadStore()||seed();
-if(!store.ui) store.ui={theme:"light"};
-if(!store.journal) store.journal=[];
-if(!store.metrics) store.metrics=[];
-if(!store.metricLog) store.metricLog={};
-if(!store.monthly) store.monthly={};
-if(!store.pending) store.pending=[];
+/* Rellena lo que falte. Se usa al arrancar y también al restaurar un
+   respaldo, para que un archivo viejo no deje la app a medias. */
+function normalizarStore(){
+  if(!store.ui) store.ui={theme:"light"};
+  if(!Array.isArray(store.events)) store.events=[];
+  if(!Array.isArray(store.routines)) store.routines=[];
+  if(!store.routineLog) store.routineLog={};
+  if(!Array.isArray(store.memories)) store.memories=[];
+  if(!Array.isArray(store.journal)) store.journal=[];
+  if(!Array.isArray(store.metrics)) store.metrics=[];
+  if(!store.metricLog) store.metricLog={};
+  if(!store.monthly) store.monthly={};
+  if(!Array.isArray(store.pending)) store.pending=[];
+}
+normalizarStore();
 
 /* ============================================================
    Categorías y colores
@@ -896,6 +935,33 @@ function pendingCountOn(iso){
   return eventsOn(iso).filter(e=>e.status!=="Cancelado").length;
 }
 function memoriesOn(iso){ return store.memories.filter(m=>m.date===iso); }
+
+/* ============================================================
+   Puente Agenda ↔ Recuerdos
+   ------------------------------------------------------------
+   Lo que agendaste y ya pasó puede convertirse en recuerdo sin
+   volver a escribirlo. El vínculo queda guardado en los dos
+   sentidos: evento.memId ↔ recuerdo.fromEvent.
+   ============================================================ */
+const EV_TO_MEM_CAT={
+  "Viaje":"Viaje","Cumpleaños":"Familia","Trabajo":"Logro","Estudio":"Logro",
+  "Personal":"Otro","Salud":"Otro","Pago / Cuenta":"Otro","Trámite":"Otro","Otro":"Otro"
+};
+function memOfEvent(ev){ return ev && ev.memId ? store.memories.find(m=>m.id===ev.memId) : null; }
+/* eventos de ese día que ya pasaron y todavía no tienen recuerdo */
+function memCandidatesOn(iso){
+  if(iso>todayISO) return [];
+  return eventsOn(iso).filter(e=>e.status!=="Cancelado" && !memOfEvent(e));
+}
+function memFromEvent(id){
+  const e=store.events.find(x=>x.id===id); if(!e) return;
+  const end=e.end||e.start;
+  openMemForm(null,{
+    date:(panelDate&&panelDate>=e.start&&panelDate<=end)?panelDate:e.start,
+    title:e.title, cat:EV_TO_MEM_CAT[e.cat]||"Otro",
+    place:e.place||"", notes:e.notes||"", fromEvent:e.id
+  });
+}
 
 /* orden del día: sin hora (todo el día) primero, alfabético; luego por hora */
 function sortForDay(items,timeKey,titleKey){
@@ -982,18 +1048,23 @@ function renderMemCal(){
   for(const d of cells){
     const iso=fmt(d),inMonth=d.getMonth()===rmView.m;
     const mems=memoriesOn(iso);
+    const cands=inMonth?memCandidatesOn(iso):[];
     const cell=document.createElement("div");
     const catColor=mems.length?(MEM_CATS[mems[0].cat]||"#888"):null;
     cell.className="cell"+(inMonth?"":" out")+(iso===todayISO?" today":"");
     if(inMonth&&catColor) cell.style.background=`color-mix(in srgb,${catColor} 26%,var(--panel))`;
     let html=`<div class="cell-num">${d.getDate()}</div>`;
-    if(inMonth&&mems.length){
+    if(inMonth&&(mems.length||cands.length)){
+      const shown=mems.slice(0,2).map(m=>({t:m.title,c:MEM_CATS[m.cat]||"#888",ghost:false}));
+      if(shown.length<2) cands.slice(0,2-shown.length).forEach(e=>shown.push({t:e.title,c:EVENT_CATS[e.cat]||"#888",ghost:true}));
+      const extra=(mems.length+cands.length)-shown.length;
       html+='<div class="chips">';
-      mems.slice(0,2).forEach(m=>{ const c=MEM_CATS[m.cat]||"#888";
-        html+=`<div class="chip" style="--c:${c};background:rgba(255,255,255,.78)">${esc(m.title)}</div>`; });
-      if(mems.length>2) html+=`<div class="chip more">+${mems.length-2} más</div>`;
+      shown.forEach(s=>{ html+=s.ghost
+        ? `<div class="chip ghost" style="--c:${s.c}">📅 ${esc(s.t)}</div>`
+        : `<div class="chip" style="--c:${s.c};background:rgba(255,255,255,.78)">${esc(s.t)}</div>`; });
+      if(extra>0) html+=`<div class="chip more">+${extra} más</div>`;
       html+='</div>';
-      html+='<div class="dot-row">'+mems.slice(0,6).map(m=>`<span class="dot" style="--c:${MEM_CATS[m.cat]||'#888'}"></span>`).join("")+'</div>';
+      if(mems.length) html+='<div class="dot-row">'+mems.slice(0,6).map(m=>`<span class="dot" style="--c:${MEM_CATS[m.cat]||'#888'}"></span>`).join("")+'</div>';
     }
     cell.innerHTML=html;
     if(inMonth) cell.addEventListener("click",()=>openPanel(iso,"recuerdos"));
@@ -1001,7 +1072,44 @@ function renderMemCal(){
   }
   const el=document.getElementById("rmLegend");
   el.innerHTML='<span style="font-weight:600">Categorías:</span>'+
-    Object.entries(MEM_CATS).map(([k,v])=>`<span class="sw"><i style="background:${v}"></i>${k}</span>`).join("");
+    Object.entries(MEM_CATS).map(([k,v])=>`<span class="sw"><i style="background:${v}"></i>${k}</span>`).join("")+
+    '<span class="sw"><i style="background:transparent;border:1px dashed var(--ink-faint)"></i>📅 De tu agenda, aún sin guardar</span>';
+  if(document.getElementById("rmYearPanel").style.display!=="none") renderMemYear();
+}
+
+/* ---- Panel del año en Recuerdos ---- */
+let rmYear=null;
+function renderMemYear(){
+  if(rmYear===null) rmYear=rmView.y;
+  document.getElementById("rmYearTitle").textContent=rmYear;
+  const g=document.getElementById("rmYearGrid"); g.innerHTML="";
+  let total=0;
+  for(let m=0;m<12;m++){
+    const cells=monthCells(rmYear,m);
+    let monthTotal=0;
+    const inner=cells.map(d=>{
+      const iso=fmt(d),inMonth=d.getMonth()===m;
+      if(!inMonth) return '<i class="out"></i>';
+      const mems=memoriesOn(iso);
+      const isTod=iso===todayISO?" today":"";
+      if(!mems.length){
+        return memCandidatesOn(iso).length
+          ? `<i class="${isTod}" style="box-shadow:inset 0 0 0 1px var(--ink-faint)"></i>`
+          : `<i class="${isTod}"></i>`;
+      }
+      monthTotal+=mems.length;
+      const c=MEM_CATS[mems[0].cat]||"#8a8f98";
+      return `<i class="mem${isTod}" style="--c:${c}" title="${esc(mems[0].title)}"></i>`;
+    }).join("");
+    total+=monthTotal;
+    const box=document.createElement("div");
+    box.className="mini"+(rmYear===rmView.y&&m===rmView.m?" cur":"");
+    box.innerHTML=`<h4>${MONTHS[m]} <b>${monthTotal}</b></h4><div class="mini-grid">${inner}</div>`;
+    box.addEventListener("click",()=>{ rmView.y=rmYear; rmView.m=m; renderMemCal(); window.scrollTo({top:0,behavior:"smooth"}); });
+    g.appendChild(box);
+  }
+  document.getElementById("rmYearCount").textContent=
+    total===1?"1 recuerdo en el año":total+" recuerdos en el año";
 }
 
 /* ============================================================
@@ -1021,14 +1129,105 @@ function toggleRoutine(id,iso){
 }
 function daysInMonth(y,m){ return new Date(y,m+1,0).getDate(); }
 function isoOf(y,m,d){ return y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0"); }
-function ymKey(){ return rtView.y+"-"+String(rtView.m+1).padStart(2,"0"); }
-function monthData(){ const k=ymKey(); if(!store.monthly[k]) store.monthly[k]={img:"",caption:"",note:"",lines:{}}; if(!store.monthly[k].lines) store.monthly[k].lines={}; return store.monthly[k]; }
+function ymKeyOf(y,m){ return y+"-"+String(m+1).padStart(2,"0"); }
+function ymKey(){ return ymKeyOf(rtView.y,rtView.m); }
+
+/* ------------------------------------------------------------
+   Qué se sigue cada mes
+   ------------------------------------------------------------
+   store.routines y store.metrics son el catálogo completo (todo
+   lo que has seguido alguna vez). Cada mes guarda aparte, en
+   store.monthly[AAAA-MM], la lista de ids que le tocan y en qué
+   orden. Así cada mes puede seguir cosas distintas sin perder el
+   historial de los demás.
+   ------------------------------------------------------------ */
+function monthDataOf(k){
+  if(!store.monthly[k]) store.monthly[k]={img:"",caption:"",note:"",lines:{},habits:[],metrics:[]};
+  const md=store.monthly[k];
+  if(!md.lines) md.lines={};
+  if(!Array.isArray(md.habits)) md.habits=[];
+  if(!Array.isArray(md.metrics)) md.metrics=[];
+  return md;
+}
+function monthData(){ return monthDataOf(ymKey()); }
+/* resuelve los ids del mes contra el catálogo, respetando el orden guardado */
+function monthHabits(){ return monthData().habits.map(id=>store.routines.find(r=>r.id===id)).filter(Boolean); }
+function monthMetrics(){ return monthData().metrics.map(id=>store.metrics.find(x=>x.id===id)).filter(Boolean); }
+function monthIsEmpty(){ return !monthHabits().length && !monthMetrics().length; }
+
+/* Migración: antes los hábitos eran los mismos para todos los meses.
+   A cualquier mes que ya tenga datos se le asigna la lista completa
+   de entonces, para que nada cambie de aspecto al actualizar. */
+function migrarMesesV2(){
+  if(store.ui.monthSetsV2) return;
+  const keys=new Set(Object.keys(store.monthly||{}));
+  Object.keys(store.routineLog||{}).forEach(iso=>keys.add(iso.slice(0,7)));
+  Object.keys(store.metricLog||{}).forEach(iso=>keys.add(iso.slice(0,7)));
+  const hoy=new Date(); keys.add(ymKeyOf(hoy.getFullYear(),hoy.getMonth()));
+  const allH=store.routines.map(r=>r.id), allM=store.metrics.map(x=>x.id);
+  keys.forEach(k=>{
+    if(!/^\d{4}-\d{2}$/.test(k)) return;
+    const md=monthDataOf(k);
+    if(!md.habits.length) md.habits=allH.slice();
+    if(!md.metrics.length) md.metrics=allM.slice();
+  });
+  store.ui.monthSetsV2=true;
+  saveStore();
+}
+
+/* mes anterior más cercano que tenga algo configurado (busca hasta 24 atrás) */
+function mesPrevioConfig(){
+  let y=rtView.y,m=rtView.m;
+  for(let i=0;i<24;i++){
+    m--; if(m<0){ m=11; y--; }
+    const md=store.monthly[ymKeyOf(y,m)];
+    if(md&&((Array.isArray(md.habits)&&md.habits.length)||(Array.isArray(md.metrics)&&md.metrics.length)))
+      return {y,m,key:ymKeyOf(y,m),md};
+  }
+  return null;
+}
+function importarMesAnterior(){
+  const prev=mesPrevioConfig();
+  if(!prev){ toast("No hay un mes anterior con hábitos que copiar"); return; }
+  const md=monthData();
+  const nuevosH=(prev.md.habits||[]).filter(id=>store.routines.some(r=>r.id===id)&&!md.habits.includes(id));
+  const nuevosM=(prev.md.metrics||[]).filter(id=>store.metrics.some(x=>x.id===id)&&!md.metrics.includes(id));
+  if(!nuevosH.length&&!nuevosM.length){ toast("Este mes ya tiene todo lo de "+MONTHS[prev.m]); return; }
+  if(!monthIsEmpty()){
+    const q=[]; if(nuevosH.length) q.push(nuevosH.length+" hábito"+(nuevosH.length>1?"s":""));
+    if(nuevosM.length) q.push(nuevosM.length+" métrica"+(nuevosM.length>1?"s":""));
+    if(!confirm("Se agregarán "+q.join(" y ")+" de "+MONTHS[prev.m]+" "+prev.y+" a lo que ya tienes este mes. ¿Seguir?")) return;
+  }
+  md.habits=md.habits.concat(nuevosH);
+  md.metrics=md.metrics.concat(nuevosM);
+  saveStore(); renderRoutine();
+  toast("Importado de "+MONTHS[prev.m]+" "+prev.y);
+}
 let _rtSaveT=null;
 function rtSaveSoon(){ clearTimeout(_rtSaveT); _rtSaveT=setTimeout(saveStore,500); }
 
 function renderRoutine(){
   document.getElementById("rtTitle").textContent=monthTitle(rtView.y,rtView.m);
-  renderRtSummary(); renderFree(); renderTracker(); renderRtCharts(); renderRtNotes();
+  renderRtSetup(); renderRtSummary(); renderFree(); renderTracker(); renderRtCharts(); renderRtNotes();
+}
+
+/* Aviso de mes vacío: la puerta de entrada a "importar mes anterior" */
+function renderRtSetup(){
+  const box=document.getElementById("rtSetup");
+  const prev=mesPrevioConfig();
+  document.getElementById("rtImport").style.display=prev?"":"none";
+  if(!monthIsEmpty()){ box.innerHTML=""; return; }
+  box.innerHTML='<div class="rt-card rt-setup">'+
+    '<div class="rt-cardhead"><h3>'+monthTitle(rtView.y,rtView.m)+' está en blanco</h3></div>'+
+    '<div class="rt-hint">Cada mes puede seguir cosas distintas. Empieza copiando el mes anterior o arma este desde cero.</div>'+
+    '<div class="rt-setup-btns">'+
+    (prev?'<button class="btn btn-primary" id="rtImport2">Importar de '+MONTHS[prev.m]+' '+prev.y+'</button>':"")+
+    '<button class="btn" id="rtNewHabit">Agregar hábito</button>'+
+    '<button class="btn" id="rtNewMetric">Agregar métrica</button>'+
+    '</div></div>';
+  const b1=document.getElementById("rtImport2"); if(b1) b1.onclick=importarMesAnterior;
+  document.getElementById("rtNewHabit").onclick=openHabitsManager;
+  document.getElementById("rtNewMetric").onclick=openMetricsManager;
 }
 
 async function renderFree(){
@@ -1060,10 +1259,11 @@ async function renderFree(){
 function renderTracker(){
   const wrap=document.getElementById("rtTableWrap");
   const y=rtView.y,m=rtView.m,N=daysInMonth(y,m),md=monthData();
-  const habits=store.routines, metrics=store.metrics;
+  const habits=monthHabits(), metrics=monthMetrics();
   if(!habits.length&&!metrics.length){
-    wrap.innerHTML='<div class="rt-cardhead"><h3>Seguimiento diario</h3></div><div class="empty">Aún no tienes nada que seguir.<br>Agrega un hábito o una métrica con los botones de arriba.</div>';
+    wrap.style.display="none"; wrap.innerHTML="";
   } else {
+    wrap.style.display="";
     let h='<div class="rt-cardhead"><h3>Seguimiento diario</h3><span class="rt-hint">Toca para marcar ✕ · escribe lo del día · anota cantidades</span></div>';
     h+='<div class="trk-scroll"><table class="trk"><thead><tr><th class="dcol">Día</th><th class="lcol">Del día</th>';
     habits.forEach(r=>{ h+='<th class="hcol" title="'+esc(r.name)+'"><span class="hemo">'+(r.emoji||"✅")+'</span></th>'; });
@@ -1103,9 +1303,10 @@ function habitStats(r){
 }
 function renderRtSummary(){
   const box=document.getElementById("rtSummary");
-  if(!store.routines.length){ box.innerHTML=""; return; }
+  const habits=monthHabits();
+  if(!habits.length){ box.innerHTML=""; return; }
   let totAp=0,totOk=0;
-  const rows=store.routines.map(r=>{ const s=habitStats(r); totAp+=s.ap; totOk+=s.ok;
+  const rows=habits.map(r=>{ const s=habitStats(r); totAp+=s.ap; totOk+=s.ok;
     return '<div class="sumrow"><span class="sumemo">'+(r.emoji||"✅")+'</span><span class="sumname">'+esc(r.name)+
       '</span><span class="sumbar"><i style="width:'+s.pct+'%"></i></span><span class="sumpct">'+s.pct+'%</span></div>'; }).join("");
   const overall= totAp?Math.round(totOk/totAp*100):0;
@@ -1117,9 +1318,10 @@ function renderRtSummary(){
 
 function renderRtCharts(){
   const box=document.getElementById("rtCharts");
-  if(!store.metrics.length){ box.innerHTML=""; return; }
+  const metrics=monthMetrics();
+  if(!metrics.length){ box.innerHTML=""; return; }
   const y=rtView.y,m=rtView.m,N=daysInMonth(y,m);
-  box.innerHTML=store.metrics.map(mt=>{
+  box.innerHTML=metrics.map(mt=>{
     const pts=[]; for(let d=1;d<=N;d++){ const iso=isoOf(y,m,d); const v=(store.metricLog[iso]&&store.metricLog[iso][mt.id]); if(v!=null) pts.push([d-1,v]); }
     let inner;
     if(pts.length<2){ inner='<div class="rt-hint" style="padding:10px 0">Marca al menos dos días para ver el gráfico.</div>'; }
@@ -1150,6 +1352,8 @@ const ICO_UP='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-
 const ICO_DOWN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
 const ICO_EDIT='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>';
 const ICO_DEL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>';
+const ICO_STAR='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3.5l2.7 5.5 6 .9-4.35 4.25 1.03 6-5.38-2.83L6.62 20.2l1.03-6L3.3 9.9l6-.9z"/></svg>';
+const ICO_STAR_ON='<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3.5l2.7 5.5 6 .9-4.35 4.25 1.03 6-5.38-2.83L6.62 20.2l1.03-6L3.3 9.9l6-.9z"/></svg>';
 
 function moveRow(id){
   return '<span class="mgr-move">'+
@@ -1157,32 +1361,52 @@ function moveRow(id){
     '<button class="mgr-mv" data-down="'+id+'" title="Bajar">'+ICO_DOWN+'</button></span>';
 }
 
+/* mover un id dentro del arreglo del mes (dir: -1 sube, +1 baja) */
+function moveIds(arr,id,dir){ const i=arr.indexOf(id); if(i<0)return false; const j=i+dir;
+  if(j<0||j>=arr.length)return false; [arr[i],arr[j]]=[arr[j],arr[i]]; return true; }
+
 function openHabitsManager(){
   let editId=null;
-  openModal("Hábitos a seguir","",addNew);
+  const md=monthData();
+  openModal("Hábitos de "+monthTitle(rtView.y,rtView.m),"",addNew);
   function addNew(){
     const name=val("f_name").trim(); if(!name){ toast("Ponle un nombre"); return; }
-    store.routines.push({id:uid(),name,emoji:val("f_emoji")||"✅",freq:val("f_freq")});
-    saveStore(); renderRoutine(); paint(); toast("Hábito agregado");
+    const nuevo={id:uid(),name,emoji:val("f_emoji")||"✅",freq:val("f_freq")};
+    store.routines.push(nuevo); md.habits.push(nuevo.id);
+    saveStore(); renderRoutine(); paint(); toast("Hábito agregado a este mes");
   }
   function paint(){
-    const N=store.routines.length;
-    const rows=store.routines.map((r,i)=>{
+    const delMes=monthHabits();
+    const rows=delMes.map(r=>{
       if(r.id===editId){
         return '<div class="mgr-editrow"><div class="mgr-editlbl">Editando</div>'+
           '<div class="field row2"><div class="field"><label>Emoji</label><input id="e_emoji" value="'+esc(r.emoji||"✅")+'" maxlength="4" style="text-align:center;font-size:20px"></div>'+
           '<div class="field"><label>Nombre</label><input id="e_name" value="'+esc(r.name)+'"></div></div>'+
           '<div class="field"><label>¿Cuándo aplica?</label><select id="e_freq"><option value="daily" '+(r.freq==="daily"?"selected":"")+'>Todos los días</option><option value="weekdays" '+(r.freq==="weekdays"?"selected":"")+'>Días de semana (L-V)</option></select></div>'+
+          '<div class="rt-hint" style="margin-bottom:6px">El nombre y el emoji son los mismos en todos los meses donde uses este hábito.</div>'+
           '<div style="display:flex;gap:8px"><button class="btn btn-primary" data-savee="'+r.id+'" style="flex:1;justify-content:center">Guardar cambios</button><button class="btn btn-ghost" data-cancele="1" style="justify-content:center">Cancelar</button></div></div>';
       }
       return '<div class="mgr-row">'+moveRow(r.id)+
         '<span class="mgr-emo">'+(r.emoji||"✅")+'</span><span class="mgr-name">'+esc(r.name)+'</span>'+
         '<span class="mgr-freq">'+(r.freq==="weekdays"?"L-V":"Diario")+'</span>'+
         '<span class="mgr-acts"><button class="mini-btn" data-edit="'+r.id+'" title="Editar">'+ICO_EDIT+'</button>'+
-        '<button class="mini-btn" data-del="'+r.id+'" title="Eliminar">'+ICO_DEL+'</button></span></div>';
-    }).join("")||'<div class="rt-hint">Aún no hay hábitos.</div>';
+        '<button class="mini-btn" data-out="'+r.id+'" title="Quitar de este mes">'+ICO_DEL+'</button></span></div>';
+    }).join("")||'<div class="rt-hint">Este mes todavía no sigue ningún hábito.</div>';
+
+    /* del catálogo: lo que ya usaste antes pero no está en este mes */
+    const fuera=store.routines.filter(r=>!md.habits.includes(r.id));
+    const prev=mesPrevioConfig();
+    const reuso=fuera.length
+      ? '<div class="mgr-editlbl" style="color:var(--ink-faint);margin:10px 0 4px">Ya los has usado antes — toca para sumarlos a este mes</div>'+
+        '<div class="mgr-chips">'+fuera.map(r=>'<span class="mgr-chip"><button data-in="'+r.id+'">'+(r.emoji||"✅")+' '+esc(r.name)+'</button>'+
+        '<button class="mgr-chip-x" data-purge="'+r.id+'" title="Borrar del todo">×</button></span>').join("")+'</div>'
+      : "";
+
     document.getElementById("mBody").innerHTML=
-      '<div class="mgr-list">'+rows+'</div><hr style="border:none;border-top:1px solid var(--line);margin:8px 0 4px">'+
+      '<div class="rt-hint" style="margin-bottom:8px">Lo que sigues puede cambiar de mes a mes. Quitar algo de este mes no borra lo que ya marcaste.</div>'+
+      (prev?'<button class="btn btn-ghost" id="mImport" style="width:100%;justify-content:center;margin-bottom:10px">Importar de '+MONTHS[prev.m]+' '+prev.y+'</button>':"")+
+      '<div class="mgr-list">'+rows+'</div>'+reuso+
+      '<hr style="border:none;border-top:1px solid var(--line);margin:10px 0 4px">'+
       '<div class="mgr-editlbl" style="color:var(--ink-faint);margin-bottom:2px">Agregar nuevo</div>'+
       '<div class="field row2"><div class="field"><label>Emoji</label><input id="f_emoji" value="✅" maxlength="4" style="text-align:center;font-size:20px"></div>'+
       '<div class="field"><label>Nombre</label><input id="f_name" placeholder="Ej: Meditar"></div></div>'+
@@ -1192,8 +1416,10 @@ function openHabitsManager(){
   }
   function wire(){
     const mb=document.getElementById("mBody");
-    mb.querySelectorAll("[data-up]").forEach(b=>b.onclick=()=>{ if(moveArr(store.routines,b.dataset.up,-1)){ saveStore(); renderRoutine(); paint(); } });
-    mb.querySelectorAll("[data-down]").forEach(b=>b.onclick=()=>{ if(moveArr(store.routines,b.dataset.down,1)){ saveStore(); renderRoutine(); paint(); } });
+    const imp=mb.querySelector("#mImport");
+    if(imp) imp.onclick=()=>{ importarMesAnterior(); paint(); };
+    mb.querySelectorAll("[data-up]").forEach(b=>b.onclick=()=>{ if(moveIds(md.habits,b.dataset.up,-1)){ saveStore(); renderRoutine(); paint(); } });
+    mb.querySelectorAll("[data-down]").forEach(b=>b.onclick=()=>{ if(moveIds(md.habits,b.dataset.down,1)){ saveStore(); renderRoutine(); paint(); } });
     mb.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>{ editId=b.dataset.edit; paint(); });
     mb.querySelectorAll("[data-cancele]").forEach(b=>b.onclick=()=>{ editId=null; paint(); });
     mb.querySelectorAll("[data-savee]").forEach(b=>b.onclick=()=>{
@@ -1202,27 +1428,42 @@ function openHabitsManager(){
       r.name=name; r.emoji=val("e_emoji")||"✅"; r.freq=val("e_freq"); editId=null;
       saveStore(); renderRoutine(); paint(); toast("Hábito actualizado");
     });
-    mb.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{
-      const r=store.routines.find(x=>x.id===b.dataset.del);
-      if(confirm('¿Eliminar "'+r.name+'"? Se conservan las marcas anteriores.')){
-        store.routines=store.routines.filter(x=>x.id!==b.dataset.del); if(editId===b.dataset.del)editId=null;
-        saveStore(); renderRoutine(); paint(); }
+    mb.querySelectorAll("[data-out]").forEach(b=>b.onclick=()=>{
+      const r=store.routines.find(x=>x.id===b.dataset.out);
+      md.habits=md.habits.filter(id=>id!==b.dataset.out);
+      if(editId===b.dataset.out) editId=null;
+      saveStore(); renderRoutine(); paint();
+      toast('"'+r.name+'" ya no se sigue este mes');
+    });
+    mb.querySelectorAll("[data-in]").forEach(b=>b.onclick=()=>{
+      if(!md.habits.includes(b.dataset.in)) md.habits.push(b.dataset.in);
+      saveStore(); renderRoutine(); paint();
+    });
+    mb.querySelectorAll("[data-purge]").forEach(b=>b.onclick=()=>{
+      const r=store.routines.find(x=>x.id===b.dataset.purge);
+      if(!confirm('¿Borrar "'+r.name+'" definitivamente? Desaparece de todos los meses donde lo hayas usado.')) return;
+      store.routines=store.routines.filter(x=>x.id!==b.dataset.purge);
+      Object.values(store.monthly).forEach(x=>{ if(Array.isArray(x.habits)) x.habits=x.habits.filter(id=>id!==b.dataset.purge); });
+      saveStore(); renderRoutine(); paint();
     });
   }
   paint();
 }
+
 function openMetricsManager(){
   const colors=["#3b6ea5","#2a8f4e","#7048b6","#c77d1a","#d1495b","#2a8f8f"];
   let editId=null;
-  openModal("Métricas por cantidad","",addNew);
+  const md=monthData();
+  openModal("Métricas de "+monthTitle(rtView.y,rtView.m),"",addNew);
   function colorSelect(id,sel){ return '<select id="'+id+'">'+colors.map(c=>'<option value="'+c+'" '+(c===sel?"selected":"")+'>'+c+'</option>').join("")+'</select>'; }
   function addNew(){
     const name=val("f_name").trim(); if(!name){ toast("Ponle un nombre"); return; }
-    store.metrics.push({id:uid(),name,unit:val("f_unit").trim(),color:val("f_color")});
-    saveStore(); renderRoutine(); paint(); toast("Métrica agregada");
+    const nueva={id:uid(),name,unit:val("f_unit").trim(),color:val("f_color")};
+    store.metrics.push(nueva); md.metrics.push(nueva.id);
+    saveStore(); renderRoutine(); paint(); toast("Métrica agregada a este mes");
   }
   function paint(){
-    const rows=store.metrics.map((mt)=>{
+    const rows=monthMetrics().map(mt=>{
       if(mt.id===editId){
         return '<div class="mgr-editrow"><div class="mgr-editlbl">Editando</div>'+
           '<div class="field row2"><div class="field"><label>Nombre</label><input id="e_name" value="'+esc(mt.name)+'"></div>'+
@@ -1234,10 +1475,20 @@ function openMetricsManager(){
         '<span class="dot" style="--c:'+(mt.color||"#3b6ea5")+'"></span>'+
         '<span class="mgr-name">'+esc(mt.name)+' <small style="color:var(--ink-faint)">'+esc(mt.unit||"")+'</small></span>'+
         '<span class="mgr-acts"><button class="mini-btn" data-edit="'+mt.id+'" title="Editar">'+ICO_EDIT+'</button>'+
-        '<button class="mini-btn" data-del="'+mt.id+'" title="Eliminar">'+ICO_DEL+'</button></span></div>';
-    }).join("")||'<div class="rt-hint">Aún no hay métricas.</div>';
+        '<button class="mini-btn" data-out="'+mt.id+'" title="Quitar de este mes">'+ICO_DEL+'</button></span></div>';
+    }).join("")||'<div class="rt-hint">Este mes todavía no sigue ninguna métrica.</div>';
+
+    const fuera=store.metrics.filter(x=>!md.metrics.includes(x.id));
+    const reuso=fuera.length
+      ? '<div class="mgr-editlbl" style="color:var(--ink-faint);margin:10px 0 4px">Ya las has usado antes — toca para sumarlas a este mes</div>'+
+        '<div class="mgr-chips">'+fuera.map(x=>'<span class="mgr-chip"><button data-in="'+x.id+'">'+esc(x.name)+'</button>'+
+        '<button class="mgr-chip-x" data-purge="'+x.id+'" title="Borrar del todo">×</button></span>').join("")+'</div>'
+      : "";
+
     document.getElementById("mBody").innerHTML=
-      '<div class="mgr-list">'+rows+'</div><hr style="border:none;border-top:1px solid var(--line);margin:8px 0 4px">'+
+      '<div class="rt-hint" style="margin-bottom:8px">Las cantidades que anotaste antes se conservan aunque quites la métrica de este mes.</div>'+
+      '<div class="mgr-list">'+rows+'</div>'+reuso+
+      '<hr style="border:none;border-top:1px solid var(--line);margin:10px 0 4px">'+
       '<div class="mgr-editlbl" style="color:var(--ink-faint);margin-bottom:2px">Agregar nueva</div>'+
       '<div class="field row2"><div class="field"><label>Nombre</label><input id="f_name" placeholder="Ej: Pasos"></div>'+
       '<div class="field"><label>Unidad</label><input id="f_unit" placeholder="pasos, h, km…"></div></div>'+
@@ -1247,8 +1498,8 @@ function openMetricsManager(){
   }
   function wire(){
     const mb=document.getElementById("mBody");
-    mb.querySelectorAll("[data-up]").forEach(b=>b.onclick=()=>{ if(moveArr(store.metrics,b.dataset.up,-1)){ saveStore(); renderRoutine(); paint(); } });
-    mb.querySelectorAll("[data-down]").forEach(b=>b.onclick=()=>{ if(moveArr(store.metrics,b.dataset.down,1)){ saveStore(); renderRoutine(); paint(); } });
+    mb.querySelectorAll("[data-up]").forEach(b=>b.onclick=()=>{ if(moveIds(md.metrics,b.dataset.up,-1)){ saveStore(); renderRoutine(); paint(); } });
+    mb.querySelectorAll("[data-down]").forEach(b=>b.onclick=()=>{ if(moveIds(md.metrics,b.dataset.down,1)){ saveStore(); renderRoutine(); paint(); } });
     mb.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>{ editId=b.dataset.edit; paint(); });
     mb.querySelectorAll("[data-cancele]").forEach(b=>b.onclick=()=>{ editId=null; paint(); });
     mb.querySelectorAll("[data-savee]").forEach(b=>b.onclick=()=>{
@@ -1257,10 +1508,23 @@ function openMetricsManager(){
       mt.name=name; mt.unit=val("e_unit").trim(); mt.color=val("e_color"); editId=null;
       saveStore(); renderRoutine(); paint(); toast("Métrica actualizada");
     });
-    mb.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{
-      const mt=store.metrics.find(x=>x.id===b.dataset.del);
-      if(confirm('¿Eliminar "'+mt.name+'"?')){ store.metrics=store.metrics.filter(x=>x.id!==b.dataset.del);
-        if(editId===b.dataset.del)editId=null; saveStore(); renderRoutine(); paint(); }
+    mb.querySelectorAll("[data-out]").forEach(b=>b.onclick=()=>{
+      const mt=store.metrics.find(x=>x.id===b.dataset.out);
+      md.metrics=md.metrics.filter(id=>id!==b.dataset.out);
+      if(editId===b.dataset.out) editId=null;
+      saveStore(); renderRoutine(); paint();
+      toast('"'+mt.name+'" ya no se sigue este mes');
+    });
+    mb.querySelectorAll("[data-in]").forEach(b=>b.onclick=()=>{
+      if(!md.metrics.includes(b.dataset.in)) md.metrics.push(b.dataset.in);
+      saveStore(); renderRoutine(); paint();
+    });
+    mb.querySelectorAll("[data-purge]").forEach(b=>b.onclick=()=>{
+      const mt=store.metrics.find(x=>x.id===b.dataset.purge);
+      if(!confirm('¿Borrar "'+mt.name+'" definitivamente? Desaparece de todos los meses.')) return;
+      store.metrics=store.metrics.filter(x=>x.id!==b.dataset.purge);
+      Object.values(store.monthly).forEach(x=>{ if(Array.isArray(x.metrics)) x.metrics=x.metrics.filter(id=>id!==b.dataset.purge); });
+      saveStore(); renderRoutine(); paint();
     });
   }
   paint();
@@ -1391,7 +1655,8 @@ async function renderPanelBody(){
   const body=document.getElementById("pBody"); body.innerHTML="";
   if(panelMode==="recuerdos"){
     const mems=memoriesOn(panelDate).sort((a,b)=>a.title.localeCompare(b.title,"es"));
-    if(!mems.length){ body.innerHTML=emptyBlock("Sin recuerdos de este día.","Toca “Agregar recuerdo”."); return; }
+    const cands=memCandidatesOn(panelDate);
+    if(!mems.length&&!cands.length){ body.innerHTML=emptyBlock("Sin recuerdos de este día.","Toca “Agregar recuerdo”."); return; }
     for(const m of mems){
       const c=MEM_CATS[m.cat]||"#888";
       const div=document.createElement("div"); div.className="ev";
@@ -1417,6 +1682,11 @@ async function renderPanelBody(){
     }
     body.querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>openMemForm(b.dataset.edit)));
     body.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click",()=>delMemory(b.dataset.del)));
+    if(cands.length){
+      body.appendChild(grpLabel("Ese día en tu agenda"));
+      cands.forEach(e=>body.appendChild(candRow(e)));
+      body.querySelectorAll("[data-mkmem]").forEach(b=>b.addEventListener("click",()=>memFromEvent(b.dataset.mkmem)));
+    }
     return;
   }
   // agenda
@@ -1428,12 +1698,37 @@ async function renderPanelBody(){
   body.querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>openEventForm(b.dataset.edit)));
   body.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click",()=>delEvent(b.dataset.del)));
   body.querySelectorAll("[data-done]").forEach(b=>b.addEventListener("click",()=>toggleDone(b.dataset.done)));
+  body.querySelectorAll("[data-mkmem]").forEach(b=>b.addEventListener("click",()=>memFromEvent(b.dataset.mkmem)));
+  body.querySelectorAll("[data-openmem]").forEach(b=>b.addEventListener("click",()=>openMemForm(b.dataset.openmem)));
 }
 function grpLabel(t){ const d=document.createElement("div"); d.className="grp-label"; d.textContent=t; return d; }
 function emptyBlock(a,b){ return `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg><div>${a}</div><div style="font-size:12.5px;margin-top:4px">${b}</div></div>`; }
+/* fila de un evento pasado ofrecido como recuerdo (panel de Recuerdos) */
+function candRow(e){
+  const c=EVENT_CATS[e.cat]||"#888";
+  const div=document.createElement("div"); div.className="ev";
+  div.innerHTML=`<div class="rail" style="--c:${c}"></div>
+    <div class="ev-main">
+      <div class="ev-time">${e.time?e.time:"Todo el día"}</div>
+      <div class="ev-title">${esc(e.title)}</div>
+      <div class="ev-meta">
+        <span class="cat-tag" style="--c:${c}">${esc(e.cat||"Otro")}</span>
+        ${e.place?`<span>📍 ${esc(e.place)}</span>`:""}
+      </div>
+      <div class="ev-link">Ya lo tenías escrito en la agenda — pásalo a recuerdos con ★</div>
+    </div>
+    <div class="ev-acts">
+      <button class="mini-btn mk-mem" data-mkmem="${e.id}" title="Guardar como recuerdo">${ICO_STAR}</button>
+    </div>`;
+  return div;
+}
 function evRow(e){
   const c=EVENT_CATS[e.cat]||"#888"; const done=e.status==="Hecho";
   const rangeLbl=e.end&&e.end!==e.start ? ` · hasta ${parse(e.end).getDate()} ${MONTHS[parse(e.end).getMonth()].slice(0,3)}` : "";
+  const lm=memOfEvent(e); const past=e.start<=todayISO;
+  const memBtn = lm
+    ? `<button class="mini-btn mk-mem" data-openmem="${lm.id}" title="Ver el recuerdo guardado">${ICO_STAR_ON}</button>`
+    : (past?`<button class="mini-btn mk-mem" data-mkmem="${e.id}" title="Guardar como recuerdo">${ICO_STAR}</button>`:"");
   const div=document.createElement("div"); div.className="ev";
   div.innerHTML=`<div class="rail" style="--c:${c}"></div>
     <div class="ev-main">
@@ -1444,8 +1739,10 @@ function evRow(e){
         ${e.place?`<span>📍 ${esc(e.place)}</span>`:""}
       </div>
       ${e.notes?`<div class="ev-notes">${esc(e.notes)}</div>`:""}
+      ${lm?`<div class="ev-link">★ Guardado en Recuerdos</div>`:""}
     </div>
     <div class="ev-acts">
+      ${memBtn}
       <button class="mini-btn" data-done="${e.id}" title="Marcar hecho">${done?
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>':
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>'}</button>
@@ -1457,9 +1754,11 @@ function evRow(e){
 function toggleDone(id){ const e=store.events.find(x=>x.id===id); if(!e)return;
   e.status=e.status==="Hecho"?"Pendiente":"Hecho"; saveStore(); renderPanelBody(); refreshCurrent(); }
 function delEvent(id){ if(!confirm("¿Eliminar este evento?"))return;
+  store.memories.forEach(m=>{ if(m.fromEvent===id) delete m.fromEvent; });
   store.events=store.events.filter(e=>e.id!==id); saveStore(); renderPanelBody(); refreshCurrent(); }
 async function delMemory(id){ if(!confirm("¿Eliminar este recuerdo?"))return;
   const m=store.memories.find(x=>x.id===id); if(m&&m.photos) m.photos.forEach(delPhoto);
+  store.events.forEach(e=>{ if(e.memId===id) delete e.memId; });
   store.memories=store.memories.filter(x=>x.id!==id); saveStore(); renderPanelBody(); refreshCurrent(); if(globeReady) rebuildMarkers(); }
 
 /* ============================================================
@@ -1510,23 +1809,29 @@ function openEventForm(id){
 }
 
 let pendingPhotos=[]; // {id,dataURL} nuevos por subir
-function openMemForm(id){
+function openMemForm(id,preset){
   const m=id?store.memories.find(x=>x.id===id):null;
-  const date=m?m.date:(panelDate||todayISO);
+  const base=preset||{};
+  const date=m?m.date:(base.date||panelDate||todayISO);
+  const vTitle=m?m.title:(base.title||"");
+  const vCat=m?m.cat:(base.cat||"Paseo");
+  const vPlace=m?(m.place||""):(base.place||"");
+  const vNotes=m?(m.notes||""):(base.notes||"");
   pendingPhotos=[];
-  openModal(m?"Editar recuerdo":"Nuevo recuerdo",`
-    <div class="field"><label>¿Qué pasó?</label><input id="f_title" value="${m?esc(m.title):""}" placeholder="Ej: Cumpleaños de la Ceci"></div>
+  openModal(m?"Editar recuerdo":(base.fromEvent?"Guardar como recuerdo":"Nuevo recuerdo"),`
+    ${base.fromEvent?'<div class="hint" style="margin-bottom:10px">Viene de tu agenda: ya está escrito, solo revísalo y agrégale fotos o lugar. Quedan vinculados para que no aparezca dos veces.</div>':""}
+    <div class="field"><label>¿Qué pasó?</label><input id="f_title" value="${esc(vTitle)}" placeholder="Ej: Cumpleaños de la Ceci"></div>
     <div class="field row2">
       <div class="field"><label>Fecha</label><input type="date" id="f_date" value="${date}"></div>
-      <div class="field"><label>Categoría</label><select id="f_cat">${catOptions(MEM_CATS,m?m.cat:"Paseo")}</select></div>
+      <div class="field"><label>Categoría</label><select id="f_cat">${catOptions(MEM_CATS,vCat)}</select></div>
     </div>
-    <div class="field"><label>Lugar (opcional)</label><input id="f_place" value="${m?esc(m.place||""):""}" placeholder="Ej: Cerro San Cristóbal"></div>
+    <div class="field"><label>Lugar (opcional)</label><input id="f_place" value="${esc(vPlace)}" placeholder="Ej: Cerro San Cristóbal"></div>
     <div class="field row2">
       <div class="field"><label>Latitud (opcional)</label><input id="f_lat" type="number" step="any" value="${m&&m.lat!=null?m.lat:""}" placeholder="-33.45"></div>
       <div class="field"><label>Longitud (opcional)</label><input id="f_lng" type="number" step="any" value="${m&&m.lng!=null?m.lng:""}" placeholder="-70.66"></div>
     </div>
     <div class="hint">Las coordenadas ubican el recuerdo en el globo. Búscalas en Google Maps: clic derecho sobre el lugar → copia los dos números.</div>
-    <div class="field"><label>Notas (opcional)</label><textarea id="f_notes">${m?esc(m.notes||""):""}</textarea></div>
+    <div class="field"><label>Notas (opcional)</label><textarea id="f_notes">${esc(vNotes)}</textarea></div>
     <div class="field"><label>Fotos</label>
       <div class="ph-drop" id="phDrop">Toca para añadir fotos 📷</div>
       <input type="file" id="phInput" accept="image/*" multiple style="display:none">
@@ -1541,10 +1846,18 @@ function openMemForm(id){
     const photos=(m?[...(m.photos||[])]:[]).concat(pendingPhotos.map(p=>p.id));
     const obj={ date:val("f_date"), title, cat:val("f_cat"), place:val("f_place").trim(),
       lat, lng, notes:val("f_notes").trim(), photos };
-    if(m) Object.assign(m,obj); else store.memories.push({id:uid(),...obj});
+    if(m) Object.assign(m,obj);
+    else{
+      const nuevo={id:uid(),...obj};
+      if(base.fromEvent){
+        const ev=store.events.find(x=>x.id===base.fromEvent);
+        if(ev){ nuevo.fromEvent=ev.id; ev.memId=nuevo.id; }
+      }
+      store.memories.push(nuevo);
+    }
     saveStore(); closeModal(); refreshCurrent(); if(panelDate) renderPanelBody();
     if(globeReady) rebuildMarkers();
-    toast(m?"Recuerdo actualizado":"Recuerdo guardado");
+    toast(m?"Recuerdo actualizado":(base.fromEvent?"Guardado desde tu agenda":"Recuerdo guardado"));
   });
   // fotos existentes
   const prev=document.getElementById("phPrev");
@@ -1597,9 +1910,72 @@ function lightbox(url){
 }
 
 /* ============================================================
-   Globo (three.js) — esfera de coordenadas + marcadores
+   Mapa mundi del globo
+   ------------------------------------------------------------
+   Contornos de continentes y fronteras de Natural Earth (escala
+   1:110m, dominio público), simplificados y codificados como
+   deltas en décimas de grado. Van embebidos aquí para que el
+   globo se dibuje sin depender de internet ni de imágenes.
+   ============================================================ */
+const MAPA_ALPH="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_";
+const MAPA_TIERRA="lm3ah1c3Z11BE55Gs13e1HJ9V11H73H0f1C3AJ2N19648N3A9B7WX70P9P2I9CFA52755Z14f2Fx1R77REp1F98H9R45DNJ27M31RJ17F87X1B7LT35LRH7EJg2ASIC08W16c2i1a1GGUN1BHp1LFQp17n1VGDf250ET4P9x12X25j4r2W11ABK3CAM1SL2HFJ1N7VTR7DX2v1RBB0BARD177277550DLDL71BKBGN6B0N79H3F7H11A4G9KG4DG94731494AC2IJ6R5F7J5AA38GCBAd1JBBJ199CBG309G3MEI7E02BR39BH99DK98JQX10FB34BC57VB1l1d2t1X1L1B976B7R9J37L905E68R6Z1JFH3DY1l1IBCF8b11X1d1Pd1Z17C6EFCF2HW1H8H04GH01LFj10FE0CZ1A9C3SN8B2f1856ND1f1W11ABC1I7A2E3A763AJM3B3AAW11G6E7C2M7A9o17GZ1NN66Q3IFO46B4DGBU7CH0275B9411D417b130F99RDNNX1P07b1D5F6f17H0X1B17F65H57B75HIHm1FS9c1HSDW23i1RBD2PO8856LIF45GDEX35n2C7Q92Z1BN6JGJ6Ri191D657B2Gj1SJ1FEL1E6A62653N8BG4S1m1k1213B2F8DC5Q5EH8303Pb192351P90B55DB0750795B2Z1B3Fp1HHDF097Z15BBT15C2CDS421UTc15GDE72DK0QBMJCBQZ1o1906SDX153FGDU118LSp1W1h1310DSL6J332J8NIBIf1c1Rg1f107B5G7CHA0e18a1CI0a1C1RTh2Z1p1LPb2p1Td1D75751DX1779N2BC53X1GV63492Z249DRBBf1Hp1h11DAF4F403R4317v1V27417f159HBNX1b1X1D7V913B293L4J1x1H76529801342C7E640Eb1-1DG7EFW21a1HOFc1FI3S4IEk1MU2QFU6C9Y19C247Mn1w1BKEg134Ac17C947C06Z1BF2HQDEl13j2RH6X14N3X1D92J8l1e1JA9A5MRQ3EHC709E3K287G9684EO1C6A4I5U2AFI2IEG066EIG6M8EC6EKA8I2g1a13QASCCa1IKY1E0C9K2S3KAM4W1EY26A3K8g13MAE309G8239909631HB929C04983O5O1Q7AHk1BM9KE5G68GAC2S367Y1565Q0m1DOCI2E36948W15GA8QKa11G485A88B1H4DBT1FAL237D3JCL0BKDAAGBAMIU28Ec11OCO6Y10-1Lg12OA2A3C_2q1E4GG98S806X15B5J1F50BA5K237L3P9B448J6MC54V408J1LP0593523NB75D8JI533N1NF5CN2N3EB91B09A336BA973KF09H469B18HD0F8BUHK3CB8184KBCv1OFE429808B257560842F2F50F69I9AFMFG06553W1BKD37BAF27BE719919F714I44DKZ1OD2F8VO5KPAl1Pb16T51NHDP3LX18BB73DD3DDj10JF92BIJ47594912S92362E884K3M0E78SEg25m10AC4e1Z1W1T81EQ4Y155OI9k1G6Gi1EIUS8G044G043EA5K7A0K8CI2OA193525A13752FD6HK307W1AW1Dc2MK325K04AS63W1ACI8GFG06S51D61Cq18g11MAJAZ11Z2BBCJ64K7I8CICy1Q18RAX15JD4Bd2X1DREDK9HLL57X19HN2BFN05IVq1BCd1NP3RA7M5k1ICs1Ic1Ks2Y2u2e1i1AW11UGc10a14-1DP5MBK6Y1Bs13i2NG70DL9V5v2GD3W1D2Tg1928BAE6m1BG6BEk1KI1K5AEFCACDCu17A9N10BE5W144Cm3SG1JBO1E6c12U8MBOCLCC8w17a3REAJA16N288BG06a1IEIE4s134BJFE56D3RMB9Db1RM186M66AIABA8EL23AGKPGa1E3EA2AB7JM19EY18g10a1BHI1Ka16w20FCOCM0e1Aq1464s12G3i1Ac104AK8m18Y15R5k1149K4w10i19G739v2Ls17I4ADA6W14W2349q212Eg21W1BABB7OFW17KKW17Y16c17E6Y11FIS8q5BIBq1Fm24e11G71FO5S4e21c12a1HO6FEA8-15g12w19ZW77;sUwPADA163F17N536NI3E9U3U62e1F66ED04IK5G8DC5AF31F7I6838N67IB606K10EI4G14I3EJ1F4f1B9BH3JJIH1DW1X1|nu1kh10JQGOD5DKDKEEI2Mw13Q929FBE919b1DR1L6TZ1NDR1F71BL3PFJL7F1NU1IX1S4c17Y1Hk1Ds131F6JELUJG6AM9UDCW18MECE1EDINEOM9I5UE6s17I4g1H67a100H6NI3EBUCKMC8W2X27Di1LW15E58FE3852NRDX15NHX11h14n11FDP7p1j1G4W1Qg1GU2I9HBCb1Q9Y14KM0DE7NB_1JNFD21Ia1Gr1325z1LBD1D6980166315v17F5U463R5D00455613DDF16968D07FN4E983G174BD2E50H616PDFJ5DB909715LDJL3D4DGT098L0L5B51921876Ne14E3AFG74J9PGt11718HJ3D0DCH1D4B1H3HFJ7FH2N45BV3b1EZ1ED4B89M389m1COCAY1a1AS06309B93D417N94435Z19BG344K1I4K0W1D6535275D0N113N8DON03A063UA66M3MDC1EE824OCAC024G1W1OE55B91670B998F806G760GO818886DE1E905e10A7G1C604m12F569G0G92FA0MBCD0980KFO324G0K3M7MF2780Gj1A32DFF65a110JGCw1JA93BO6c19U0UFQLE5I087AZ17X1b1d1Rd1515D2b17h1573PJP1JH93BL0T7F7L5LFHJ1D2B7TD9LZ1VN7JLNLBF491HAD1BC19QH3DE719HPT9d13L24B3F49B5L3H8752JE5A86BH5FB7TH0FB5DKDK37HNBBNH7776LCBP2PB3HV6j1O7E6C9C1Y18KMGT6IG6Y1O7Ag1D65PB4CY2AC7g182a1-25U6G1OCQGy31W13UJA18b1Kp1a17G26b2-3TM889K6EGCAE3A79BA441I64CQ18OC16821A66A2GM764C3I443IDG3C44HE9135D9ABH53C135238L403D63628JA7A2533B6142E3244d1a12461365215B2f1EB0JCNMPCb19p2ULEV878LC9C3A62164606DSl1m1H8142CLG3EB0JMJa128F851B6174NSR47204BOLIb109A0GH03B75Cb1Q1QNG13HABCA0880ADEB6Ne1BSBC9216f1C1CJKFS04NO3G9A4G0I5G8I4a13SBQ24U7AH669W1t1SZ18BI4CPA3GNE0ATE3IPGBIn12N6f1Kr1CR1z1IL34Df2F3AAKM656PBDBRDE9HFf1D57T959N7D0t1HX1514-1QO2A8m1O2ECCN554B7BA557AJ7B01C46B8P3TE1CD8UW1U0G8G0E63894E8X1355D6T3R678PCe2IG019g10FCN8X1IR8CAa10OA6AK8w1CI1UCU5G784Y1113W13K2W39Q4k4Pg1EU1-1EE7E46AE1W1HSE2FO486O1k2Fm11Q9R9a13e26KBMAJ8C8g12a1FM2Y19-143CI4W170HCGG0AKj1K2MOEQ1K9SLH9c13|lm3zq1ICa17S8U7U8w14y1Do5Fw16s23m15i3C48l46F8r144AEE3Aj2I-22U5a2CG878r1Ap36t1M5MS7Y24G7W12g2GU2087866Q4C5s18s12g2EU1S2S3s14u13o30i1AQ3k1AW1JK6O7o17s16s27A8NEN2B8BMy25K587S0k28K3Q2IEG7M3Q2G7g27OGK7S2Y1BQ2g1Ak28I4C66A38NU0828GG465I88s1Q88OCK0a2OG2C377R9F4F1R9951707A5V5Z1L37IDW19ST672HEN19NDP3LDh3HF7Z4167q19C5L5X12R51FO547O7i11a3HY37e2DUFy2Ii2Co10w27C8S6q12W6KLE06r33582GA4-18Y2KW4Ca3Ka1C68L488E8-1EQIE4O0A7O008A8M167O1o16M0A7M6i3GSCG3K2QFO488K4Q087G8a22i13MBw24Y3GG6MIK385I3K0SBM668e1Ag16m1EI1W1CI0I428I6s18c13G329SBO1UBK0Y1Cu19e10GL0319Z1B27O037JFG5O1M4IGOCGGg28GGE8g2Mm22E4AEGFI1w20W15w16K1-1W1S7e1Hc11g16UCc14e1FM0c19O1M2SCI2e13a12a13e18m246IC547EFI3m34m11E537C5i19g29M0E6o1Fm13A7c1Bo33W2BE517Z1VP1B7P3b1LBD1HOLc1189d37H939HDQ7A7g1De3HA9w13I7u14k15z_63|uv2p86DE6GF174H29616H196Dm1R13CD8J8489444Le1Z14F0NAF9t1DX1D7Rr15X1B7L0H7LFRC2A93HDx1GBC7Q98J26A3E9DH3CC2C8A1EFHB57FF80CLM44x1MZ11l1DJ2b1F9HT1H4R3B950JBR2VG0CE60Y19K3M7K783GDOA77IGD0AFS8Q1C8E2D8Eg1ME0c1EW16QU2IEI8HA47A6AA32EGIA4068104K6QLO13CAG84168CC6A1I40AF6C4ODG362C5O6A9DH5027DJ25u1Z1G545I5E6Gm13Q6K168S86692B4127692J|zGcq1-3Fb17t51A3c22-15c16G7L9q4Ey13C7x2J_11k11d1P0NOBT1X15c194HL0QHh11O775t13QD07d1895S3QB6FX13d1I6BNBo21h3Vn27J7RJh1DZ29HD0D9BVF8FJZ1R1TId10HADKX1O9E3IRI8ED8KOU6884Gp1BN61E8Ay13p1IJ1F6MIp1g1P808r1Cl40v1Iy28p24j1828s4K88r16I8a2EU27Ai38-10M5q1As3Dl1A28a2Cc20Q6c22W51|lm3hAqW73D318G4lW783B|Zs1uj1GDIGq1AY1L3Be16K8e2J29c16KDm17I7IHZ19k1BW15UHU05DX1NN8VKP11Bu1PCJ5Dh2Ko1R27r18f1CNA66v1K05v13H8EEk24568AOK3878TAf16E4LEH0F895Z13p4EF8K8R05KGIK8q16FB|vg1-p1W33a1503p3Hi10l2HX1Fr17x11S1D3G9n1B97R543Y1003r1Bp16v13Z241Aa149EE2q19PEX14G8a1466R87Cc23W18p30Z18d1E36y28U8O1M5GC-14u60|wp2N6VMBGMMCI0W1DM3e2POJ4BW1B69H14DIBCLC007E353M715D136b16POBGPARB2FF5V4HGJ435P08GE65M9Gb1IF0TK59713GFAM6E016T07CH47AS4A6W1727|sf2a1MHN15D0HHD1J7T16L77CD296N77AT21Q969G1I2ICEE5G44GW18W1a1W1OAG80A927UB17D049D7BHEH19|hd2sj197k16Q9OAI7GHA8DKI2K1M7IX1c2J17V1C755d28x17r25BAP6H1NGY38b14d2198k18V0X16UMs1CK3|gVl82N6719355C354F17531Hj1f4X1DRC3A1I7U2GA208AE2E9M0I8Oc18SO6A1881AE2C6AIV|lm3si1WX7DL036bW78|aY2r3L0FIPGNSPg1FIDW1HE9GZ1Y11Ai15-1z1M0GDCFE97FK7ANE1AD3N1V|x1qa1LJg123FHHK1KPE1IVO31BB589H9P0X1594B9H2D5B4UKI4V458M6BA4EU14CDCN4568856B90KBA8KGGe10|au2cN7F499DP7Z11RLD60GZ13L9N0KFDVB9984IB67EK6ACKCECe16M3Ka1E9e1SEO3O8CM4AR0FHJ0L|-Z1ci1h2258Z161AK41Ce1GH4m1G5Am3OY22Y18e12E7D5Z4Hz1Jz1b14Hc1F|X9of13DMDPDh2Hn2AK8h1Aa1406f14CEW12UDUCQ5W1AY10|fh2qi1p1998j1Ce1a1JCa22k23g1Df2JPD07|dStm1Q98B4H_1Bl27l10P848g16I6k1W1e14U3|hs1wn1O7R5Z1DZ11f12LA26G6b10L6BASEK274k12QBY27GB|kBwn1W2Dn179FH39FN0f1CI6T6d1IFGu16A5S086U2Q7|bx1cm1M5e10I557a19u11W14g20K767D3R5P4X33r289MJ8f12L888e11|ai3nP47G84709TV89F0F5HX1PDH0B6L236AGQKi1MUU2AEA47|XZ1sVDHE6C355I586K75DE4AN9FL24G34NHB0EAJ4x1016C874GCKW1ECG6A0DH|ek2SFJD3J4n133DIHC8a1809947BH7KP35IN0BB576AGJ73628DC2KD52p1B3766I3K705E8EGs1IEG5O1O0KE23|pZ2ql187c1449B9Z21n19T036g1Av23R4SKI6u17a1BY10RII8K189|k-1gn1f11t14X18FEP4q1Eg16e1Bk1H5H|aj3pMEJ2E854FG5C1C8A19TF25529JRF798AG5CL828E62S7INQ9E80C9E56H|vg1hi1479Fj15P0A8j15F608a1AM06A2OAAI2C7OX1|hg1pX1QDS379J09657F5L2Z18PCJAROe2PAA6EK8E1GN|yZ2d4c1168a178DU3OBL7LAd10t1E73Z183AH0EKO1O727|uv2sVMX1T6BRIL0DFCBD3G0g14E2SBI2SIA78A4CX11H8L|vn1eE87K2a1PI315G0E713D3t10EA76B0763CB0N8P47484J2D97035H0OIU8Y11I5|-v2qRE3E84LR5HJVE9LL03KAEM2Ci1MLG5|wh2oBC56625176D3FB73F4FK0Q91B6319FA7C37DCH396286456179C3S872W16IC0|d4sW1Z1BR2GM9Kg1OI2KB9D4DFH|t-1ak1O3a1465J9W173HX17H2D6n1G06g11LEM8|sw2el1FFf20V3d1EACQ4s10e29|Wl2e52N5H7K796F57NC5E6AB85792DB368GOE69G64AE01GG94H|yFeo1e15TBv11v1434R2L8-16S3K6o15|dr1Yf149A4w1H09G2E7H5T6B8l1J7AP1GAAY1E0|yw2lPK5Q6C12N751F56DDH2BG1EBG0AE1|dw1mj1LFL2BG0AAAK4m23THN3|hj1kCI324G0G545C015A0A77794F09334517D5404D4L073B628Y15869808B246C0|nz1-l1G70B9DV1L40AV01EM0U6S022|pe2mm11DF7t2BR4i2Sw12|uo1y3H37G3S8W1E9KZ13J75|sX2-m1n37c1QG2Y2B57|db1_n1BJr22N6B6u21QGK7|bj2gU91X1858F636L45A06q19IFK78B|lZ3rn1b11P6PEC8c13Y1B69|n-1-m187_18j12K6N418-29E9|rl1sj105_11RC2882k11a1B|xz1zi1M3M2C9x20J498C4s13|W_2j39133L990RC26S16A29C0GE1CC2430B5B|tx1ch1D5P6F1R8W1EW17KB|uh2eE9F9G1GCIGGA5Fh1|-a2sBF9F61IA8Y1647775B|s9yN5F2539r1K4AM1a14|u5uPCD1P9075760O3CA1A6|uj2f6F514AIK824c1861h1JDD|-Vgo1h1311N3L4C8j10c2445U8U373|kFsm1h19Z16E4B8g1487S3|na1zVG757R578H99AOAG3E8|xx1wm1T5F69808a11O735|km2M1F921D89517C5Q4G682BC127|aq2gL45BB76935BB60AACC38AE5|lw1yk1B7p16AAS4QB|c-2-k1L7V2b1866s27|ke3xD73NEPQ36A0A7g1X1|jl1-f1L03A8AI4G51BD5|kk2q76NF66H950E523CC108BGI165|p_2sZ1J7963AUAC1A5H9|xa2om1b15R6G8S2S355|mj2k6JPBE8C2CC03BGI1H|zo2uX1K27LIF70TO1GA3|on2z16FFAf104CQ0M5|uv2uj1f24I8Q2S725|th2zj1Q3O4TBR2J648O3|wi2X51BT3R208G4C5W18|-7uY1BFLC18U669|-h1XVV14OE5I33B|lm3si1K2S5L7P10E|s_2v2557KX1M44QDGF29|Yg2w5PHa1e1AK4FNP|sf2X585C247l158AA266|fX2yj1HBTEW12G3|W6iQ7F745E46E84F|bp1cd1N9D036G8Q003|qLgMD923J79238k1C|Xm1cB53LA2680I1A345D0|ci2k7C5C007LF1U|ml3vA651BD1921A868164|bX3-B33343C4CE589D7|fh3yd1y19F5N8H13228|vd1YTY119770N8568669|kX3d451789C3G4225ON15|wEgMA5W1013C215T104N448|kh2h671PEI4IB13|pc1sUZ16HAW13M703|_e1iB33R10A22G0E5|-h2c83HJQI165|jm1yE513C764C608H09|ld3kb1B1P8K4G127|pw1km1l1234e10E311|na2an1t1304K6a15|Xc1g6L06608C2400F|ml2b255D438K247|Yb3_533DI3C60GP|lk2zj1W17X28E6K5|cq2x39D1G8E4509|nn1yc17B7256A8C3|ke3f94F90161GA5|oa3b6J25428E3A9|-Z3b503F8HE4285MD|pm1qGL318O003|gb3n665D07CG5|Zm1qG3D322A9AG7";
+const MAPA_BORDES="gl3zAC11BN06G81;lm3XA09cW7718SA_W70;cLJi2f12BSJ;mOz29N2BC53X1MZ1;cPj6t1Pv12;qLb7Hg1H4;mKt5f1I;cJb5La15e1;gIv2UM5K;WJLc22;j5aH0TX202n1J10d1j2055;pAiDi12Ii1SMMg1q142C;ti2qUt1SZ18BI4CPA3GNE0A;nn2eY1AA0CX1EX1a1f1Sd1HTMd160y5;Zu2oh1w2Fg1EU1-1EE7KEk1JSE2Fu18-3HQ9R9a13e26KBMAJ8C8g12a1Fu17-143CI4W170HCGG0AKj1K2MOEk1BSLH9c130JQGOD5DKDY1W12Mw13Q929FBE919b1Dn14TZ1NDh191BL3j1b19d1U1IX1S4s3d1s134Z1ELUJG6AM9UDCW18Y1SFW1NEOMFm1s22m1Pa106f1W1FUCW1UW2X27Di1Lk1B8FM92Nr2b1_30f1Lp1j1G4W1Qg1GU2I9HBCb1Q9Y14KM0DE7l3l1D21Ia1Gr13;zf1cSDC0SR6Tb1F9Z20b1Rb10916Bh2N78KU9Y1j1W1b2S_13r1C9E7007dH0;lq1Yd1G8Q0NDH6;xn1mj1LA2882k11a1Hb20;bo1wc186C37BBA;lw1yk1B7p16c1EQB;pw1km1p16q15;ly1en1O735T5F69Ga11;Xt1mk1r289MJ8_1A88c37I557a19Y52K767D3t45;nb2ym1S355b15R6i1A;hb2en1Q3t13U8;tY1YW1NTE6C355k175DE4AN9FL24G34NHB0EAJ4x1016C874a1i1UIA035;jq1se1k1B09U5H5T6B8l1J7AP1GAAY1e1B;dn1ej1K8e2J29c16KDm17a1PZ19k2HUHU05DX1Nt1SP11Bu1PCJ5Dh2Kq1Z1_2KNA66v1K05v13H8EEk24568AOKBGd2GE4t1Mj19p4EF8K8R05KGIK8q16FBGDIGq1AY1L3Be16;Xx1gk1m23h2b1L2BQUE;vi2ol1i2Sw121DF7t2BR4;zo2uX1K27LIFb1O1GA3;zX2on1-29MHj3AK6N418;bj2gUh16PKL45Gq19k1Z1;zh2mk1k23g1Df2JPD07p19t1Ke1a1JCa22;hZ2il1c1449B9r3BT036g1Ar30k1Q-3JRII8K1GH;nY2sj1M7IX1c2J17V1C755d28n4DBAh14NGY38j3298k18X26UMs1CK397k16Q9OAI7GHA8DKc10;t-1kj1LEM8y1065J9W173HX17n2O06g11;pY2Wk1g13HBTE62;nz1-l1G79PV1L40AV01Eo28;_x1io1Y1874k12QBY27e1J_1Jj20LA26G6b10X1GE8;dv1cp1w3Gk17GC-14Y42w6B03p3Hi10l2HX1Fn39S1D3G9t2Pc17r1Bn561Aa149EY27PEX14w1IR87Cc23W18p30Z18h1K;_k1ag1Z153A8AI4G51B;by1kh1E7D5b2CW1Ec1B;fe1cVW13MBr1G;_d1iT69Y11H7N85686;zf1cS25z1L9B3F6980166315f2Da10f113LDFBC8LFN4E983G2JD2E5Cj1DFr1Ph1f10ROz15X1F09ENe14EJQR5PG_134Jh2CT5l1X10b1;ry1cGb1Ad1y1T8BFF6p1o1X1009t10f2Sl13;bf2gKRUf1Ch2o34Y15GCs1Fs1W13AH669W1;ZX3oCCBHB7G4CA3;Xe3ub1G127B1P8K4;t_2ea1M7b1H963AUA;nn2eY1TE3IPGBIn12X2Qn2Az1IL34Df2F3AAKM656Z2b1E9HFf1Df1Rz2PZ11-1QO2c1KKCEQf19BA557AV72IB8P3TE1CD88CMKU0k1EDCE8d19h12R6X1Ke2IG019g10f2c1R8CAa10o1Sg3Mk1Dg12U7Y6D;fh3yd1y19F5f161A;qs1uUFDF01J99d16DZ1n1BIX1D529;co1mQNAb20R8B31BX16F9;ii1kQr1V58P23G902KNEv13HIp1Op1B2f2;WZ1wP90RKV9;wW1aQ0KN6JUK10EY120W1Z12f1B;sUWT942ABCF0FEMg1KB2Eg1MU0a2LM8W12OB66S06AVEI836K6DE86i28k2Ka136LK6Q719c2K75QFi1n1CAQBU6g1RQ2CB;ii1kQ61HDs1BPFF2;ii1aP964AR5FNF259G34DBL;of1iN0Cj1IZ1O9KR2741GRCX1J49L0;au2p1e2POJ4BW1B69H14DUX1C007UFF7f1Cb1e1PARB2FF5V4;au2r50Y4;i_2f2AF557KX1M44Y1N;o-2p3V9RC26S16A29C0GE1CC24FJH;uW3f3ON15D67O;au2r5HGn118GE6Fc1p2c1DB3GFAa1616T0X1Qc1AW178d1MBGMMCe2H;ck2x5DDH1AIK8;yp2f46U4F9D;sf2o2BHEH19MHN15VHD9n116L77CN8N77AT21QJM1I2ICE;oa2e1GNQ2MCI5G4Qw1e13;ym2t1M56FFAf104CQ0;gl2h2HCK24755;-l2i12BC1271F921D8951Dc1AO;wi2IO0KE23FJp233DIHC8a180994PJKP35IN0BB576AGJ73628DC2KD52p1B3762c1705EKy1MMe17;ch2j6PEI4IB95;wh2f5W181BT3R208G4C5;-f2d5C247l15OI85;wZ2_327c1168a178Ds1FL7X5S3AH0EKm19;eX2LANE1AD5t1L0X2-1f1y1DW1_1W21Ai15-1z1M0GDQP7FK7;xg1xW1GNs1H79T6;xf1fY1V00k1;_Z1xIFf2;la1bL19QH3DE719HPT9z114b1B5L3H8752JE5A86BX1H7TH0FB5De1H7HNBBNPF6LCB72;xg1rW1X267QJ61MMMCW2A4BC68785MA43QAc1C65c1EE0GCKDu1CM4a1SW1584e1MA4Q;zf1bEGIQ5CD8GQ3;bd1xDc1X1y1P47JTw15IG4I;ZY1XGA4AB0Fl2X2;xf1fY1LDv1Af2k1e2PGOY16;lh1_AOZ17JKn1E4;xg1rW1h1B3HV6j1ODe28KMGT6IG6Y1O7Ag1D65PB4CY2AC7g182a1-21c2CQGy35-1;cJb5X11BF0p1IB642LF2X1W1R37AT8;-Ev6X139i2N02890D57FT1Ni1l23;a8_2M6A9SU8a1OQIk2;oBc20EKGw1J8EW18y12;aHe3CFY14ML;eJc20N81PV5b1;WQX1BG0g2IM;cQk2a1MQ0u1y1;yTW5MU0c1;oUa7i1C1RTh2v1j2b2p1Td1;cLJ0MMa1Jm1;YMk3A38HE0OFU3OIM7;WQX1PHLf1;iFa5LG2MDK;gE-6BU70M-1I11m2;yEeC08O00e1;qFuDk70;YNuDCZ2IB;WOeBTJ9p1;uMW99Z1Vd15b1;eLk55W1980U90B36HJPB1FCJHh12JID1BRB5E7;gE-6N9DLh1927HDr19;o9q45SJE4AQ0Jw1;Y9Y828B29KAQOIEi2FI3W1;g9gEKA-4h2;vi1eBh10B628g109GB246U3;vi1gCY11Y1J77d14DF58;qw1qo1g16s2T5HX32X18FEP4q1E;eW2on1q1B57n37c1QU2;us2ol1-39FFf33d1EACQ4;qy2Yl1o13L7V2b1866a13;kt2yj1i1AUDf24;WSio1c42j2DL4C8j10;cE-X1x12;gDmY1U51B;kX1ak1m1G5Am3Oi4CE7n4Nz1Jz1b14Hc1Fh2258Z161AK41Ce1GH4;gv2oX16b1Ut1T6BRIL0DFCBD2a3BI2SIA78A44D;qn2mQ0AA01g1I6O3c1a2n1DT07INEX18Z1y1j1Ep13F9A509RR09RBN8;-e2cVN1L8TDh17h14VK_13R83G_1ELJ8BHDb3Mt2T;sUWTl1Z1c1t1;iUaQFBRE;WTcQHCj3I;WPaRX2a1E4GG98S8H2;yNkTCEI28Y1z2K7CF24ABAd13;yJoW19KS6b1S2Gr1C;YH-Z1865ICG;mHcb1MAJA;oHwb1a2m1TE8CHEEILMIGVE4E;yHch1o1A;kJmh1K6Y1Bs13y2V0Dr1Fd3CW1D2Tg1928BAE6m1BG6BEk1Kc17AEFCACDCu17A9N10BE5W144Cm3SG1JBO1o2GMBOCLCC8w17a3REALGN288BMW2e1s134BJFKJ3RMBl1f1M1s1W1BA8EL23AGKPGa1E3EA2AB7JM19EY18g10a1BHI1K-36FCOCu3Ic21o2AOIm18Y15R5k1149k24y1H39v2Le23ADg1AW2349q212Eg21W1BABB7u1NKKW17u32FIS8q5Bc2Ru32G71FO5g44a1HO6FEA8Y5DZW77c3Z11BE55Gs13e1Hp1B1H73x1C3Ah109648N3A9B7WX70P9P2e1V3DZ14f2FZ2Z1REp1F98H9R4TX127M31RJ17F87X1B7LT35LRHRu2ASIC08W16g3y1GUN1BHp1LFQp17n1VGDf250ET4P9z33j4r2W11ABK3CAM1SL2HFJ9t1d3Z3RBNATL;lm3si1m13l19gW7036bW78;yLoSU337l1DB448J6IE;hn1uGO3L318;pm1yGG73DBM;xm1uF608RHG4C;dc1hW1OAG3E8G7X1D78H99A;k9wn186U2w2Ln179FH39FN0f1CI6b2OFGu16A5S0;yHch18EP8T79DJ9j14NCB5;yCch1B01Db145BH0_1_16757J2DJ2PC95NPN;y6wa1BCd1NR3PADa2k3o1s2Y2u2e1i28UGg24-1DP5MB;aHYo1TBv11v14r1Ek38w2B;kFsm1h19Z16E4B8g14a1B;dTqp1a5Ic70-3Fb17j55a43c16G7L9q4Ey13C7x2J_11k11d1P0NOB_17c194HL0QHh11O775t13QD07d1895s1F6FX13d1I6BNBo21h3Vn27l1Rl3NHD9PVF8FJZ1R1TId10X2s1DW1RI8ED8KOU6COp1BN66Oy13p1IZ14MIp1g1P808r1Cl40v1Iy28X4C28s4K88r16q3O7Ai38q25q1As3Dl1A28;Yh1hUY1D57V14O;ak2n5IAS0h1J;cAxHAACDM3SA0g2;kClFIL2HE2Y1SI7U44GC2CKk1U;mJzDEf11R;yJZGF25JCBGC;mKrGBf1l2l2l1L_10n1HX1E9U640Eb1-1;aIZI9875LJGD62OO56;ry1cGFb2EZ1QZ1UDy1GC8AY1W2A6DFN3P94;rt1aBb100990KNN09V;pv1Y9X1SF6b19f4q1TKDM622IDSl1m1H80Gv1q1Hi1F8H42V-1b2Il1A0GHBB5Cb1Q1Qt1Y1A08IPKVw1;_Z1xIC2W2b1CD794B;hX1ZLTNv1ABC;ZY1XG6Y1L07W1f165c1;ha1pCEe1FI2Kd105o1h2QLI2a1P1X1LN0;jh1x6J00UFBb1C4AJUII4Qg1KI0;rh1r2AW2BW1E228B20Cc1086CD;vf1QCBG2QEGEH61Q76Y15g1E6E;zb1e3E317CB9N8JM9OCG0;fZ1c1A10EU3;XY1k1W13Og1;fW1q280Gj1A32DFF65a110JGCw1JA93BO6a29u1b1W15Ih17X1d2n2B_2Vl2H93Bp17x1THJ7t1v2b3;ha1pCHGr13Hp1;lh1_ACM5UCm1FW1;_h1jBl3g25Mb2-3TM889KMQ;bo1Z21JG189Se1O8MK2S;Zl13Y1LCJk10G7DJGB;Zl13HCL0TK;fn1SAOA2GM764Y1BS;rm1m4EE3G;hm1k5Y1E4OCAU2W1OE535;ni1i7D3HL7PA18X187c10EHg109VAN99IT;rm1m49I44HEPD8F73913C7138P2;np1W66BG3m1GW1H;xp1a5d1c119B60O;nr1-6e13;nr1-6d1a182;ns1a8C61AK0IKa14;zp1i9Fd249;xs1i81AB1HC;Zt1w9W26c1J;xs1i8D3VA;rt1aB1b160;fu1o8f1G;bt1oB1d19B;ni1i7B76J998F806G7MO818886DE1EFe10Q9CAm12F569G0G92FI3;hb1e5FB6FH53DEF;hb1e5s1l1;rZ1u3Hb1Uh1;rZ1u3-13;tX1q39HAP9P;tX1q3M7ON;y3-Uc19BR;s4uTF1DF07A267;e4uS6D756DC337;q4gRHBb16T51B;y1oQr12h1G;b1aRAC4e1Z1W1T81Ey115OI9k1G6GI4;o1-Va1NS7;k5qQE84F7F741K;bo1Z2AE3A79BA2M64AY1OC;jf1oBE533R12CG0;lm1oBSBV096E6;jp1mEY11QDK2a1PI315U7F7t10EAJ6BIz1C7484J2PFH0OIU8;iIvDRC5KTOHW1;wFXBY13c1c1SA;-Ir907I0W1F1d2Td1;kClF0y1K00c2k1887UC;cAxHLUHa3n1m21G;g7vAa16C7q22E9m11a18;mEzAG4M7;jAm8HMMS;fAYAc1AOBOR;p7a9Eh1;b7u7h14;n8y7x13;lAe8y16P8V5;p7a9AGK5O8m204ENm5W10;X3qFW5f32BM2;s2WC0j1DP_1D;8g9T2d1TH0NZ13P;h3m6p13;_4i6Lg1L9P606;j5aHi2l1;fAYA4m2FI;c1w33y1HS2A;e2g72VJV0h1;y8w7LMFBP8d1BNAJ3RGP79Z1;i1k70EN6Be1;s2WCS8-3k2;m7sEW19A9G8;y8w78739FFb1h2B7J8HBDV;g5W3p19Ve1V0;o9q4FN0TSX12D;WAk11Bt1C;W6k14GPY1;Ms39K2SDs1;Ms3z1NH6;v1a35QCc13S;t1W61Sw10;h3m6MFG6E5;v1a3X14z1F;v4u22QJG4O;d5w4CI9O68;d5w4F7BO71;h6e551BY1P3FH;d8o5b1g1;j9y6SG0G;j9y6JABI;v4u2P8l1e1;Z7e4OW1;Z7e4TK5M;oBc2R4LR;iFa5u1x1;-6l2GC7CK82AA9I16A0S9CAOJ23K;-6l2j1w1Eg1;-5Ka120O;mKt5EP7L4FBPA5;uKt8x1F2D;mEzAPS0W2g101e1;qLb75F6PE58D2PFHBC2W1PC;cPj6At25DJPf1Hp1h11DIV0VBFl1N4J;g7vAAw1U-1Fg16CHo1;cMeK523B4157A2;aMsJ9d1;kLmJGc1;mMqLC7FH;-Uv7I_1355C352Nr1_4X1DRCDi12UA2Ca19e18Oc18SO4I81Ia169;-5-I7a1TO1GIS0S;e5YNMAE309G87D4VB929OD;c7sK1DTJ2H93;j5gH0Mc2OUI2Ek1E48Lo1;h1WMg2Si22K8g13;-5-I8P3n177KX1A4OL;gMkKM7e1M;mOaKh1DKJ99F1BDL4;eW1aFm11g1e1;eZ1oF902F935N;mY1cE_167O;uVmF1ECC653N;eUyHZ1A;eOyKi1K6e1KG;kQeNo10;WSeNCNE52BFLEJO9AF1DIL;aTcIb12t1e1r1K;eZ1oFKJQ5MPPb1D31PL55DB0HJX13;cX1kALk1;mW1yBy1KEe19E;me3z9CB515E;ee3v93MA54F90;aW2q75OEGi12;uX2-8G7AEI7;aZ2y82b1X1D8Bb19;cX2o6F2HW1;aW2q7Z184GH0HZ20FE0CZ1W1N;w_1y3H91AJ6;o-1Y4Vc13B6g1;qz1c6Ke19c1HQEMTi1IQa1E;o-1uCAHE03d1KCI146G1EF2JGF7P;e_1iDC31MA4;y_1YEKX1O08HHBOBi1t12X1;qz1c61W2Pi2Z1NN66Q3IFO46PK;-v1uDA62a1G3AGAc1QEE34O;wy1sHC0GF0VJF1NM44JC35FO9E427;y_1YEk16GCSB1B87K3;mZ2mDPHJVW2h28b11X1l2z17C6EFC;un2iQLB0Dh1L1BKB;em2aOh1H;yk2oNH0B8EQLA;sj2-Oq1c1Q51AU88CCB;em2aOMZ10N79p1D2Q9KG4DG;-e2cVNZ147W10G8Y1L15j10j2b1V6BBAFRFr2FL9p2Mv20JUZ1Gp16588ODGj1I3E;-v1uDBW17B9AOUn161EN87BEBFDC53BAT;qt1wD17b130F99RDv1n107b1D7j3B17F65H5FHHIX1i29c1HSHi3RBD2PO8856LI;qg1wECEi10Fg1D8MMO1q1-10EICFAFUA8s10IG;qm1cMMN1F8909D24Lm1P;so1yIJRW2RW3J0U;mt1YHIBk122E76;gv1iHG2g1SG5EAAD77M1;uv1-CJg1H03JP6;mt1YHOKY19;so1yI84G5c2b1k15;qg1wEF4JUX35;kc1sF8MSC9C1IH8HM;Yc1qIW19i2C2GACm1C0CKI7CK0EO5IA8a2C;Wl1cNE76FW17;ig1cNS268C0EIA32N87UGY11;Yc1qIII1EF27UAA94Ec1;ec1eMa134AQ84GKCG5;ii1aP75J41Bq21;Yk1qO4HK12J;co1mQf1NP17DX10J919;ec1eM1Ih2UZ10VF;sX1eN0a1F66ED04IK5G8JMF31F5E;WSeNBG1SE6;YTeOW1G6579I9;oU-N6DW1DU3W1A;kc1sFn2C7Q92Z1BN6d1MRi1N457;oMiMCKu11u1A;WSwOLC1G;aSuPIJ55I70D;yCch1w1N2T67;-Eef1X15JD4Bd2X1DRY1NHLL5Hp1N2BFN0b1c2;yJoW1H15Df3CZ15;sEeW15IC45O;sEsX1e186AG818;yNkTl19F50B;yKuSX1608J1LP;qHkSEII128NSN8H5;qGaUX19h14;aEsU18SI7O;aEsUJ8Z15H6;wB-UPIH3X1I;i9-VHc1645C;w8qX1c2Mg19;aAgTl17;q8YTVCZ13;W6sTY200GEC;m8oUE5K8Y17;cE-TB3LRF3;uBsSN2JA;qAYUI5w1GQ3;qHkS1QTS;mIgSF73N;yHgRRAV9r1238;cEqR08L4RQ;cDWZ1i28W1F;cDWZ1ASI8GFG04G;cFaa1I4g19;cFaa12CJ41Cq18g11;i9-Vt1F6FMB;W6sTL6J3;y3uV3MG62Q;g4kX1O0EA5K;c6iY107K307W1AW1D;yHgRHL6B;gGaQ09z10;WEkQCI984C;kGYM15T1N848q17;gGmPl11EB91LA33GL73KF09H469B18HT8Tu1;aDmPe1A;oMiM5A88T2DBT1FAL2HBJCL0PUAGBAMIU28Ec11m1IY10-1Lg12OA;WQ-PK2K9;mHeQKD33N1NF5C;qCuOFE0W1;yBYSx1657w1h1;mBoQl1KFE5IB2575E;o8kSW10AEG6;m6gT07N137h10;Y2YW1Y14OD;Y2YW1Sa1i18;p5cQE869Q269953R71AT9J;r4cNR32SD8Eg13M;p5cQ0E78SEw35;y1oQ0BHDP3LX18BFLD3DDj10JF92BIJ4;x3sX14DFHZ1BR2GM9Kg1O;t4kY10JS3;qd3bDQL7396h1e1a1J;gb3n665D07CG5;Yb3_5LQ60GP;oa3b6J23COD;uZ3_469X1MSB;cY3h485B27CC7;ok3XPHNF798AG5CL8GE2Sf1w1Y1FKb12E854FS7M69TF25J;Yg3dRSMY1e18FG84709TV89V5HX1PDp1836a1a1SA;gy2lPC12N9L56DDH2Pu1Y17Q6;wk2ZKb1F9Hh21b1LR2VG0CE62MFs1X1a2A77IGDFc16c18E2D8Eg1Mq2KQU2IEI8HA47A6AA32EQSS8QLO13COc1e180AF6C4w1LO6A9JH9X1-2r1E68K8S0q1GY1Sh2E6GFKl2m1RIb1K14Le1Z14d1AFDb2b1r1Jz1X17d1NRC2ARHx1GBC7QTA6A3E9DH3MY11ERN7FF80CLM44x1Md3D;ap1s43JP9Bi18W1Y1j1;ka2iBF61IA8Y1647DJF9;sj2-O_1JMUBAp1VJ199i1TMEW172BR3b1Z1K9Y1r10FB3GH7VB1l1d2t1X1X1B76B7l1D7L900Mb14;ai2eFLl1BW1SY1A53B;s8mSV36Po1f1G06553q1P37RC7BE719JH718MDKp2m1DA5KPATD;e9wNE27Vr1K4Ai10;k5oPA6CD1PH5763a1A1;g5iY17A4Qk1I5FC7PJ69;u7YZ169BFLC18U6;t4kY1I2KB9D;z1iX14CDCTA8856B90KBAOa1e10LJg12LX1K1KPE1IVO31BB589H9b21h1DB4m1OV458M6BA4EU1;X9of13DMDPDh2Hn2AK8h1Aa1406f14CEW12UDUCQ5W1AY10;iUaQKNG5F1Db1;aSuPU17C64;WQ-P1MTG;mh2-79GO73H9A;qi2e66IC03BGI1HJPBE46;Wl2e52N5H7K796F57NC5E6AB8TH368GOE69G64AE01GG94H;Yg2w5PHk1y14FNP;ki2iB4L3FB70Vk192PNM37DCR28C5617DK0K878o1W15;ei2a71AO507LF0K;kk2q76NF66H959SC108BGI165;w_1y3QP2f1EN05D1f1W1No11O;oa2e1E5G44GW18OS;id2w2A9C64M;ce2i3OU80CHUB17D049D7;oHwb1d3DVI4K7I8Ck2c118RA;qAiUc1I;WOeBIf1i2_1;mQw7TW1H8T0BA5FN4;su2mOHJ3l19Dz19RLD60Gn2DKFDVB9984IJKK6i1a1-12Ka1E9e1SEO3O8CM4Ah1;iw2mRE84LR5HJVE9LL03KAEM2Ci1MLU9;uo2-KUIIBBB76935BB60A;cX1kAD53Fp1HHDv2RD05CBe14M;uQcA884IY2567g1Y1w18;eUyH8HSJ1FEL;uQcAb1W2Z1a10QBMJCl1i2908Q;jUtm1e14u1DCTl4Jf2848y1Ck1W1;jf1bo1u21QGK7BJr22Z1C;bk1ni1a128Y1SCe1n19Fd25A8j15F608M8;z_1zi1k31C9x20TC;pi2Xk148g23TBl18;nl2zj1E6q1DX28;fc3Zn1C8c13Y1B69b11p1K;lm3zq1ICa17U8S7U8w14y1Do5Fw16c49i3C48l46b2CIO3Aj2I-22U5q2K78r1Ap36t1M5MS7Y24G7W12e3I7G66Q4C5s5Os93q3GW1JK6g2Fs16s27A8NEN2NUy25SDS0k28k11IEG7m11G7g27OGo2Ho4KI4IGRk1IO1O88s2k1e3QC377t2HBDADV5d1To1NSTMn119d2Vx3PZ4167W2Fp291Fq1Lw9f1UFe5Ui47e1Eq7MLE06r333OA4W4SW4Ca3Ka1C68L4MG-1Ee1Mw17AGq1Be26A7-4Y1a11QFq1GQ087G8a22i13MBw24Y3Gc1O-2Pa2Ow2KI1a2GKEs18c13k1Ps1DK0Y1CW39GP19Z1B27O0NNe17M4w1i1g28UOg2Mm22OIY1Hw35k24-1W1a2Pm24a2Ge1Fq2Ba2Gm35u3C6IUTI3W52MJi19g29a16o1Fm13m1Jo33k2Hb1d1_1Dn1Z11HOLc1189d37d1X1k2Te3HA9i2Bu14m29_W70;kK-Lc1CBB;eL-LJ9DA80;pAiDq1Y3a1Y1I2g1a13QMe1a1IKY1g2B;qFuD0m45GAW1;uFuJQ0m1Dg1EE36948W15A4;wLkIJb1Vi1a1f2W1h13FSL;c7sKg2FAHa2LKE5GMIe1167e1B;YMk3NY1LCKI;mQw7DH29K3;uQw635MRo2N;-Qc7KLW3K;eJc2q16CA;yBYS8059A779;mDiQ4AJC99;nc1u6G20FL06E";
+let _mapaIdx=null;
+function mapaDecode(s){
+  if(!_mapaIdx){ _mapaIdx={}; for(let i=0;i<MAPA_ALPH.length;i++) _mapaIdx[MAPA_ALPH[i]]=i; }
+  const pts=[]; let val=0,shift=0,x=0,y=0,dx=null;
+  for(let i=0;i<s.length;i++){
+    const c=_mapaIdx[s[i]];
+    val|=(c&31)<<shift;
+    if(c>=32){ shift+=5; continue; }
+    const n=(val>>>1)^-(val&1); val=0; shift=0;
+    if(dx===null){ dx=n; } else { x+=dx; y+=n; pts.push([x/10,y/10]); dx=null; }
+  }
+  return pts;
+}
+/* Dibuja la Tierra en un canvas (proyección equirectangular) para
+   usarlo como textura de la esfera. Se regenera al cambiar de tema. */
+function buildEarthTexture(){
+  const W=2048,H=1024;
+  const cv=document.createElement("canvas"); cv.width=W; cv.height=H;
+  const g=cv.getContext("2d");
+  const dark=store.ui.theme==="dark";
+  const OCEAN =dark?"#0d2745":"#15406e",
+        LAND  =dark?"#37704b":"#4f8f5f",
+        COAST =dark?"rgba(190,225,205,.30)":"rgba(238,250,240,.45)",
+        BORDER=dark?"rgba(210,230,240,.15)":"rgba(255,255,255,.22)",
+        GRAT  =dark?"rgba(150,190,230,.08)":"rgba(205,230,255,.12)";
+  g.fillStyle=OCEAN; g.fillRect(0,0,W,H);
+  g.strokeStyle=GRAT; g.lineWidth=1.5;
+  for(let lng=-180;lng<=180;lng+=30){ const x=(lng+180)/360*W; g.beginPath(); g.moveTo(x,0); g.lineTo(x,H); g.stroke(); }
+  for(let lat=-60;lat<=60;lat+=30){ const y=(90-lat)/180*H; g.beginPath(); g.moveTo(0,y); g.lineTo(W,y); g.stroke(); }
+  const px=p=>[(p[0]+180)/360*W,(90-p[1])/180*H];
+  g.lineJoin="round"; g.lineCap="round";
+  g.fillStyle=LAND; g.strokeStyle=COAST; g.lineWidth=2.2;
+  MAPA_TIERRA.split("|").forEach(poly=>{
+    const path=new Path2D();
+    poly.split(";").forEach(r=>{
+      const pts=mapaDecode(r); if(pts.length<3) return;
+      for(let i=0;i<pts.length;i++){ const q=px(pts[i]); i?path.lineTo(q[0],q[1]):path.moveTo(q[0],q[1]); }
+      path.closePath();
+    });
+    g.fill(path,"evenodd"); g.stroke(path);
+  });
+  g.strokeStyle=BORDER; g.lineWidth=1.6;
+  MAPA_BORDES.split(";").forEach(r=>{
+    const pts=mapaDecode(r); if(pts.length<2) return;
+    g.beginPath();
+    for(let i=0;i<pts.length;i++){ const q=px(pts[i]); i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]); }
+    g.stroke();
+  });
+  return cv;
+}
+
+/* ============================================================
+   Globo (three.js) — Tierra con mapa + marcadores
    ============================================================ */
 let scene,camera,renderer,globeGroup,markerGroup,raycaster,globeReady=false,rotSpeed=0.0018;
+let earthTex=null,earthMat=null;
 let dragging=false,lastX=0,lastY=0,velX=0,velY=0;
 const R=1;
 function latLngToVec(lat,lng,r){
@@ -1616,23 +1992,20 @@ function initGlobe(){
   renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(w,h,false);
   globeGroup=new THREE.Group(); scene.add(globeGroup);
 
-  // esfera base
-  const sphere=new THREE.Mesh(new THREE.SphereGeometry(R,48,48),
-    new THREE.MeshPhongMaterial({color:0x16386a,emissive:0x0a1830,shininess:14,transparent:true,opacity:.92}));
+  // esfera con el mapa mundi
+  earthTex=new THREE.CanvasTexture(buildEarthTexture());
+  if(renderer.capabilities&&renderer.capabilities.getMaxAnisotropy) earthTex.anisotropy=renderer.capabilities.getMaxAnisotropy();
+  earthMat=new THREE.MeshPhongMaterial({map:earthTex,shininess:10,specular:0x14304f});
+  const sphere=new THREE.Mesh(new THREE.SphereGeometry(R,64,48),earthMat);
   globeGroup.add(sphere);
-  // graticula
-  const grat=new THREE.LineSegments(
-    new THREE.EdgesGeometry(new THREE.SphereGeometry(R*1.001,24,16)),
-    new THREE.LineBasicMaterial({color:0x5fa8e0,transparent:true,opacity:.22}));
-  globeGroup.add(grat);
   // halo
   const halo=new THREE.Mesh(new THREE.SphereGeometry(R*1.06,48,48),
     new THREE.MeshBasicMaterial({color:0x2a6cc0,transparent:true,opacity:.06,side:THREE.BackSide}));
   globeGroup.add(halo);
 
   markerGroup=new THREE.Group(); globeGroup.add(markerGroup);
-  scene.add(new THREE.AmbientLight(0xffffff,.65));
-  const dir=new THREE.DirectionalLight(0xffffff,.85); dir.position.set(5,3,5); scene.add(dir);
+  scene.add(new THREE.AmbientLight(0xffffff,.92));
+  const dir=new THREE.DirectionalLight(0xffffff,.45); dir.position.set(5,3,5); scene.add(dir);
   raycaster=new THREE.Raycaster();
 
   // interacción
@@ -1651,6 +2024,15 @@ function initGlobe(){
   rebuildMarkers();
   animate();
   window.addEventListener("resize",resizeGlobe);
+}
+/* el mapa se redibuja al cambiar entre tema claro y oscuro */
+function refreshEarthTexture(){
+  if(!globeReady||!earthMat) return;
+  const old=earthTex;
+  earthTex=new THREE.CanvasTexture(buildEarthTexture());
+  if(renderer.capabilities&&renderer.capabilities.getMaxAnisotropy) earthTex.anisotropy=renderer.capabilities.getMaxAnisotropy();
+  earthMat.map=earthTex; earthMat.needsUpdate=true;
+  if(old) old.dispose();
 }
 function resizeGlobe(){
   if(!globeReady)return;
@@ -1819,9 +2201,11 @@ document.querySelectorAll(".subtab").forEach(s=>s.addEventListener("click",()=>{
 document.getElementById("agPrev").addEventListener("click",()=>{ shift(agView,-1); renderAgenda(); });
 document.getElementById("agNext").addEventListener("click",()=>{ shift(agView,1); renderAgenda(); });
 document.getElementById("agToday").addEventListener("click",()=>{ const t=new Date(); agView={y:t.getFullYear(),m:t.getMonth()}; renderAgenda(); });
-document.getElementById("rmPrev").addEventListener("click",()=>{ shift(rmView,-1); renderMemCal(); });
-document.getElementById("rmNext").addEventListener("click",()=>{ shift(rmView,1); renderMemCal(); });
-document.getElementById("rmToday").addEventListener("click",()=>{ const t=new Date(); rmView={y:t.getFullYear(),m:t.getMonth()}; renderMemCal(); });
+document.getElementById("rmPrev").addEventListener("click",()=>{ shift(rmView,-1); rmYear=rmView.y; renderMemCal(); });
+document.getElementById("rmNext").addEventListener("click",()=>{ shift(rmView,1); rmYear=rmView.y; renderMemCal(); });
+document.getElementById("rmToday").addEventListener("click",()=>{ const t=new Date(); rmView={y:t.getFullYear(),m:t.getMonth()}; rmYear=rmView.y; renderMemCal(); });
+document.getElementById("rmYearPrev").addEventListener("click",()=>{ rmYear=(rmYear===null?rmView.y:rmYear)-1; renderMemYear(); });
+document.getElementById("rmYearNext").addEventListener("click",()=>{ rmYear=(rmYear===null?rmView.y:rmYear)+1; renderMemYear(); });
 document.getElementById("rtPrev").addEventListener("click",()=>{ shift(rtView,-1); renderRoutine(); });
 document.getElementById("rtNext").addEventListener("click",()=>{ shift(rtView,1); renderRoutine(); });
 document.getElementById("rtToday").addEventListener("click",()=>{ const t=new Date(); rtView={y:t.getFullYear(),m:t.getMonth()}; renderRoutine(); });
@@ -1834,8 +2218,16 @@ document.getElementById("yearToggle").addEventListener("click",()=>{
   document.getElementById("yearToggle").textContent=show?"Ocultar el año":"Ver el año";
   if(show) renderYear();
 });
+document.getElementById("rmYearToggle").addEventListener("click",()=>{
+  const p=document.getElementById("rmYearPanel");
+  const show=p.style.display==="none";
+  p.style.display=show?"block":"none";
+  document.getElementById("rmYearToggle").textContent=show?"Ocultar el año":"Ver el año";
+  if(show){ rmYear=rmView.y; renderMemYear(); }
+});
 
 document.getElementById("btnHabits").addEventListener("click",openHabitsManager);
+document.getElementById("rtImport").addEventListener("click",importarMesAnterior);
 document.getElementById("btnMetrics").addEventListener("click",openMetricsManager);
 document.getElementById("addGroup").addEventListener("click",()=>openGroupForm(null));
 document.getElementById("addMemory").addEventListener("click",()=>openMemForm(null));
@@ -1858,6 +2250,7 @@ function applyTheme(){ document.documentElement.setAttribute("data-theme",store.
   document.getElementById("themeIcon").innerHTML = store.ui.theme==="dark"
     ? '<path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/>'
     : '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+  if(typeof refreshEarthTexture==="function") refreshEarthTexture();
 }
 document.getElementById("themeBtn").addEventListener("click",()=>{
   store.ui.theme=store.ui.theme==="dark"?"light":"dark"; saveStore(); applyTheme();
@@ -1905,7 +2298,7 @@ document.getElementById("importFile").addEventListener("change",async e=>{
   else{
     try{
       const data=JSON.parse(text);
-      if(data.store){ store=data.store; if(!store.ui) store.ui={theme:"light"}; if(!store.pending) store.pending=[];
+      if(data.store){ store=data.store; normalizarStore(); migrarMesesV2();
         if(data.photos) for(const [id,url] of Object.entries(data.photos)) await putPhoto(id,url);
         saveStore(); applyTheme(); refreshCurrent(); if(globeReady) rebuildMarkers(); closeModal(); toast("Respaldo restaurado");
       } else toast("Archivo no reconocido");
@@ -2043,7 +2436,7 @@ async function driveUpdate(id,payload){
 }
 async function applyCloud(cloud){
   if(!cloud||!cloud.store) return;
-  store=cloud.store; if(!store.ui) store.ui={theme:"light"}; if(!store.journal) store.journal=[]; if(!store.metrics) store.metrics=[]; if(!store.metricLog) store.metricLog={}; if(!store.monthly) store.monthly={}; if(!store.pending) store.pending=[];
+  store=cloud.store; normalizarStore(); migrarMesesV2();
   if(cloud.updatedAt) store.ui.updatedAt=cloud.updatedAt;
   if(cloud.photos) for(const kv of Object.entries(cloud.photos)) await putPhoto(kv[0],kv[1]);
   try{ localStorage.setItem(LS_KEY,JSON.stringify(store)); }catch(e){}
@@ -2107,6 +2500,7 @@ function updateSyncUI(msg){
 
 (async function init(){
   await openDB();
+  migrarMesesV2();
   applyTheme();
   renderQuote();
   renderAgenda();
