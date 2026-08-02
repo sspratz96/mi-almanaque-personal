@@ -1,4 +1,4 @@
-# Mi calendario
+# Mi almanaque
 
 App web personal para organizar tu tiempo en cinco secciones: **Agenda** (lo que se
 viene), **Rutina** (tu tracker mensual de hábitos), **Pendientes** (tus listas por tema,
@@ -152,6 +152,31 @@ entre tus dispositivos. Abre el menú de datos (↧) → **Conectar con Google**
 - El acceso dura ~1 hora: cada vez que abres la app y quieres sincronizar, pulsa **Conectar**
   una vez. Mientras la sesión está activa, los cambios se suben solos.
 - Solo funciona en la app **publicada** (GitHub Pages o abierta localmente), no en vistas previas.
+
+### Qué pasa cuando los dos lados tienen datos distintos
+
+La app **nunca decide sola** cuál versión sobrevive. Al sincronizar puede pasar:
+
+- **Drive vacío** o **este dispositivo sin datos propios** → se copia en la dirección obvia,
+  sin preguntar.
+- **Drive no cambió** desde la última vez que este dispositivo lo vio → se suben los cambios
+  locales tranquilamente.
+- **Drive cambió y aquí también hay cambios sin subir** → aparece una pantalla con el resumen
+  de cada lado (cuántos eventos, recuerdos, entradas de diario…) y tres opciones:
+  **Combinar** (recomendado), **Dejar lo de Drive** o **Dejar lo de este dispositivo**.
+
+Combinar junta eventos, recuerdos, diario, hábitos, métricas y pendientes de ambos lados;
+si algo existe en los dos, se queda la versión más reciente. Lo único que combinar no
+propaga son los **borrados**: si eliminaste algo en un dispositivo y el otro todavía lo
+tenía, puede reaparecer. Es a propósito — es preferible que vuelva algo de más a que
+desaparezca algo que querías.
+
+### La red de seguridad
+
+Antes de reemplazar el archivo de Drive, la app guarda el contenido anterior en
+`mi-calendario-datos-anterior.json`, en tu mismo Drive. Si algo sale mal, ese archivo tiene
+la versión previa. Además Google Drive guarda su propio historial de versiones: clic derecho
+sobre el archivo → **Gestionar versiones**.
 
 Consejo: aunque uses Drive, baja un respaldo `.json` de vez en cuando y guárdalo aparte.
 La regla mental: el navegador es tu día a día, Drive es la sincronización, el `.json` es tu seguro.

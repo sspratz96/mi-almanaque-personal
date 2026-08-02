@@ -3,7 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Mi calendario</title>
+<title>Mi almanaque</title>
+<meta name="description" content="Mi almanaque — agenda, rutina y recuerdos.">
+<meta name="theme-color" content="#1f3864">
+<meta name="apple-mobile-web-app-title" content="Mi almanaque">
+<!-- Icono de la pestaña: emoji de libro abierto -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%96%3C/text%3E%3C/svg%3E">
+<!-- Icono para la pantalla de inicio del telefono: libro dibujado, con los colores de la app -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='38' fill='%231f3864'/%3E%3Cg fill='none' stroke='%23e0a92e' stroke-width='9' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M90 58C78 48 62 45 46 47v72c16-2 32 1 44 11 12-10 28-13 44-11V47c-16-2-32 1-44 11z'/%3E%3Cpath d='M90 58v72'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -537,8 +544,8 @@ textarea{resize:vertical;min-height:64px}
 <div class="topbar">
   <div class="topbar-inner">
     <div class="brand">
-      <div class="brand-mark">C</div>
-      <div class="brand"><h1>Mi calendario</h1><span>agenda · rutina · recuerdos</span></div>
+      <div class="brand-mark">A</div>
+      <div class="brand"><h1>Mi almanaque</h1><span>agenda · rutina · recuerdos</span></div>
     </div>
     <div class="spacer"></div>
     <button class="icon-btn" id="importBtn" title="Importar / exportar datos">
@@ -782,13 +789,21 @@ function loadStore(){
   }catch(e){ memoryOnly=true; }
   return null;
 }
-function saveStore(){
-  if(store.ui) store.ui.updatedAt=Date.now();
-  if(!memoryOnly){
-    try{ localStorage.setItem(LS_KEY,JSON.stringify(store)); }
-    catch(e){ memoryOnly=true; toast("Sin espacio para guardar — revisa tus fotos"); }
-  }
-  scheduleDrivePush();
+/* Guarda en el navegador SIN tocar la marca de tiempo ni avisarle a Drive.
+   Se usa para cosas internas (migraciones, marcadores de sincronización)
+   que no son cambios de contenido y por lo tanto no deben "ganarle" a Drive. */
+function persistir(){
+  if(memoryOnly) return;
+  try{ localStorage.setItem(LS_KEY,JSON.stringify(store)); }
+  catch(e){ memoryOnly=true; toast("Sin espacio para guardar — revisa tus fotos"); }
+}
+/* Guarda un cambio real del usuario. `interno=true` evita mover la fecha
+   de modificación: así abrir la app en un dispositivo viejo ya no lo hace
+   parecer "más nuevo" que Drive. */
+function saveStore(interno){
+  if(store.ui && !interno) store.ui.updatedAt=Date.now();
+  persistir();
+  if(!interno) scheduleDrivePush();
 }
 const uid=()=>Math.random().toString(36).slice(2,10);
 
@@ -1172,7 +1187,7 @@ function migrarMesesV2(){
     if(!md.metrics.length) md.metrics=allM.slice();
   });
   store.ui.monthSetsV2=true;
-  saveStore();
+  saveStore(true);   /* migración interna: no debe contar como cambio del usuario */
 }
 
 /* mes anterior más cercano que tenga algo configurado (busca hasta 24 atrás) */
@@ -2265,8 +2280,10 @@ document.getElementById("importBtn").addEventListener("click",()=>{
       <div class="hint" id="syncStatus" style="margin-bottom:6px">No conectado</div>
       <button class="btn btn-primary" id="syncConnectBtn" style="justify-content:center">Conectar con Google</button>
       <button class="btn" id="syncNowBtn" style="justify-content:center">Sincronizar ahora</button>
+      <button class="btn btn-ghost" id="syncPullBtn" style="justify-content:center">Traer todo desde Drive</button>
+      <button class="btn btn-ghost" id="syncPushBtn" style="justify-content:center">Subir este dispositivo a Drive</button>
       <button class="btn btn-ghost" id="syncDisconnectBtn" style="justify-content:center">Desconectar</button>
-      <div class="hint">Guarda una copia en tu Drive y la mantiene igual entre tus dispositivos. La app solo puede ver su propio archivo, nada más de tu Drive.</div>
+      <div class="hint">Guarda una copia en tu Drive y la mantiene igual entre tus dispositivos. Si los dos lados tienen cosas distintas, la app te pregunta antes de tocar nada. Además deja siempre una copia de la versión anterior en <span class="mono">mi-calendario-datos-anterior.json</span>.</div>
     </div>
     <hr style="border:none;border-top:1px solid var(--line);margin:0">
     <button class="btn btn-primary" id="doExport" style="justify-content:center">Descargar respaldo (.json)</button>
@@ -2280,7 +2297,15 @@ document.getElementById("importBtn").addEventListener("click",()=>{
   updateSyncUI();
   document.getElementById("syncConnectBtn").addEventListener("click",()=>driveConnect(true));
   document.getElementById("syncDisconnectBtn").addEventListener("click",driveDisconnect);
-  document.getElementById("syncNowBtn").addEventListener("click",()=>{ if(!(store.ui&&store.ui.driveConnected)){ toast("Primero contéctate"); return;} driveConnect(false); });
+  document.getElementById("syncNowBtn").addEventListener("click",()=>{ if(!conectado()){ toast("Primero conéctate"); return;} driveSync(false,"auto"); });
+  document.getElementById("syncPullBtn").addEventListener("click",()=>{
+    if(!conectado()){ toast("Primero conéctate"); return;}
+    if(confirm("Se reemplazará lo que hay en este dispositivo con lo que está en Drive. ¿Continuar?")) driveSync(false,"bajar");
+  });
+  document.getElementById("syncPushBtn").addEventListener("click",()=>{
+    if(!conectado()){ toast("Primero conéctate"); return;}
+    if(confirm("Se reemplazará lo que hay en Drive con lo de este dispositivo.\n\nLa versión anterior de Drive queda guardada en mi-calendario-datos-anterior.json. ¿Continuar?")) driveSync(false,"subir");
+  });
   document.getElementById("doExport").addEventListener("click",exportData);
   document.getElementById("doImportJson").addEventListener("click",()=>{ importKind="json"; document.getElementById("importFile").click(); });
   document.getElementById("doImportCsv").addEventListener("click",()=>{ importKind="csv"; document.getElementById("importFile").click(); });
@@ -2288,7 +2313,7 @@ document.getElementById("importBtn").addEventListener("click",()=>{
 
 async function exportData(){
   const blob=new Blob([JSON.stringify({store,photos:await collectPhotos()},null,2)],{type:"application/json"});
-  downloadBlob(blob,"mi-calendario-respaldo.json"); toast("Respaldo descargado");
+  downloadBlob(blob,"mi-almanaque-respaldo.json"); toast("Respaldo descargado");
 }
 let importKind="json";
 document.getElementById("importFile").addEventListener("change",async e=>{
@@ -2298,7 +2323,15 @@ document.getElementById("importFile").addEventListener("change",async e=>{
   else{
     try{
       const data=JSON.parse(text);
-      if(data.store){ store=data.store; normalizarStore(); migrarMesesV2();
+      if(data.store){
+        /* La conexión con Drive es de este navegador y no viaja en el respaldo:
+           se conserva para que la sincronización siga sabiendo qué vio por última vez. */
+        const uiLocal=Object.assign({},store.ui||{});
+        store=data.store; normalizarStore(); migrarMesesV2();
+        store.ui.driveConnected=uiLocal.driveConnected;
+        store.ui.driveFileId=uiLocal.driveFileId;
+        store.ui.lastCloudAt=uiLocal.lastCloudAt;
+        store.ui.lastCloudModified=uiLocal.lastCloudModified;
         if(data.photos) for(const [id,url] of Object.entries(data.photos)) await putPhoto(id,url);
         saveStore(); applyTheme(); refreshCurrent(); if(globeReady) rebuildMarkers(); closeModal(); toast("Respaldo restaurado");
       } else toast("Archivo no reconocido");
@@ -2361,7 +2394,12 @@ function toast(msg){ const el=document.getElementById("toast"); el.textContent=m
    Si algún día lo regeneras, cámbialo en esta línea:
    ============================================================ */
 const GOOGLE_CLIENT_ID="337107389419-fbm65en61eiieeb744jr48i77oecfabt.apps.googleusercontent.com";
+/* Ojo: NO cambies este nombre — es el archivo donde ya viven tus datos.
+   Si lo renombras, la app deja de encontrar lo que tienes guardado. */
 const DRIVE_FILE_NAME="mi-calendario-datos.json";
+/* Copia de seguridad automática: guarda el contenido que había en Drive
+   justo antes de reemplazarlo. Es la red de protección contra pisadas. */
+const DRIVE_BAK_NAME="mi-calendario-datos-anterior.json";
 const DRIVE_SCOPE="https://www.googleapis.com/auth/drive.file";
 let tokenClient=null, accessToken=null, tokenExpiry=0, driveBusy=false, pushTimer=null;
 
@@ -2403,10 +2441,15 @@ async function dfetch(url,opts){
     opts.headers.Authorization="Bearer "+accessToken; r=await fetch(url,opts); }
   return r;
 }
-async function driveFind(){
-  const q=encodeURIComponent("name='"+DRIVE_FILE_NAME+"' and trashed=false");
+async function driveFindNamed(name){
+  const q=encodeURIComponent("name='"+name+"' and trashed=false");
   const r=await dfetch("https://www.googleapis.com/drive/v3/files?q="+q+"&spaces=drive&fields=files(id,modifiedTime)");
   const d=await r.json(); return (d.files&&d.files[0])||null;
+}
+async function driveFind(){ return driveFindNamed(DRIVE_FILE_NAME); }
+async function driveMeta(id){
+  const r=await dfetch("https://www.googleapis.com/drive/v3/files/"+id+"?fields=id,modifiedTime");
+  return await r.json();
 }
 async function driveDownload(id){
   const r=await dfetch("https://www.googleapis.com/drive/v3/files/"+id+"?alt=media");
@@ -2421,9 +2464,9 @@ async function collectPhotos(){
 async function buildPayload(){
   return JSON.stringify({v:1, updatedAt:(store.ui&&store.ui.updatedAt)||Date.now(), store, photos:await collectPhotos()});
 }
-async function driveCreate(payload){
+async function driveCreate(payload,name){
   const boundary="mcal"+Date.now();
-  const meta={name:DRIVE_FILE_NAME, mimeType:"application/json"};
+  const meta={name:name||DRIVE_FILE_NAME, mimeType:"application/json"};
   const body="--"+boundary+"\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n"+JSON.stringify(meta)+
     "\r\n--"+boundary+"\r\nContent-Type: application/json\r\n\r\n"+payload+"\r\n--"+boundary+"--";
   const r=await dfetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",{
@@ -2434,57 +2477,318 @@ async function driveUpdate(id,payload){
   await dfetch("https://www.googleapis.com/upload/drive/v3/files/"+id+"?uploadType=media",{
     method:"PATCH", headers:{"Content-Type":"application/json"}, body:payload});
 }
-async function applyCloud(cloud){
-  if(!cloud||!cloud.store) return;
-  store=cloud.store; normalizarStore(); migrarMesesV2();
-  if(cloud.updatedAt) store.ui.updatedAt=cloud.updatedAt;
-  if(cloud.photos) for(const kv of Object.entries(cloud.photos)) await putPhoto(kv[0],kv[1]);
-  try{ localStorage.setItem(LS_KEY,JSON.stringify(store)); }catch(e){}
+/* ============================================================
+   Cómo se decide qué versión gana
+   ------------------------------------------------------------
+   Antes la app comparaba fechas y, si este dispositivo tenía una
+   fecha más nueva, subía y pisaba Drive. Eso borraba datos: basta
+   abrir la app en un teléfono viejo para que su fecha quede "más
+   nueva" aunque su contenido sea antiguo.
+
+   Ahora:
+   1. Se recuerda cuál era la versión de Drive la última vez que
+      ESTE dispositivo la vio (lastCloudModified / lastCloudAt).
+   2. Si Drive no cambió desde entonces, subir es seguro.
+   3. Si Drive cambió y aquí también hay cambios sin subir, la app
+      NO adivina: pregunta (combinar / traer / subir).
+   4. Antes de reemplazar el archivo de Drive siempre se guarda el
+      contenido anterior en DRIVE_BAK_NAME.
+   ============================================================ */
+
+function conectado(){ return !!(store.ui&&store.ui.driveConnected); }
+
+/* Resumen legible de un store, para poder mostrar qué hay en cada lado */
+function contarStore(s){
+  if(!s) return {total:0,detalle:"sin datos"};
+  const n=[
+    ["eventos",(s.events||[]).length],
+    ["recuerdos",(s.memories||[]).length],
+    ["entradas de diario",(s.journal||[]).length],
+    ["hábitos",(s.routines||[]).length],
+    ["pendientes",(s.pending||[]).reduce((a,g)=>a+((g.items||[]).length),0)],
+    ["días de rutina",Object.keys(s.routineLog||{}).length],
+    ["meses con notas",Object.keys(s.monthly||{}).length]
+  ];
+  const total=n.reduce((a,x)=>a+x[1],0);
+  const detalle=n.filter(x=>x[1]>0).map(x=>x[1]+" "+x[0]).join(" · ")||"sin datos";
+  return {total,detalle};
+}
+function fechaCorta(ms){
+  if(!ms) return "sin fecha";
+  const d=new Date(ms);
+  return d.getDate()+" "+MONTHS[d.getMonth()].slice(0,3)+" "+d.getFullYear()+
+    " · "+d.getHours()+":"+String(d.getMinutes()).padStart(2,"0");
+}
+
+/* ---- Combinación de dos versiones ---- */
+/* Une dos listas por id. Si un id está en las dos, se queda la copia con
+   `ts` más nuevo; si no hay ts, gana el lado marcado como más reciente. */
+function unirPorId(a,b,bGana){
+  const mapa=new Map();
+  const meter=(lista,prioritario)=>{
+    (lista||[]).forEach(it=>{
+      if(!it) return;
+      const k=it.id!=null?String(it.id):JSON.stringify(it);
+      const ya=mapa.get(k);
+      if(!ya){ mapa.set(k,{it,prioritario}); return; }
+      const t1=Number(ya.it.ts)||0, t2=Number(it.ts)||0;
+      if(t2>t1||(t2===t1&&prioritario)) mapa.set(k,{it,prioritario});
+    });
+  };
+  meter(a,!bGana); meter(b,bGana);
+  return Array.from(mapa.values()).map(x=>x.it);
+}
+function unirPendientes(a,b,bGana){
+  const grupos=unirPorId(a,b,bGana);
+  const ia=new Map((a||[]).map(g=>[String(g.id),g]));
+  const ib=new Map((b||[]).map(g=>[String(g.id),g]));
+  return grupos.map(g=>{
+    const ga=ia.get(String(g.id)), gb=ib.get(String(g.id));
+    if(ga&&gb) return Object.assign({},g,{items:unirPorId(ga.items,gb.items,bGana)});
+    return g;
+  });
+}
+/* routineLog y metricLog son {fecha:{id:valor}} — se juntan día por día */
+function unirLogs(a,b,bGana){
+  const out={};
+  const dias=new Set(Object.keys(a||{}).concat(Object.keys(b||{})));
+  dias.forEach(d=>{
+    const base=bGana?Object.assign({},(a||{})[d],(b||{})[d])
+                    :Object.assign({},(b||{})[d],(a||{})[d]);
+    if(Object.keys(base).length) out[d]=base;
+  });
+  return out;
+}
+function unirMeses(a,b,bGana){
+  const out={};
+  const ks=new Set(Object.keys(a||{}).concat(Object.keys(b||{})));
+  ks.forEach(k=>{
+    const ma=(a||{})[k], mb=(b||{})[k];
+    if(!ma){ out[k]=mb; return; }
+    if(!mb){ out[k]=ma; return; }
+    const pri=bGana?mb:ma, sec=bGana?ma:mb;
+    out[k]={
+      img:pri.img||sec.img||"",
+      caption:pri.caption||sec.caption||"",
+      note:pri.note||sec.note||"",
+      lines:Object.assign({},sec.lines||{},pri.lines||{}),
+      habits:Array.from(new Set((ma.habits||[]).concat(mb.habits||[]))),
+      metrics:Array.from(new Set((ma.metrics||[]).concat(mb.metrics||[])))
+    };
+  });
+  return out;
+}
+function combinarStores(local,nube){
+  const bGana=((nube.ui&&nube.ui.updatedAt)||0)>=((local.ui&&local.ui.updatedAt)||0);
+  return {
+    events:     unirPorId(local.events,nube.events,bGana),
+    routines:   unirPorId(local.routines,nube.routines,bGana),
+    routineLog: unirLogs(local.routineLog,nube.routineLog,bGana),
+    memories:   unirPorId(local.memories,nube.memories,bGana),
+    journal:    unirPorId(local.journal,nube.journal,bGana),
+    metrics:    unirPorId(local.metrics,nube.metrics,bGana),
+    metricLog:  unirLogs(local.metricLog,nube.metricLog,bGana),
+    monthly:    unirMeses(local.monthly,nube.monthly,bGana),
+    pending:    unirPendientes(local.pending,nube.pending,bGana),
+    ui: Object.assign({},nube.ui||{},local.ui||{},{
+      monthSetsV2: !!(((local.ui||{}).monthSetsV2)||((nube.ui||{}).monthSetsV2))
+    })
+  };
+}
+
+/* ---- Aplicar lo que viene de Drive ---- */
+/* La conexión con Drive es propia de cada dispositivo: no debe viajar
+   dentro del archivo, así que se conserva la del navegador actual. */
+function conservarUI(uiLocal){
+  store.ui.driveConnected=true;
+  store.ui.driveFileId=uiLocal.driveFileId||store.ui.driveFileId;
+  store.ui.theme=uiLocal.theme||store.ui.theme||"light";
+  store.ui.lastSync=Date.now();
+}
+async function refrescarTodo(cloud){
+  if(cloud&&cloud.photos) for(const kv of Object.entries(cloud.photos)) await putPhoto(kv[0],kv[1]);
+  persistir();
   applyTheme(); renderQuote(); refreshCurrent(); if(globeReady) rebuildMarkers();
 }
-async function driveConnect(interactive){
+async function applyCloud(cloud){
+  if(!cloud||!cloud.store) return;
+  const uiLocal=Object.assign({},store.ui||{});
+  store=cloud.store; normalizarStore(); migrarMesesV2();
+  conservarUI(uiLocal);
+  store.ui.updatedAt=cloud.updatedAt||Date.now();
+  await refrescarTodo(cloud);
+}
+async function combinarConNube(cloud){
+  if(!cloud||!cloud.store) return;
+  const uiLocal=Object.assign({},store.ui||{});
+  store=combinarStores(store,cloud.store); normalizarStore(); migrarMesesV2();
+  conservarUI(uiLocal);
+  store.ui.updatedAt=Date.now();
+  await refrescarTodo(cloud);
+}
+
+/* ---- Escritura en Drive, siempre con copia de lo anterior ---- */
+async function respaldarNube(cloudPrevio){
+  if(!cloudPrevio) return;
+  try{
+    const payload=JSON.stringify(cloudPrevio);
+    const f=await driveFindNamed(DRIVE_BAK_NAME);
+    if(f) await driveUpdate(f.id,payload);
+    else await driveCreate(payload,DRIVE_BAK_NAME);
+  }catch(e){ console.warn("No se pudo guardar la copia anterior",e); }
+}
+function marcarNubeVista(cloud,file){
+  store.ui.lastCloudAt=(cloud&&cloud.updatedAt)||0;
+  store.ui.lastCloudModified=(file&&file.modifiedTime)||"";
+}
+async function subirANube(fileId,cloudPrevio){
+  await respaldarNube(cloudPrevio);
+  await driveUpdate(fileId,await buildPayload());
+  const meta=await driveMeta(fileId);
+  store.ui.lastCloudAt=(store.ui&&store.ui.updatedAt)||Date.now();
+  store.ui.lastCloudModified=meta.modifiedTime||"";
+}
+function finalizarSync(){
+  store.ui.driveConnected=true; store.ui.lastSync=Date.now();
+  persistir(); updateSyncUI();
+}
+
+/* ---- Motor principal ----
+   modo: "auto" | "bajar" | "subir" | "combinar" */
+async function driveSync(interactive,modo){
   if(driveBusy) return;
+  modo=modo||"auto";
   driveBusy=true; updateSyncUI("Conectando…");
+  let preguntar=null;
   try{
     await requestToken(interactive);
     const file=await driveFind();
-    if(file){
-      store.ui.driveFileId=file.id;
-      const cloud=await driveDownload(file.id);
-      const localAt=(store.ui&&store.ui.updatedAt)||0;
-      if((cloud.updatedAt||0)>localAt){ await applyCloud(cloud); toast("Datos traídos desde Drive"); }
-      else { await driveUpdate(file.id, await buildPayload()); toast("Datos guardados en Drive"); }
-    } else {
-      store.ui.driveFileId=await driveCreate(await buildPayload());
-      toast("Copia creada en tu Drive");
+
+    /* Primera vez: no hay nada en Drive, se crea */
+    if(!file){
+      store.ui.driveFileId=await driveCreate(await buildPayload(),DRIVE_FILE_NAME);
+      const meta=await driveMeta(store.ui.driveFileId);
+      store.ui.lastCloudAt=(store.ui.updatedAt)||Date.now();
+      store.ui.lastCloudModified=meta.modifiedTime||"";
+      finalizarSync(); toast("Copia creada en tu Drive"); return;
     }
-    store.ui.driveConnected=true; store.ui.lastSync=Date.now();
-    try{ localStorage.setItem(LS_KEY,JSON.stringify(store)); }catch(e){}
+
+    store.ui.driveFileId=file.id;
+    const cloud=await driveDownload(file.id);
+    const cs=contarStore(cloud&&cloud.store), ls=contarStore(store);
+
+    if(modo==="bajar"){
+      await applyCloud(cloud); marcarNubeVista(cloud,file);
+      finalizarSync(); toast("Datos traídos desde Drive"); return;
+    }
+    if(modo==="combinar"){
+      await combinarConNube(cloud); await subirANube(file.id,cloud);
+      finalizarSync(); toast("Se combinaron las dos versiones"); return;
+    }
+    if(modo==="subir"){
+      await subirANube(file.id,cloud);
+      finalizarSync(); toast("Este dispositivo se copió a Drive"); return;
+    }
+
+    /* ---------- modo automático ---------- */
+
+    /* Drive está vacío: subir no borra nada */
+    if(!cs.total){ await subirANube(file.id,cloud); finalizarSync(); toast("Datos guardados en Drive"); return; }
+
+    /* Este dispositivo nunca guardó nada propio: traer es lo correcto */
+    if(!store.ui.updatedAt||!ls.total){
+      await applyCloud(cloud); marcarNubeVista(cloud,file);
+      finalizarSync(); toast("Datos traídos desde Drive"); return;
+    }
+
+    /* Drive sigue igual que la última vez que este dispositivo lo vio */
+    const nubeIntacta = store.ui.lastCloudModified && file.modifiedTime===store.ui.lastCloudModified;
+    if(nubeIntacta){
+      if((store.ui.updatedAt||0)>(store.ui.lastCloudAt||0)){
+        await subirANube(file.id,cloud); finalizarSync(); toast("Cambios guardados en Drive");
+      } else { finalizarSync(); toast("Ya estaba todo al día"); }
+      return;
+    }
+
+    /* Drive cambió, pero aquí no hay nada nuevo sin subir: bajar es seguro */
+    const sinCambiosLocales = store.ui.lastCloudAt && (store.ui.updatedAt||0)<=store.ui.lastCloudAt;
+    if(sinCambiosLocales){
+      await applyCloud(cloud); marcarNubeVista(cloud,file);
+      finalizarSync(); toast("Datos traídos desde Drive"); return;
+    }
+
+    /* Los dos lados tienen algo distinto: se pregunta, no se adivina */
+    preguntar=()=>preguntarConflicto(cloud,file,cs,ls);
   }catch(e){
     console.error(e);
     if(e&&(e.type==="popup_closed"||e.error==="access_denied"||e.type==="popup_failed_to_open")) toast("Conexión cancelada");
     else toast("No se pudo conectar con Drive");
-  }finally{ driveBusy=false; updateSyncUI(); }
+  }finally{
+    driveBusy=false; updateSyncUI();
+    if(preguntar) preguntar();
+  }
 }
+function driveConnect(interactive){ return driveSync(interactive,"auto"); }
+
+function preguntarConflicto(cloud,file,cs,ls){
+  openModal("¿Qué versión quieres dejar?",`
+    <p style="font-size:13.5px;color:var(--ink-soft);line-height:1.55;margin:0">
+      Hay información distinta aquí y en Drive. Elige tú — no se toca nada hasta que decidas,
+      y la versión anterior de Drive siempre queda guardada como copia.</p>
+    <div class="field">
+      <label>En Drive · ${esc(fechaCorta(cloud&&cloud.updatedAt))}</label>
+      <div class="hint">${esc(cs.detalle)}</div>
+    </div>
+    <div class="field">
+      <label>En este dispositivo · ${esc(fechaCorta(store.ui&&store.ui.updatedAt))}</label>
+      <div class="hint">${esc(ls.detalle)}</div>
+    </div>
+    <hr style="border:none;border-top:1px solid var(--line);margin:0">
+    <button class="btn btn-primary" id="cfMerge" style="justify-content:center">Combinar las dos (recomendado)</button>
+    <button class="btn" id="cfPull" style="justify-content:center">Dejar lo de Drive</button>
+    <button class="btn btn-ghost" id="cfPush" style="justify-content:center">Dejar lo de este dispositivo</button>
+    <div class="hint">Combinar junta eventos, recuerdos, diario, hábitos y pendientes de ambos lados; si algo está en los dos, se queda la versión más reciente.</div>
+  `,null);
+  document.getElementById("mSave").style.display="none";
+  document.getElementById("cfMerge").addEventListener("click",()=>{ closeModal(); driveSync(false,"combinar"); });
+  document.getElementById("cfPull").addEventListener("click",()=>{
+    if(confirm("Se reemplazará lo de este dispositivo con lo de Drive. ¿Continuar?")){ closeModal(); driveSync(false,"bajar"); }
+  });
+  document.getElementById("cfPush").addEventListener("click",()=>{
+    if(confirm("Se reemplazará lo de Drive con lo de este dispositivo.\n\nLa versión anterior queda en mi-calendario-datos-anterior.json. ¿Continuar?")){ closeModal(); driveSync(false,"subir"); }
+  });
+}
+
 function driveDisconnect(){
   store.ui.driveConnected=false; accessToken=null; tokenExpiry=0;
-  try{ localStorage.setItem(LS_KEY,JSON.stringify(store)); }catch(e){}
-  updateSyncUI(); toast("Sincronización desconectada");
+  persistir(); updateSyncUI(); toast("Sincronización desconectada");
 }
 function scheduleDrivePush(){
   if(!store.ui||!store.ui.driveConnected||!store.ui.driveFileId) return;
   if(!tokenValid()){ updateSyncUI("Conéctate para sincronizar los cambios"); return; }
   clearTimeout(pushTimer);
   pushTimer=setTimeout(async ()=>{
-    try{ await driveUpdate(store.ui.driveFileId, await buildPayload());
-      store.ui.lastSync=Date.now(); try{localStorage.setItem(LS_KEY,JSON.stringify(store));}catch(e){}
-      updateSyncUI();
+    if(driveBusy) return;
+    try{
+      /* Si el archivo de Drive cambió desde la última vez que lo vimos,
+         puede traer cosas de otro dispositivo: no se pisa. */
+      const meta=await driveMeta(store.ui.driveFileId);
+      if(store.ui.lastCloudModified && meta.modifiedTime && meta.modifiedTime!==store.ui.lastCloudModified){
+        updateSyncUI("Hay cambios nuevos en Drive — toca “Sincronizar ahora”");
+        return;
+      }
+      await driveUpdate(store.ui.driveFileId,await buildPayload());
+      const m2=await driveMeta(store.ui.driveFileId);
+      store.ui.lastCloudAt=store.ui.updatedAt||Date.now();
+      store.ui.lastCloudModified=m2.modifiedTime||"";
+      store.ui.lastSync=Date.now(); persistir(); updateSyncUI();
     }catch(e){ /* se reintenta al próximo cambio */ }
   },2500);
 }
 function updateSyncUI(msg){
   const el=document.getElementById("syncStatus");
   const cb=document.getElementById("syncConnectBtn"), db=document.getElementById("syncDisconnectBtn"), nb=document.getElementById("syncNowBtn");
+  const pl=document.getElementById("syncPullBtn"), ph=document.getElementById("syncPushBtn");
   if(el){
     if(msg) el.textContent=msg;
     else if(store.ui&&store.ui.driveConnected){
@@ -2496,6 +2800,8 @@ function updateSyncUI(msg){
   if(cb) cb.style.display=on?"none":"";
   if(db) db.style.display=on?"":"none";
   if(nb) nb.style.display=on?"":"none";
+  if(pl) pl.style.display=on?"":"none";
+  if(ph) ph.style.display=on?"":"none";
 }
 
 (async function init(){
