@@ -63,4 +63,7 @@ window.FRASES = [
   ["Then I heard the voice of the Lord saying, 'Whom shall I send? And who will go for us?' And I said, 'Here am I. Send me!", "Isaiah 6:8"],
   ["Oh Heavenly Father, bear witness as I show you the strength of your creation.", "Anónimo"],
   ["If you have a problem with me, text me. And if you don't have my number, you don't know me well enough to have a problem with me.", "Tom Holland"],
+  ["A harmless man is not a good man. A good man is a very, very dangerous man who has that under voluntary control.", "Jordan Peterson"],
+  ["A society grows great when old men plant trees in whose shade they know they shall never sit in.", "Greek Proverb"],
+  ["One must imagine Sisyphus happy.", "Albert Camus"], 
 ];
