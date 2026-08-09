@@ -537,6 +537,113 @@ textarea{resize:vertical;min-height:64px}
   padding:0 15px 12px;text-align:left;font-family:inherit}
 .pend-clear:hover{color:var(--ink-soft);text-decoration:underline}
 @media(max-width:720px){ .pend-grid{grid-template-columns:1fr} }
+
+/* ---------- Notas y su red ---------- */
+.nsub-view{display:none} .nsub-view.active{display:block}
+.nt-bar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.nt-search{flex:1;min-width:200px}
+.nt-sort{width:auto;min-width:150px;flex:0 0 auto}
+.nt-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.nt-fchip{appearance:none;cursor:pointer;font-family:"Inter";font-size:12px;font-weight:600;
+  padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--panel);
+  color:var(--ink-soft);display:flex;align-items:center;gap:6px}
+.nt-fchip i{width:8px;height:8px;border-radius:50%;background:var(--c,var(--ink-faint));font-size:0}
+.nt-fchip.on{border-color:var(--c,var(--nav));color:var(--ink);
+  background:color-mix(in srgb,var(--c,var(--nav)) 13%,transparent)}
+.nt-fchip b{font-family:"Space Mono";font-weight:700;font-size:11px;color:var(--ink-faint)}
+
+.nt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;align-items:start}
+.nt-card{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--c,#3b6ea5);
+  border-radius:var(--radius);padding:15px 17px 13px;box-shadow:var(--shadow-soft);cursor:pointer;
+  transition:transform .1s,border-color .15s,box-shadow .15s}
+.nt-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.nt-card .nt-kind{font-family:"Space Mono";font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  font-weight:700;color:var(--c,#3b6ea5)}
+.nt-card h3{font-family:"Fraunces",serif;font-size:18px;font-weight:600;line-height:1.2;margin:3px 0 7px}
+.nt-ex{font-size:13px;line-height:1.55;color:var(--ink-soft);
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.nt-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}
+.nt-foot{display:flex;align-items:center;gap:10px;margin-top:11px;padding-top:9px;
+  border-top:1px solid var(--line-2);font-family:"Space Mono";font-size:10.5px;color:var(--ink-faint)}
+.nt-foot .nt-when{margin-left:auto}
+
+.tagchip{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;
+  background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--accent-ink);
+  border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);cursor:pointer;text-decoration:none}
+[data-theme="dark"] .tagchip{color:var(--accent)}
+
+/* lector */
+.nt-reader{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:24px 28px 26px;box-shadow:var(--shadow-soft);max-width:76ch}
+.nt-rhead{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+.nt-rhead .nt-kind{font-family:"Space Mono";font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  font-weight:700;color:var(--c,#3b6ea5)}
+.nt-rhead h2{font-family:"Fraunces",serif;font-size:27px;font-weight:600;line-height:1.15;margin:2px 0 0;width:100%}
+.nt-racts{margin-left:auto;display:flex;gap:6px;flex:0 0 auto}
+.nt-rmeta{font-size:12px;color:var(--ink-faint);margin-top:7px;display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.nt-doc{margin-top:18px;font-size:15px;line-height:1.72;word-break:break-word}
+.nt-doc h3{font-family:"Fraunces",serif;font-size:20px;margin:22px 0 8px}
+.nt-doc h4{font-family:"Fraunces",serif;font-size:17px;margin:18px 0 6px}
+.nt-doc h5,.nt-doc h6{font-size:14px;margin:16px 0 5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft)}
+.nt-doc p{margin:0 0 12px}
+.nt-doc ul,.nt-doc ol{margin:0 0 12px;padding-left:22px}
+.nt-doc li{margin:3px 0}
+.nt-doc li.task{list-style:none;margin-left:-18px}
+.nt-doc blockquote{margin:0 0 12px;padding:2px 0 2px 15px;border-left:3px solid var(--accent);
+  color:var(--ink-soft);font-style:italic}
+.nt-doc code{font-family:"Space Mono";font-size:13px;background:var(--line-2);padding:1px 5px;border-radius:5px}
+.nt-doc pre{background:var(--line-2);padding:12px 14px;border-radius:10px;overflow-x:auto;margin:0 0 12px}
+.nt-doc pre code{background:none;padding:0;font-size:12.5px;line-height:1.55}
+.nt-doc hr{border:none;border-top:1px solid var(--line);margin:18px 0}
+.nt-doc a[href]{color:var(--nav);text-decoration:underline;text-underline-offset:2px}
+[data-theme="dark"] .nt-doc a[href]{color:#9db8e8}
+
+.wlink{color:var(--nav);font-weight:600;text-decoration:none;border-bottom:1.5px solid
+  color-mix(in srgb,var(--nav) 35%,transparent);cursor:pointer}
+.wlink:hover{border-bottom-color:var(--nav)}
+[data-theme="dark"] .wlink{color:#9db8e8;border-bottom-color:rgba(157,184,232,.4)}
+.wlink.new{color:var(--ink-faint);border-bottom-style:dashed}
+
+.nt-rel{margin-top:26px;padding-top:18px;border-top:1px solid var(--line);
+  display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.nt-rel h4{font-family:"Space Mono";font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  font-weight:700;color:var(--ink-faint);margin:0 0 9px}
+.nt-rel ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.nt-rel li{font-size:13.5px;line-height:1.4}
+.nt-rel .none{font-size:12.5px;color:var(--ink-faint)}
+
+/* red */
+.net-wrap{position:relative;background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-soft);
+  height:clamp(360px,62vh,620px);touch-action:none}
+#netCanvas{width:100%;height:100%;display:block;cursor:grab}
+#netCanvas:active{cursor:grabbing}
+.net-hint{position:absolute;left:15px;bottom:12px;font-family:"Space Mono";font-size:11px;
+  color:var(--ink-faint);pointer-events:none}
+.net-tools{position:absolute;right:12px;top:12px;display:flex;gap:6px}
+.net-empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:30px;
+  color:var(--ink-faint);font-size:14px;pointer-events:none}
+.net-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--ink-soft)}
+.net-legend span{display:flex;align-items:center;gap:6px}
+.net-legend i{width:9px;height:9px;border-radius:50%;background:var(--c);font-size:0}
+.net-legend i.ghost{background:transparent;border:1.5px dashed var(--ink-faint)}
+
+/* autocompletar [[ ]] en el editor */
+.nt-acwrap{position:relative}
+.nt-ac{position:absolute;left:0;right:0;top:100%;z-index:5;background:var(--panel);
+  border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);overflow:hidden;display:none}
+.nt-ac.on{display:block}
+.nt-ac button{display:block;width:100%;text-align:left;border:none;background:none;cursor:pointer;
+  font-family:"Inter";font-size:13px;padding:8px 12px;color:var(--ink)}
+.nt-ac button.sel,.nt-ac button:hover{background:color-mix(in srgb,var(--nav) 12%,transparent)}
+.nt-ac button small{color:var(--ink-faint);margin-left:6px}
+.modal.wide{width:min(720px,100%)}
+
+@media(max-width:720px){
+  .nt-reader{padding:19px 17px 22px}
+  .nt-rel{grid-template-columns:1fr;gap:16px}
+  .nt-sort{width:100%}
+}
 </style>
 </head>
 <body>
@@ -575,6 +682,10 @@ textarea{resize:vertical;min-height:64px}
     <button class="tab" data-view="diario">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4a2 2 0 012-2h11l3 3v15a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M8 7h6M8 11h8M8 15h5"/></svg>
       <span class="tab-lbl">Diario</span>
+    </button>
+    <button class="tab" data-view="notas">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="7" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="17" r="2.5"/><path d="M8.2 8.4l2.6 6.3M16.6 8.2l-3.2 6.6M8.4 6.6h7.2"/></svg>
+      <span class="tab-lbl">Notas</span>
     </button>
   </div>
 </div>
@@ -730,6 +841,63 @@ textarea{resize:vertical;min-height:64px}
     </div>
     <div class="jr-list" id="jrList"></div>
   </section>
+  <!-- ============ NOTAS ============ -->
+  <section class="view" id="view-notas">
+    <div class="view-head">
+      <div class="title-wrap">
+        <div class="eyebrow">Lo que vas leyendo</div>
+        <h2>Notas</h2>
+        <p class="view-sub">Apuntes que se enlazan entre sí. Escribe <span class="mono">[[el título de otra nota]]</span> dentro del texto y las dos quedan conectadas; en “Red” ves el mapa completo.</p>
+      </div>
+      <button class="btn btn-primary" id="addNote">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        Nueva nota
+      </button>
+    </div>
+
+    <div class="subtabs">
+      <button class="nsubtab active" data-nsub="lista">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+        Notas
+      </button>
+      <button class="nsubtab" data-nsub="red">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="7" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="17" r="2.5"/><path d="M8.2 8.4l2.6 6.3M16.6 8.2l-3.2 6.6M8.4 6.6h7.2"/></svg>
+        Red
+      </button>
+    </div>
+
+    <div class="nsub-view active" id="nsub-lista">
+      <div id="ntBrowse">
+        <div class="nt-bar">
+          <input class="nt-search" id="ntSearch" placeholder="Buscar por título, texto o #etiqueta…">
+          <select class="nt-sort" id="ntSort">
+            <option value="rec">Más recientes</option>
+            <option value="az">Título A–Z</option>
+            <option value="con">Más conectadas</option>
+          </select>
+          <button class="btn btn-ghost" id="ntImport" title="Traer archivos .md de Obsidian">Importar .md</button>
+          <button class="btn btn-ghost" id="ntExport" title="Bajar todas las notas como Markdown">Exportar .md</button>
+        </div>
+        <div class="nt-filters" id="ntFilters"></div>
+        <div class="nt-grid" id="ntGrid"></div>
+      </div>
+      <div class="nt-reader" id="ntReader" style="display:none"></div>
+    </div>
+
+    <div class="nsub-view" id="nsub-red">
+      <div class="net-wrap">
+        <canvas id="netCanvas"></canvas>
+        <div class="net-tools">
+          <button class="mini-btn" id="netFit" title="Centrar todo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 00-2 2v4M15 3h4a2 2 0 012 2v4M9 21H5a2 2 0 01-2-2v-4M15 21h4a2 2 0 002-2v-4"/></svg></button>
+          <button class="mini-btn" id="netShake" title="Reacomodar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.5 9a9 9 0 0114.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0020.5 15"/></svg></button>
+        </div>
+        <div class="net-empty" id="netEmpty" style="display:none"></div>
+        <div class="net-hint">Arrastra para mover · rueda o pellizca para acercar · toca un punto para abrir la nota</div>
+      </div>
+      <div class="net-legend" id="netLegend"></div>
+    </div>
+  </section>
+
 </main>
 
 <button class="fab" id="fab" title="Agregar">
@@ -770,6 +938,7 @@ textarea{resize:vertical;min-height:64px}
 
 <div class="toast" id="toast"></div>
 <input type="file" id="importFile" accept="application/json,.json,.csv" style="display:none">
+<input type="file" id="mdFiles" accept=".md,.markdown,.txt,text/markdown" multiple style="display:none">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -884,6 +1053,17 @@ function seed(){
         {id:uid(),text:"Renovar el carnet",done:false,ts:Date.now()},
       ]},
     ],
+    notes:[
+      {id:uid(),created:Date.now(),ts:Date.now(),type:"Nota",source:"",tags:["método"],
+       title:"Cómo tomo apuntes",
+       body:"Esta sección funciona como un cuaderno donde las hojas se pueden coser entre sí.\n\n## La idea\nCada nota dice **una sola cosa**. Cuando una idea se conecta con otra, no se copia: se enlaza escribiendo el título entre dobles corchetes, así: [[Hábitos atómicos]].\n\n## Cómo empiezo\n- Anoto lo que me llamó la atención mientras leo.\n- Al terminar, la releo y la enlazo con lo que ya tenía.\n- Si un enlace apunta a algo que aún no escribo, queda en gris y me sirve de recordatorio: [[Lectura activa]].\n\nLo que estoy armando con esto está en [[Proyecto: huerto en el balcón]].\n\n#método #lectura"},
+      {id:uid(),created:Date.now(),ts:Date.now()-1,type:"Libro",source:"James Clear",tags:["lectura"],
+       title:"Hábitos atómicos",
+       body:"> Nota de ejemplo: reemplázala por tus propios apuntes.\n\nLa tesis, en mis palabras: los cambios grandes vienen de repeticiones pequeñas sostenidas en el tiempo, y el ambiente pesa más que la fuerza de voluntad.\n\n## Lo que me quedó\n- Es más fácil cambiar de sistema que de meta.\n- Hacer la conducta obvia, fácil y satisfactoria.\n\nEsto se conecta con la Rutina de esta misma app y con [[Cómo tomo apuntes]].\n\n#lectura"},
+      {id:uid(),created:Date.now(),ts:Date.now()-2,type:"Proyecto",source:"",tags:["casa"],
+       title:"Proyecto: huerto en el balcón",
+       body:"Un proyecto es una nota que junta ideas sueltas y les pone un objetivo.\n\n- [ ] Medir cuántas horas de sol llegan\n- [ ] Elegir tres cosas fáciles: albahaca, cilantro, tomate cherry\n- [x] Conseguir maceteros\n\nMe apoyo en la constancia de [[Hábitos atómicos]] para regar sin olvidarme.\n\n#casa"}
+    ],
     ui:{ theme:"light" }
   };
 }
@@ -901,6 +1081,7 @@ function normalizarStore(){
   if(!store.metricLog) store.metricLog={};
   if(!store.monthly) store.monthly={};
   if(!Array.isArray(store.pending)) store.pending=[];
+  if(!Array.isArray(store.notes)) store.notes=[];
 }
 normalizarStore();
 
@@ -1787,6 +1968,7 @@ function openModal(title,html,onSave){
   /* El pie vuelve siempre a su texto por defecto; cada modal puede cambiarlo
      después (por ejemplo "Datos y respaldo" lo pasa a "Cerrar"). */
   document.getElementById("mCancel").textContent="Cancelar";
+  document.querySelector(".modal").classList.remove("wide");
   modalSave=onSave;
   modalWrap.classList.add("on");
 }
@@ -2188,6 +2370,709 @@ function openEntryForm(id){
 }
 document.getElementById("addEntry").addEventListener("click",()=>openEntryForm(null));
 
+
+/* ============================================================
+   Notas enlazadas
+   ------------------------------------------------------------
+   Cada nota es un texto con título. Dentro del cuerpo puedes
+   escribir [[Otro título]] y las dos quedan unidas: la nota
+   enlazada muestra de vuelta quién la menciona (retroenlaces),
+   y la pestaña "Red" dibuja todo el conjunto como un grafo.
+   Los enlaces se guardan tal cual dentro del texto, así que el
+   formato es el mismo de Obsidian y se puede llevar de un lado
+   a otro sin convertir nada.
+   ============================================================ */
+const NOTE_TYPES={
+  "Nota":"#3b6ea5","Idea":"#c9a227","Libro":"#2a8f4e",
+  "Proyecto":"#7048b6","Persona":"#d1495b","Concepto":"#2f9e8f"
+};
+const NOTE_TYPE_LIST=Object.keys(NOTE_TYPES);
+
+/* Dos títulos son el mismo si solo cambian mayúsculas, tildes o espacios.
+   Así [[hábitos atómicos]] encuentra la nota "Hábitos atómicos". */
+function normTitle(s){
+  return (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/\s+/g," ").trim();
+}
+function noteById(id){ return store.notes.find(n=>n.id===id)||null; }
+function noteByTitle(t){ const k=normTitle(t); return k?store.notes.find(n=>normTitle(n.title)===k)||null:null; }
+
+const WIKI_RE=/\[\[([^\[\]|]+)(?:\|([^\[\]]+))?\]\]/g;
+/* títulos mencionados por una nota, sin repetir */
+function linkTargets(note){
+  const out=[],vistos=new Set(); WIKI_RE.lastIndex=0; let m;
+  while((m=WIKI_RE.exec(note.body||""))){
+    const t=m[1].trim(); const k=normTitle(t);
+    if(!k||vistos.has(k)) continue;
+    vistos.add(k); out.push(t);
+  }
+  return out;
+}
+/* notas que mencionan a esta */
+function backlinks(note){
+  const k=normTitle(note.title);
+  return store.notes.filter(n=>n.id!==note.id && linkTargets(n).some(t=>normTitle(t)===k));
+}
+const TAG_RE=/(^|[\s(¿¡])#([\p{L}\d_\/-]{2,40})/gu;
+function tagsOf(note){
+  const set=new Set((note.tags||[]).map(t=>t.replace(/^#/,"").trim()).filter(Boolean));
+  TAG_RE.lastIndex=0; let m;
+  while((m=TAG_RE.exec(note.body||""))) set.add(m[2]);
+  return Array.from(set);
+}
+function allTags(){
+  const c=new Map();
+  store.notes.forEach(n=>tagsOf(n).forEach(t=>c.set(t,(c.get(t)||0)+1)));
+  return Array.from(c.entries()).sort((a,b)=>b[1]-a[1]);
+}
+function noteColor(n){ return NOTE_TYPES[n&&n.type]||NOTE_TYPES["Nota"]; }
+
+/* ---- Markdown mínimo (el que se usa al escribir apuntes) ---- */
+function mdInline(s){
+  s=s.replace(/`([^`]+)`/g,(_,c)=>`<code>${c}</code>`);
+  s=s.replace(WIKI_RE,(_,t,alias)=>{
+    const destino=t.trim(), existe=!!noteByTitle(destino);
+    return `<a class="wlink${existe?"":" new"}" data-wl="${destino.replace(/"/g,"&quot;")}">${(alias||destino).trim()}</a>`;
+  });
+  s=s.replace(/\[([^\]]+)\]\((https?:[^\s)]+)\)/g,(_,txt,url)=>`<a href="${url}" target="_blank" rel="noopener">${txt}</a>`);
+  s=s.replace(/(^|[\s(])((?:https?:\/\/)[^\s<)]+)/g,(_,pre,url)=>`${pre}<a href="${url}" target="_blank" rel="noopener">${url}</a>`);
+  s=s.replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>");
+  s=s.replace(/(^|[^*])\*([^*\n]+)\*/g,"$1<em>$2</em>");
+  s=s.replace(/~~([^~]+)~~/g,"<s>$1</s>");
+  s=s.replace(/==([^=]+)==/g,'<mark>$1</mark>');
+  s=s.replace(TAG_RE,(_,pre,t)=>`${pre}<a class="tagchip" data-tag="${t}">#${t}</a>`);
+  return s;
+}
+function mdRender(src){
+  const lineas=esc(src||"").split(/\r?\n/);
+  const out=[]; let enCodigo=false, lista=null;
+  const cerrarLista=()=>{ if(lista){ out.push(lista==="ul"?"</ul>":"</ol>"); lista=null; } };
+  for(const linea of lineas){
+    if(/^\s*```/.test(linea)){
+      if(enCodigo){ out.push("</code></pre>"); enCodigo=false; }
+      else { cerrarLista(); out.push("<pre><code>"); enCodigo=true; }
+      continue;
+    }
+    if(enCodigo){ out.push(linea+"\n"); continue; }
+    if(!linea.trim()){ cerrarLista(); continue; }
+    let m;
+    if(/^\s*(---|\*\*\*|___)\s*$/.test(linea)){ cerrarLista(); out.push("<hr>"); continue; }
+    if((m=linea.match(/^(#{1,4})\s+(.*)$/))){
+      cerrarLista(); const nivel=Math.min(m[1].length+2,6);
+      out.push(`<h${nivel}>${mdInline(m[2])}</h${nivel}>`); continue;
+    }
+    if(/^\s*&gt;\s?/.test(linea)){
+      cerrarLista(); out.push(`<blockquote>${mdInline(linea.replace(/^\s*&gt;\s?/,""))}</blockquote>`); continue;
+    }
+    if((m=linea.match(/^\s*[-*+]\s+(.*)$/))){
+      if(lista!=="ul"){ cerrarLista(); out.push("<ul>"); lista="ul"; }
+      const tarea=m[1].match(/^\[( |x|X)\]\s+(.*)$/);
+      if(tarea) out.push(`<li class="task">${tarea[1]===" "?"☐":"☑"} ${mdInline(tarea[2])}</li>`);
+      else out.push(`<li>${mdInline(m[1])}</li>`);
+      continue;
+    }
+    if((m=linea.match(/^\s*\d+[.)]\s+(.*)$/))){
+      if(lista!=="ol"){ cerrarLista(); out.push("<ol>"); lista="ol"; }
+      out.push(`<li>${mdInline(m[1])}</li>`); continue;
+    }
+    cerrarLista(); out.push(`<p>${mdInline(linea)}</p>`);
+  }
+  cerrarLista(); if(enCodigo) out.push("</code></pre>");
+  return out.join("");
+}
+/* texto plano para las tarjetas y el buscador */
+function mdPlain(src){
+  return (src||"").replace(/```[\s\S]*?```/g," ").replace(WIKI_RE,(_,t,a)=>(a||t))
+    .replace(/[#*`>~=]+/g," ").replace(/\[([^\]]+)\]\([^)]+\)/g,"$1")
+    .replace(/\s+/g," ").trim();
+}
+
+/* ---- Lista de notas ---- */
+let ntFiltro="", ntTipo="", ntOrden="rec", ntAbierta=null;
+function notasFiltradas(){
+  const q=ntFiltro.trim().toLowerCase();
+  const etiqueta=q.startsWith("#")?normTitle(q.slice(1)):"";
+  let lista=store.notes.filter(n=>{
+    if(ntTipo && (n.type||"Nota")!==ntTipo) return false;
+    if(!q) return true;
+    if(etiqueta) return tagsOf(n).some(t=>normTitle(t).includes(etiqueta));
+    const heno=normTitle(n.title+" "+mdPlain(n.body)+" "+tagsOf(n).join(" ")+" "+(n.source||""));
+    return heno.includes(normTitle(q));
+  });
+  const grado=n=>linkTargets(n).length+backlinks(n).length;
+  if(ntOrden==="az") lista.sort((a,b)=>a.title.localeCompare(b.title,"es"));
+  else if(ntOrden==="con") lista.sort((a,b)=>grado(b)-grado(a)||(b.ts||0)-(a.ts||0));
+  else lista.sort((a,b)=>(b.ts||0)-(a.ts||0));
+  return lista;
+}
+function fechaCorta(ts){
+  if(!ts) return "";
+  const d=new Date(ts), hoy=new Date();
+  const mismoAno=d.getFullYear()===hoy.getFullYear();
+  return `${d.getDate()} ${MONTHS[d.getMonth()].slice(0,3)}${mismoAno?"":" "+d.getFullYear()}`;
+}
+function renderNotesFilters(){
+  const cont=document.getElementById("ntFilters"); if(!cont) return;
+  const cuenta=t=>store.notes.filter(n=>(n.type||"Nota")===t).length;
+  const chips=[`<button class="nt-fchip ${ntTipo?"":"on"}" data-tipo="">Todas <b>${store.notes.length}</b></button>`];
+  NOTE_TYPE_LIST.forEach(t=>{
+    const c=cuenta(t); if(!c && ntTipo!==t) return;
+    chips.push(`<button class="nt-fchip ${ntTipo===t?"on":""}" data-tipo="${t}" style="--c:${NOTE_TYPES[t]}"><i></i>${t} <b>${c}</b></button>`);
+  });
+  cont.innerHTML=chips.join("");
+  cont.querySelectorAll("[data-tipo]").forEach(b=>b.addEventListener("click",()=>{
+    ntTipo=b.dataset.tipo; renderNotes();
+  }));
+}
+function renderNotes(){
+  const grid=document.getElementById("ntGrid"); if(!grid) return;
+  document.getElementById("ntBrowse").style.display=ntAbierta?"none":"";
+  document.getElementById("ntReader").style.display=ntAbierta?"":"none";
+  if(ntAbierta){ renderNoteReader(); return; }
+  renderNotesFilters();
+  const lista=notasFiltradas();
+  grid.innerHTML="";
+  if(!lista.length){
+    grid.innerHTML=`<div style="grid-column:1/-1">${
+      store.notes.length
+        ? emptyBlock("Ninguna nota coincide con esa búsqueda.","Prueba con otra palabra o quita el filtro de tipo.")
+        : emptyBlock("Todavía no hay notas.","Toca “Nueva nota” y empieza por lo último que leíste.")}</div>`;
+    return;
+  }
+  for(const n of lista){
+    const c=noteColor(n), salen=linkTargets(n).length, entran=backlinks(n).length;
+    const tags=tagsOf(n).slice(0,4);
+    const div=document.createElement("div");
+    div.className="nt-card"; div.style.setProperty("--c",c);
+    div.innerHTML=`<div class="nt-kind">${esc(n.type||"Nota")}</div>
+      <h3>${esc(n.title)}</h3>
+      <div class="nt-ex">${esc(mdPlain(n.body).slice(0,180))||"—"}</div>
+      ${tags.length?`<div class="nt-tags">${tags.map(t=>`<span class="tagchip">#${esc(t)}</span>`).join("")}</div>`:""}
+      <div class="nt-foot">
+        <span>↗ ${salen}</span><span>↘ ${entran}</span>
+        <span class="nt-when">${fechaCorta(n.ts)}</span>
+      </div>`;
+    div.addEventListener("click",()=>abrirNota(n.id));
+    grid.appendChild(div);
+  }
+}
+function abrirNota(id){ ntAbierta=id; renderNotes(); window.scrollTo({top:0,behavior:"smooth"}); }
+function cerrarNota(){ ntAbierta=null; renderNotes(); }
+
+function renderNoteReader(){
+  const cont=document.getElementById("ntReader");
+  const n=noteById(ntAbierta);
+  if(!n){ ntAbierta=null; renderNotes(); return; }
+  const c=noteColor(n);
+  const salientes=linkTargets(n).map(t=>({t,nota:noteByTitle(t)}));
+  const entrantes=backlinks(n);
+  const tags=tagsOf(n);
+  cont.style.setProperty("--c",c);
+  cont.innerHTML=`
+    <div class="nt-rhead">
+      <div style="flex:1;min-width:0">
+        <div class="nt-kind">${esc(n.type||"Nota")}</div>
+        <h2>${esc(n.title)}</h2>
+      </div>
+      <div class="nt-racts">
+        <button class="mini-btn" id="ntBack" title="Volver a la lista"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+        <button class="mini-btn" id="ntEdit" title="Editar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg></button>
+        <button class="mini-btn" id="ntDel" title="Eliminar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button>
+      </div>
+    </div>
+    <div class="nt-rmeta">
+      ${n.source?`<span>📖 ${esc(n.source)}</span>`:""}
+      <span>Editada el ${fechaCorta(n.ts)||"—"}</span>
+      ${tags.length?`<span class="nt-tags">${tags.map(t=>`<a class="tagchip" data-tag="${esc(t)}">#${esc(t)}</a>`).join("")}</span>`:""}
+    </div>
+    <div class="nt-doc">${mdRender(n.body)||'<p style="color:var(--ink-faint)">Esta nota está vacía.</p>'}</div>
+    <div class="nt-rel">
+      <div>
+        <h4>Enlaza con</h4>
+        ${salientes.length?`<ul>${salientes.map(s=>`<li><a class="wlink${s.nota?"":" new"}" data-wl="${esc(s.t)}">${esc(s.t)}</a>${s.nota?"":' <span class="none">— por crear</span>'}</li>`).join("")}</ul>`
+          :`<div class="none">Nada todavía. Escribe [[un título]] en el texto para conectarla.</div>`}
+      </div>
+      <div>
+        <h4>La mencionan</h4>
+        ${entrantes.length?`<ul>${entrantes.map(b=>`<li><a class="wlink" data-wl="${esc(b.title)}">${esc(b.title)}</a></li>`).join("")}</ul>`
+          :`<div class="none">Ninguna nota apunta aquí por ahora.</div>`}
+      </div>
+    </div>`;
+  document.getElementById("ntBack").addEventListener("click",cerrarNota);
+  document.getElementById("ntEdit").addEventListener("click",()=>openNoteForm(n.id));
+  document.getElementById("ntDel").addEventListener("click",()=>{
+    if(!confirm(`¿Eliminar la nota “${n.title}”?\n\nLas notas que la mencionan quedarán con el enlace en gris, listo para volver a crearla.`)) return;
+    store.notes=store.notes.filter(x=>x.id!==n.id); saveStore(); ntAbierta=null; renderNotes(); netInvalidar(); toast("Nota eliminada");
+  });
+  cont.querySelectorAll("[data-wl]").forEach(a=>a.addEventListener("click",()=>seguirEnlace(a.dataset.wl)));
+  cont.querySelectorAll("[data-tag]").forEach(a=>a.addEventListener("click",()=>{
+    ntFiltro="#"+a.dataset.tag; ntTipo=""; ntAbierta=null;
+    document.getElementById("ntSearch").value=ntFiltro; renderNotes();
+  }));
+}
+/* Tocar un [[enlace]]: si la nota existe se abre; si no, se ofrece crearla
+   con ese título ya puesto. Nunca se crea nada sin preguntar. */
+function seguirEnlace(titulo){
+  const n=noteByTitle(titulo);
+  if(n){ abrirNota(n.id); return; }
+  if(confirm(`Todavía no existe la nota “${titulo}”.\n\n¿Crearla ahora?`)) openNoteForm(null,titulo);
+}
+
+/* ---- Formulario ---- */
+function openNoteForm(id,tituloPrevio){
+  const n=id?noteById(id):null;
+  openModal(n?"Editar nota":"Nueva nota",`
+    <div class="field"><label>Título</label>
+      <input id="f_ntitle" value="${n?esc(n.title):esc(tituloPrevio||"")}" placeholder="Ej: Hábitos atómicos"></div>
+    <div class="field row2">
+      <div class="field"><label>Tipo</label>
+        <select id="f_ntype">${NOTE_TYPE_LIST.map(t=>`<option ${(n?n.type:"Nota")===t?"selected":""}>${t}</option>`).join("")}</select></div>
+      <div class="field"><label>Fuente o autor (opcional)</label>
+        <input id="f_nsource" value="${n?esc(n.source||""):""}" placeholder="Ej: James Clear"></div>
+    </div>
+    <div class="field"><label>Etiquetas (separadas por coma)</label>
+      <input id="f_ntags" value="${n?esc((n.tags||[]).join(", ")):""}" placeholder="lectura, productividad"></div>
+    <div class="field nt-acwrap"><label>Apuntes</label>
+      <textarea id="f_nbody" style="min-height:260px" placeholder="Escribe aquí. Usa [[Título de otra nota]] para enlazar, # para títulos, - para listas y #etiqueta donde quieras.">${n?esc(n.body||""):""}</textarea>
+      <div class="nt-ac" id="ntAc"></div>
+      <div class="hint">Escribe <span class="mono">[[</span> y aparecen tus notas para elegir. Si el título no existe, el enlace queda en gris hasta que crees esa nota.</div>
+    </div>
+  `,()=>{
+    const title=val("f_ntitle").trim();
+    if(!title){ toast("Ponle un título a la nota"); return; }
+    const repetida=noteByTitle(title);
+    if(repetida && (!n || repetida.id!==n.id)){ toast("Ya tienes una nota con ese título"); return; }
+    const tituloViejo=n?n.title:"";
+    const obj={
+      title,
+      type:val("f_ntype"),
+      source:val("f_nsource").trim(),
+      tags:val("f_ntags").split(",").map(t=>t.replace(/^#/,"").trim()).filter(Boolean),
+      body:document.getElementById("f_nbody").value,
+      ts:Date.now()
+    };
+    if(n) Object.assign(n,obj);
+    else store.notes.push(Object.assign({id:uid(),created:Date.now()},obj));
+    /* Si le cambiaste el nombre, los [[enlaces]] de las demás notas se
+       actualizan solos para que la red no se rompa. */
+    if(n && tituloViejo && normTitle(tituloViejo)!==normTitle(title)) renombrarEnlaces(tituloViejo,title);
+    saveStore(); closeModal(); netInvalidar();
+    if(!n){ ntAbierta=(store.notes[store.notes.length-1]||{}).id||null; }
+    renderNotes(); toast(n?"Nota actualizada":"Nota creada");
+  });
+  const modal=document.querySelector(".modal"); if(modal) modal.classList.add("wide");
+  montarAutocompletado();
+}
+function renombrarEnlaces(viejo,nuevo){
+  const k=normTitle(viejo);
+  store.notes.forEach(n=>{
+    if(!n.body||n.body.indexOf("[[")<0) return;
+    n.body=n.body.replace(WIKI_RE,(todo,t,alias)=>
+      normTitle(t)===k ? `[[${nuevo}${alias?"|"+alias:""}]]` : todo);
+  });
+}
+/* Sugerencias al escribir [[ */
+function montarAutocompletado(){
+  const ta=document.getElementById("f_nbody"), ac=document.getElementById("ntAc");
+  if(!ta||!ac) return;
+  let opciones=[], sel=0;
+  const contexto=()=>{
+    const pos=ta.selectionStart, antes=ta.value.slice(0,pos);
+    const i=antes.lastIndexOf("[[");
+    if(i<0) return null;
+    const frag=antes.slice(i+2);
+    if(/[\]\n]/.test(frag)) return null;
+    return {i,frag};
+  };
+  const cerrar=()=>{ ac.classList.remove("on"); opciones=[]; };
+  const pintar=()=>{
+    const ctx=contexto();
+    if(!ctx){ cerrar(); return; }
+    const q=normTitle(ctx.frag);
+    opciones=store.notes
+      .filter(n=>!q||normTitle(n.title).includes(q))
+      .sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,6);
+    if(!opciones.length){ cerrar(); return; }
+    sel=0;
+    ac.innerHTML=opciones.map((n,i)=>
+      `<button type="button" data-i="${i}" class="${i===0?"sel":""}">${esc(n.title)}<small>${esc(n.type||"Nota")}</small></button>`).join("");
+    ac.classList.add("on");
+    ac.querySelectorAll("[data-i]").forEach(b=>b.addEventListener("mousedown",ev=>{
+      ev.preventDefault(); insertar(opciones[+b.dataset.i]);
+    }));
+  };
+  const insertar=(n)=>{
+    const ctx=contexto(); if(!ctx||!n) return;
+    const pos=ta.selectionStart;
+    ta.value=ta.value.slice(0,ctx.i)+"[["+n.title+"]]"+ta.value.slice(pos);
+    const caret=ctx.i+n.title.length+4;
+    ta.focus(); ta.setSelectionRange(caret,caret);
+    cerrar();
+  };
+  ta.addEventListener("input",pintar);
+  ta.addEventListener("click",pintar);
+  ta.addEventListener("blur",()=>setTimeout(cerrar,120));
+  ta.addEventListener("keydown",e=>{
+    if(!ac.classList.contains("on")) return;
+    if(e.key==="ArrowDown"||e.key==="ArrowUp"){
+      e.preventDefault();
+      sel=(sel+(e.key==="ArrowDown"?1:opciones.length-1))%opciones.length;
+      ac.querySelectorAll("button").forEach((b,i)=>b.classList.toggle("sel",i===sel));
+    } else if(e.key==="Enter"||e.key==="Tab"){ e.preventDefault(); insertar(opciones[sel]); }
+    else if(e.key==="Escape"){ cerrar(); }
+  });
+}
+
+/* ---- Importar y exportar Markdown (el puente con Obsidian) ---- */
+function parsearMarkdown(texto,nombreArchivo){
+  let body=texto.replace(/^\uFEFF/,""), tags=[], type="Nota", source="";
+  const fm=body.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
+  if(fm){
+    body=body.slice(fm[0].length);
+    fm[1].split(/\r?\n/).forEach(l=>{
+      const m=l.match(/^\s*([\w-]+)\s*:\s*(.*)$/); if(!m) return;
+      const clave=m[1].toLowerCase(), valor=m[2].trim();
+      if(clave==="tags"||clave==="etiquetas")
+        tags=valor.replace(/[\[\]"']/g,"").split(/[,\s]+/).map(t=>t.replace(/^#/,"").trim()).filter(Boolean);
+      else if(clave==="tipo"||clave==="type"){ const t=NOTE_TYPE_LIST.find(x=>normTitle(x)===normTitle(valor)); if(t) type=t; }
+      else if(clave==="fuente"||clave==="source"||clave==="autor"||clave==="author") source=valor;
+    });
+  }
+  let title=nombreArchivo.replace(/\.(md|markdown|txt)$/i,"").trim();
+  const h1=body.match(/^\s*#\s+(.+)$/m);
+  if(h1 && normTitle(h1[1])===normTitle(title)) body=body.replace(h1[0],"").replace(/^\s*\n/,"");
+  return {title,body:body.trim(),tags,type,source};
+}
+async function importarNotasMd(files){
+  let nuevas=0, actualizadas=0;
+  for(const f of files){
+    let texto=""; try{ texto=await f.text(); }catch(e){ continue; }
+    const d=parsearMarkdown(texto,f.name);
+    if(!d.title) continue;
+    const ya=noteByTitle(d.title);
+    if(ya){ Object.assign(ya,{body:d.body,tags:d.tags.length?d.tags:ya.tags,source:d.source||ya.source,ts:Date.now()}); actualizadas++; }
+    else { store.notes.push({id:uid(),created:Date.now(),ts:Date.now(),...d}); nuevas++; }
+  }
+  saveStore(); ntAbierta=null; renderNotes(); netInvalidar();
+  toast(`${nuevas} nota${nuevas===1?"":"s"} nueva${nuevas===1?"":"s"}${actualizadas?` · ${actualizadas} actualizada${actualizadas===1?"":"s"}`:""}`);
+}
+function notaAMarkdown(n){
+  const meta=["---","tipo: "+(n.type||"Nota")];
+  if((n.tags||[]).length) meta.push("tags: ["+n.tags.join(", ")+"]");
+  if(n.source) meta.push("fuente: "+n.source);
+  meta.push("---","");
+  return meta.join("\n")+(n.body||"")+"\n";
+}
+function nombreArchivo(t){
+  return (t||"nota").replace(/[\\/:*?"<>|]/g,"-").replace(/\s+/g," ").trim().slice(0,80)+".md";
+}
+/* ZIP sin compresión: son pocos KB de texto y así no hace falta
+   ninguna librería externa. Cualquier descompresor lo abre. */
+const CRC_TABLA=(()=>{
+  const t=new Uint32Array(256);
+  for(let i=0;i<256;i++){ let c=i; for(let k=0;k<8;k++) c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1); t[i]=c>>>0; }
+  return t;
+})();
+function crc32(buf){
+  let c=0xFFFFFFFF;
+  for(let i=0;i<buf.length;i++) c=CRC_TABLA[(c^buf[i])&0xFF]^(c>>>8);
+  return (c^0xFFFFFFFF)>>>0;
+}
+function crearZip(archivos){
+  const enc=new TextEncoder(), partes=[], central=[];
+  const ahora=new Date();
+  const hora=((ahora.getHours()<<11)|(ahora.getMinutes()<<5)|(ahora.getSeconds()>>1))&0xFFFF;
+  const fecha=(((ahora.getFullYear()-1980)<<9)|((ahora.getMonth()+1)<<5)|ahora.getDate())&0xFFFF;
+  let offset=0;
+  for(const a of archivos){
+    const nombre=enc.encode(a.name), datos=enc.encode(a.text), crc=crc32(datos);
+    const local=new Uint8Array(30+nombre.length), dv=new DataView(local.buffer);
+    dv.setUint32(0,0x04034b50,true); dv.setUint16(4,20,true); dv.setUint16(6,0x0800,true);
+    dv.setUint16(8,0,true); dv.setUint16(10,hora,true); dv.setUint16(12,fecha,true);
+    dv.setUint32(14,crc,true); dv.setUint32(18,datos.length,true); dv.setUint32(22,datos.length,true);
+    dv.setUint16(26,nombre.length,true); dv.setUint16(28,0,true);
+    local.set(nombre,30);
+    partes.push(local,datos);
+    const cen=new Uint8Array(46+nombre.length), dc=new DataView(cen.buffer);
+    dc.setUint32(0,0x02014b50,true); dc.setUint16(4,20,true); dc.setUint16(6,20,true);
+    dc.setUint16(8,0x0800,true); dc.setUint16(10,0,true); dc.setUint16(12,hora,true); dc.setUint16(14,fecha,true);
+    dc.setUint32(16,crc,true); dc.setUint32(20,datos.length,true); dc.setUint32(24,datos.length,true);
+    dc.setUint16(28,nombre.length,true); dc.setUint16(30,0,true); dc.setUint16(32,0,true);
+    dc.setUint16(34,0,true); dc.setUint16(36,0,true); dc.setUint32(38,0,true);
+    dc.setUint32(42,offset,true);
+    cen.set(nombre,46);
+    central.push(cen);
+    offset+=local.length+datos.length;
+  }
+  const tamCentral=central.reduce((a,c)=>a+c.length,0);
+  const fin=new Uint8Array(22), df=new DataView(fin.buffer);
+  df.setUint32(0,0x06054b50,true); df.setUint16(4,0,true); df.setUint16(6,0,true);
+  df.setUint16(8,archivos.length,true); df.setUint16(10,archivos.length,true);
+  df.setUint32(12,tamCentral,true); df.setUint32(16,offset,true); df.setUint16(20,0,true);
+  return new Blob([...partes,...central,fin],{type:"application/zip"});
+}
+function exportarNotasMd(){
+  if(!store.notes.length){ toast("Todavía no hay notas que exportar"); return; }
+  const usados=new Set();
+  const archivos=store.notes.map(n=>{
+    let nombre=nombreArchivo(n.title), i=2;
+    while(usados.has(nombre.toLowerCase())){ nombre=nombreArchivo(n.title+" "+i); i++; }
+    usados.add(nombre.toLowerCase());
+    return {name:nombre,text:notaAMarkdown(n)};
+  });
+  downloadBlob(crearZip(archivos),"mis-notas-markdown.zip");
+  toast(`${archivos.length} notas exportadas`);
+}
+
+/* ============================================================
+   La red — un grafo de fuerzas dibujado en canvas
+   ------------------------------------------------------------
+   Cada nota es un punto; cada [[enlace]] una línea. Los puntos
+   se repelen entre sí y los enlaces tiran de ellos, así que los
+   grupos de notas relacionadas se juntan solos. Los títulos que
+   mencionaste pero todavía no escribiste salen como puntos
+   huecos: son los huecos de tu red.
+   ============================================================ */
+let netNodos=[], netAristas=[], netAlpha=0, netRAF=null, netListo=false;
+let netVista={x:0,y:0,z:1}, netArrastre=null, netMovio=false, netCanvas=null, netCtx=null;
+
+function netInvalidar(){ netListo=false; if(currentView==="notas"&&netVisible()) construirRed(); }
+function netVisible(){ const v=document.getElementById("nsub-red"); return v&&v.classList.contains("active"); }
+
+function construirRed(){
+  netCanvas=document.getElementById("netCanvas"); if(!netCanvas) return;
+  netCtx=netCanvas.getContext("2d"); if(!netCtx) return;
+  const previos=new Map(netNodos.map(n=>[n.key,n]));
+  netNodos=[]; netAristas=[];
+  const porClave=new Map();
+  const R=Math.min(260,60+store.notes.length*6);
+  store.notes.forEach((n,i)=>{
+    const ang=i*2.399963;
+    const nodo=previos.get("n:"+n.id)||{
+      x:Math.cos(ang)*R*Math.sqrt(i/Math.max(1,store.notes.length)),
+      y:Math.sin(ang)*R*Math.sqrt(i/Math.max(1,store.notes.length)),vx:0,vy:0
+    };
+    Object.assign(nodo,{key:"n:"+n.id,id:n.id,label:n.title,color:noteColor(n),fantasma:false,grado:0});
+    porClave.set(normTitle(n.title),nodo); netNodos.push(nodo);
+  });
+  store.notes.forEach(n=>{
+    const desde=porClave.get(normTitle(n.title));
+    linkTargets(n).forEach(t=>{
+      const k=normTitle(t);
+      let hasta=porClave.get(k);
+      if(!hasta){
+        hasta=previos.get("g:"+k)||{x:(Math.random()-.5)*300,y:(Math.random()-.5)*300,vx:0,vy:0};
+        Object.assign(hasta,{key:"g:"+k,id:null,label:t,color:null,fantasma:true,grado:0});
+        porClave.set(k,hasta); netNodos.push(hasta);
+      }
+      if(desde===hasta) return;
+      netAristas.push({a:desde,b:hasta});
+      desde.grado++; hasta.grado++;
+    });
+  });
+  netListo=true; netAlpha=1;
+  netAjustarTamano();
+  if(netNodos.length && (netVista.z===1&&netVista.x===0&&netVista.y===0)) netCentrar();
+  netLoop();
+  const vacio=document.getElementById("netEmpty");
+  if(vacio){
+    vacio.style.display=netNodos.length?"none":"grid";
+    vacio.innerHTML=`<div>Tu red está vacía.<br><span style="font-size:12.5px">Crea un par de notas y enlázalas con [[dobles corchetes]].</span></div>`;
+  }
+  const leyenda=document.getElementById("netLegend");
+  if(leyenda){
+    const usados=NOTE_TYPE_LIST.filter(t=>store.notes.some(n=>(n.type||"Nota")===t));
+    const fantasmas=netNodos.filter(n=>n.fantasma).length;
+    leyenda.innerHTML=usados.map(t=>`<span><i style="--c:${NOTE_TYPES[t]}"></i>${t}</span>`).join("")
+      +(fantasmas?`<span><i class="ghost"></i>Por crear (${fantasmas})</span>`:"");
+  }
+}
+function netAjustarTamano(){
+  if(!netCanvas) return;
+  const r=netCanvas.getBoundingClientRect(), dpr=window.devicePixelRatio||1;
+  netCanvas.width=Math.max(1,Math.round(r.width*dpr));
+  netCanvas.height=Math.max(1,Math.round(r.height*dpr));
+  netCtx.setTransform(dpr,0,0,dpr,0,0);
+}
+function netCentrar(){
+  if(!netNodos.length||!netCanvas) return;
+  const r=netCanvas.getBoundingClientRect();
+  let x1=Infinity,y1=Infinity,x2=-Infinity,y2=-Infinity;
+  netNodos.forEach(n=>{ x1=Math.min(x1,n.x); y1=Math.min(y1,n.y); x2=Math.max(x2,n.x); y2=Math.max(y2,n.y); });
+  const ancho=Math.max(60,x2-x1), alto=Math.max(60,y2-y1);
+  netVista.z=Math.min(1.6,Math.max(.25,Math.min((r.width-90)/ancho,(r.height-90)/alto)));
+  netVista.x=r.width/2-((x1+x2)/2)*netVista.z;
+  netVista.y=r.height/2-((y1+y2)/2)*netVista.z;
+}
+function netPaso(){
+  const n=netNodos.length; if(!n) return;
+  const repulsion=(n>120?5200:9000), largo=78;
+  for(let i=0;i<n;i++){
+    const a=netNodos[i];
+    for(let j=i+1;j<n;j++){
+      const b=netNodos[j];
+      let dx=b.x-a.x, dy=b.y-a.y, d2=dx*dx+dy*dy;
+      if(d2<0.01){ dx=Math.random()-.5; dy=Math.random()-.5; d2=0.01; }
+      if(d2>360000) continue;
+      const d=Math.sqrt(d2), f=repulsion/d2;
+      const fx=(dx/d)*f, fy=(dy/d)*f;
+      a.vx-=fx; a.vy-=fy; b.vx+=fx; b.vy+=fy;
+    }
+    a.vx-=a.x*0.0055; a.vy-=a.y*0.0055;
+  }
+  for(const e of netAristas){
+    let dx=e.b.x-e.a.x, dy=e.b.y-e.a.y;
+    const d=Math.sqrt(dx*dx+dy*dy)||0.01;
+    const f=(d-largo)*0.045;
+    const fx=(dx/d)*f, fy=(dy/d)*f;
+    e.a.vx+=fx; e.a.vy+=fy; e.b.vx-=fx; e.b.vy-=fy;
+  }
+  for(const a of netNodos){
+    if(a.fijo) { a.vx=a.vy=0; continue; }
+    a.vx*=0.82; a.vy*=0.82;
+    a.x+=Math.max(-14,Math.min(14,a.vx*netAlpha));
+    a.y+=Math.max(-14,Math.min(14,a.vy*netAlpha));
+  }
+  netAlpha=Math.max(0,netAlpha-0.006);
+}
+function netRadio(n){ return 5+Math.min(9,n.grado*1.4); }
+function netDibujar(){
+  if(!netCtx||!netCanvas) return;
+  const r=netCanvas.getBoundingClientRect();
+  const cs=getComputedStyle(document.documentElement);
+  const tinta=cs.getPropertyValue("--ink").trim()||"#20242c";
+  const suave=cs.getPropertyValue("--ink-faint").trim()||"#9aa1ad";
+  const linea=cs.getPropertyValue("--line").trim()||"#e4e0d7";
+  netCtx.clearRect(0,0,r.width,r.height);
+  netCtx.save();
+  netCtx.translate(netVista.x,netVista.y); netCtx.scale(netVista.z,netVista.z);
+  netCtx.strokeStyle=linea; netCtx.lineWidth=1.2/netVista.z;
+  netCtx.beginPath();
+  for(const e of netAristas){ netCtx.moveTo(e.a.x,e.a.y); netCtx.lineTo(e.b.x,e.b.y); }
+  netCtx.stroke();
+  const mostrarTexto=netVista.z>0.55;
+  for(const n of netNodos){
+    const rad=netRadio(n);
+    netCtx.beginPath(); netCtx.arc(n.x,n.y,rad,0,Math.PI*2);
+    if(n.fantasma){
+      netCtx.setLineDash([3/netVista.z,3/netVista.z]);
+      netCtx.strokeStyle=suave; netCtx.lineWidth=1.5/netVista.z; netCtx.stroke();
+      netCtx.setLineDash([]);
+    } else {
+      netCtx.fillStyle=n.color; netCtx.fill();
+    }
+    if(mostrarTexto){
+      netCtx.fillStyle=n.fantasma?suave:tinta;
+      netCtx.font=`${11/netVista.z*Math.min(1.4,netVista.z+0.4)}px Inter, sans-serif`;
+      netCtx.textAlign="center"; netCtx.textBaseline="top";
+      const txt=n.label.length>26?n.label.slice(0,25)+"…":n.label;
+      netCtx.fillText(txt,n.x,n.y+rad+3/netVista.z);
+    }
+  }
+  netCtx.restore();
+}
+function netLoop(){
+  cancelAnimationFrame(netRAF);
+  const tick=()=>{
+    if(!netVisible()) return;
+    if(netAlpha>0.002||netArrastre) netPaso();
+    netDibujar();
+    netRAF=requestAnimationFrame(tick);
+  };
+  netRAF=requestAnimationFrame(tick);
+}
+function netNodoEn(cx,cy){
+  const x=(cx-netVista.x)/netVista.z, y=(cy-netVista.y)/netVista.z;
+  let mejor=null, mejorD=Infinity;
+  for(const n of netNodos){
+    const d=Math.hypot(n.x-x,n.y-y), tope=netRadio(n)+10/netVista.z;
+    if(d<tope&&d<mejorD){ mejor=n; mejorD=d; }
+  }
+  return mejor;
+}
+function montarRedEventos(){
+  const c=document.getElementById("netCanvas"); if(!c||c.dataset.listo) return;
+  c.dataset.listo="1";
+  const pos=e=>{ const r=c.getBoundingClientRect(); return {x:e.clientX-r.left,y:e.clientY-r.top}; };
+  c.addEventListener("pointerdown",e=>{
+    c.setPointerCapture(e.pointerId);
+    const p=pos(e), n=netNodoEn(p.x,p.y);
+    netMovio=false;
+    netArrastre=n?{nodo:n,ox:p.x,oy:p.y}:{pan:true,ox:p.x,oy:p.y,vx:netVista.x,vy:netVista.y};
+    if(n){ n.fijo=true; netAlpha=Math.max(netAlpha,.35); }
+  });
+  c.addEventListener("pointermove",e=>{
+    if(!netArrastre) return;
+    const p=pos(e);
+    if(Math.hypot(p.x-netArrastre.ox,p.y-netArrastre.oy)>4) netMovio=true;
+    if(netArrastre.pan){
+      netVista.x=netArrastre.vx+(p.x-netArrastre.ox);
+      netVista.y=netArrastre.vy+(p.y-netArrastre.oy);
+      netDibujar();
+    } else {
+      netArrastre.nodo.x=(p.x-netVista.x)/netVista.z;
+      netArrastre.nodo.y=(p.y-netVista.y)/netVista.z;
+      netAlpha=Math.max(netAlpha,.3);
+    }
+  });
+  const soltar=e=>{
+    if(!netArrastre) return;
+    const arr=netArrastre; netArrastre=null;
+    if(arr.nodo){
+      arr.nodo.fijo=false;
+      if(!netMovio){
+        if(arr.nodo.id) abrirNotaDesdeRed(arr.nodo.id);
+        else seguirEnlace(arr.nodo.label);
+      }
+    }
+    netLoop();
+  };
+  c.addEventListener("pointerup",soltar);
+  c.addEventListener("pointercancel",soltar);
+  c.addEventListener("wheel",e=>{
+    e.preventDefault();
+    const p=pos(e), factor=Math.exp(-e.deltaY*0.0016);
+    const z=Math.max(.15,Math.min(3,netVista.z*factor));
+    netVista.x=p.x-(p.x-netVista.x)*(z/netVista.z);
+    netVista.y=p.y-(p.y-netVista.y)*(z/netVista.z);
+    netVista.z=z; netDibujar();
+  },{passive:false});
+  document.getElementById("netFit").addEventListener("click",()=>{ netCentrar(); netDibujar(); });
+  document.getElementById("netShake").addEventListener("click",()=>{
+    netNodos.forEach(n=>{ n.x+=(Math.random()-.5)*90; n.y+=(Math.random()-.5)*90; });
+    netAlpha=1; netLoop();
+  });
+  window.addEventListener("resize",()=>{ if(netVisible()){ netAjustarTamano(); netDibujar(); } });
+}
+function abrirNotaDesdeRed(id){
+  document.querySelector('.nsubtab[data-nsub="lista"]').click();
+  abrirNota(id);
+}
+function mostrarRed(){
+  montarRedEventos();
+  if(!netListo) construirRed();
+  else { netAjustarTamano(); netAlpha=Math.max(netAlpha,.25); netLoop(); }
+}
+
+/* ---- Enganches de la sección ---- */
+document.querySelectorAll(".nsubtab").forEach(s=>s.addEventListener("click",()=>{
+  document.querySelectorAll(".nsubtab").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll(".nsub-view").forEach(x=>x.classList.remove("active"));
+  s.classList.add("active");
+  document.getElementById("nsub-"+s.dataset.nsub).classList.add("active");
+  if(s.dataset.nsub==="red") setTimeout(mostrarRed,30);
+}));
+document.getElementById("addNote").addEventListener("click",()=>openNoteForm(null));
+document.getElementById("ntSearch").addEventListener("input",e=>{ ntFiltro=e.target.value; ntAbierta=null; renderNotes(); });
+document.getElementById("ntSort").addEventListener("change",e=>{ ntOrden=e.target.value; renderNotes(); });
+document.getElementById("ntImport").addEventListener("click",()=>document.getElementById("mdFiles").click());
+document.getElementById("ntExport").addEventListener("click",exportarNotasMd);
+document.getElementById("mdFiles").addEventListener("change",async e=>{
+  const files=Array.from(e.target.files||[]);
+  if(files.length) await importarNotasMd(files);
+  e.target.value="";
+});
+
 /* ============================================================
    Navegación general
    ============================================================ */
@@ -2197,6 +3082,7 @@ function refreshCurrent(){
   else if(currentView==="rutina") renderRoutine();
   else if(currentView==="pendientes") renderPending();
   else if(currentView==="diario") renderJournal();
+  else if(currentView==="notas"){ renderNotes(); if(netVisible()) mostrarRed(); }
   else { renderMemCal(); }
 }
 document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
@@ -2259,6 +3145,7 @@ document.getElementById("fab").addEventListener("click",()=>{
   else if(currentView==="pendientes") openGroupForm(null);
   else if(currentView==="recuerdos") openMemForm(null);
   else if(currentView==="diario") openEntryForm(null);
+  else if(currentView==="notas") openNoteForm(null);
   else openEventForm(null);
 });
 
@@ -2524,6 +3411,7 @@ function contarStore(s){
     ["eventos",(s.events||[]).length],
     ["recuerdos",(s.memories||[]).length],
     ["entradas de diario",(s.journal||[]).length],
+    ["notas",(s.notes||[]).length],
     ["hábitos",(s.routines||[]).length],
     ["pendientes",(s.pending||[]).reduce((a,g)=>a+((g.items||[]).length),0)],
     ["días de rutina",Object.keys(s.routineLog||{}).length],
@@ -2610,6 +3498,7 @@ function combinarStores(local,nube){
     metricLog:  unirLogs(local.metricLog,nube.metricLog,bGana),
     monthly:    unirMeses(local.monthly,nube.monthly,bGana),
     pending:    unirPendientes(local.pending,nube.pending,bGana),
+    notes:      unirPorId(local.notes,nube.notes,bGana),
     ui: Object.assign({},nube.ui||{},local.ui||{},{
       monthSetsV2: !!(((local.ui||{}).monthSetsV2)||((nube.ui||{}).monthSetsV2))
     })
@@ -2846,6 +3735,7 @@ function updateSyncUI(msg){
   renderMemCal();
   renderJournal();
   renderPending();
+  renderNotes();
   initPendingEvents();
   if(memoryOnly) toast("Vista previa: los cambios no se guardarán aquí");
 })();
