@@ -1,9 +1,10 @@
 # Mi almanaque
 
-App web personal para organizar tu tiempo en cinco secciones: **Agenda** (lo que se
+App web personal para organizar tu tiempo en seis secciones: **Agenda** (lo que se
 viene), **Rutina** (tu tracker mensual de hábitos), **Pendientes** (tus listas por tema,
 como notas que te mandas a ti mismo), **Recuerdos** (lo que ya viviste, con fotos y un
-globo con mapa mundi) y **Diario** (entradas de texto). La Agenda y los Recuerdos están
+globo con mapa mundi), **Diario** (entradas de texto) y **Notas** (apuntes enlazados
+entre sí, con su mapa de conexiones). La Agenda y los Recuerdos están
 conectados, para no escribir la misma salida dos veces. Incluye tema claro/oscuro, diseño
 responsive y sincronización opcional con Google Drive.
 
@@ -34,7 +35,7 @@ con Drive (ver más abajo). Por eso:
 - **Cargar eventos (.csv):** solo *agrega* eventos a la Agenda desde la hoja "Eventos" de
   la planilla de Excel. No reemplaza nada.
 
-## Las cinco secciones
+## Las seis secciones
 
 - **Agenda:** vista de mes con colores según cuántas cosas hay cada día. Toca un día para
   ver el detalle ordenado por hora (los de "todo el día" primero). Botón "Ver el año" con
@@ -58,6 +59,10 @@ con Drive (ver más abajo). Por eso:
   sub-pestaña "Globo" muestra tus recuerdos como puntos sobre el mapa mundi (necesitan
   coordenadas).
 - **Diario:** entradas de texto con fecha, ánimo y título opcional.
+- **Notas:** tus apuntes de lectura y tus proyectos, enlazados entre sí. Escribe
+  `[[el título de otra nota]]` dentro del texto y las dos quedan conectadas; la
+  sub-pestaña "Red" dibuja el conjunto como un mapa de puntos y líneas
+  (ver más abajo).
 
 ## De la Agenda a los Recuerdos (sin escribir dos veces)
 
@@ -103,6 +108,56 @@ retomarlo en mayo, sin perder nada de lo marcado.
 **Si ya venías usando la app:** todos los meses en los que tengas algo marcado reciben
 automáticamente tu lista de hábitos y métricas actual, así que los ves exactamente igual que
 antes. El cambio solo se nota de aquí en adelante, en los meses nuevos.
+
+## Las notas y su red
+
+La sección **Notas** es un cuaderno donde las hojas se pueden coser entre sí, al estilo de
+Obsidian. Cada nota tiene título, tipo (Nota, Idea, Libro, Proyecto, Persona, Concepto),
+fuente o autor opcional, etiquetas y un cuerpo de texto.
+
+### Enlazar
+
+Dentro del cuerpo, `[[Título de otra nota]]` crea un enlace. Mientras escribes `[[`
+aparecen tus notas para elegir de la lista.
+
+- Los títulos se comparan sin distinguir mayúsculas ni tildes: `[[habitos atomicos]]`
+  encuentra "Hábitos atómicos".
+- `[[Título|como quieras llamarlo]]` muestra otro texto pero enlaza a lo mismo.
+- Si el título **todavía no existe**, el enlace queda en gris; al tocarlo, la app te
+  ofrece crear esa nota. Son los huecos por llenar.
+- Al pie de cada nota hay dos columnas: **Enlaza con** (a dónde apunta) y **La mencionan**
+  (los retroenlaces: quién apunta hacia ella, sin que tengas que anotarlo dos veces).
+- Si **renombras** una nota, los `[[enlaces]]` de las demás se actualizan solos.
+
+### Escribir
+
+El cuerpo acepta Markdown básico: `#` para títulos, `-` para listas, `- [ ]` para tareas,
+`> ` para citas, `**negrita**`, `*cursiva*`, `` `código` ``, `==destacado==` y bloques con
+triple acento grave. Cualquier `#etiqueta` suelta en el texto se vuelve un chip: al tocarlo
+se filtran todas las notas que la usan. También puedes escribir etiquetas en su propio campo.
+
+### La red
+
+La sub-pestaña **Red** dibuja cada nota como un punto (del color de su tipo) y cada enlace
+como una línea. Los puntos se repelen y los enlaces tiran de ellos, así que los grupos de
+notas relacionadas se agrupan solos. Los títulos que mencionaste pero aún no escribes salen
+como círculos huecos.
+
+Arrastra el fondo para moverte, la rueda o el pellizco para acercar, arrastra un punto para
+acomodarlo, y tócalo para abrir la nota. El botón ⤢ centra todo y ↻ reacomoda.
+
+### Ir y venir con Obsidian
+
+El formato es el mismo, así que no hay conversión de por medio:
+
+- **Importar .md** acepta varios archivos a la vez. El nombre del archivo es el título; si
+  hay *frontmatter* (`tags:`, `tipo:`, `fuente:`) se lee. Si ya tienes una nota con ese
+  título, se actualiza en vez de duplicarse.
+- **Exportar .md** baja un `.zip` con una nota por archivo, listo para soltar dentro de un
+  vault de Obsidian. Los `[[enlaces]]` siguen funcionando allá tal cual.
+
+Las notas viajan también en el respaldo `.json` y en la sincronización con Drive, igual que
+todo lo demás.
 
 ## El globo
 
