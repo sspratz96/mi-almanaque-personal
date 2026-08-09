@@ -1784,6 +1784,9 @@ let modalSave=null;
 function openModal(title,html,onSave){
   document.getElementById("mTitle").textContent=title;
   document.getElementById("mBody").innerHTML=html;
+  /* El pie vuelve siempre a su texto por defecto; cada modal puede cambiarlo
+     después (por ejemplo "Datos y respaldo" lo pasa a "Cerrar"). */
+  document.getElementById("mCancel").textContent="Cancelar";
   modalSave=onSave;
   modalWrap.classList.add("on");
 }
@@ -2797,6 +2800,10 @@ function updateSyncUI(msg){
     } else el.textContent="No conectado";
   }
   const on=!!(store.ui&&store.ui.driveConnected);
+  /* Con Drive ya conectado no hay nada que cancelar: el botón del pie solo cierra.
+     Solo se cambia si el modal abierto es el de datos (el que tiene syncStatus). */
+  const cancelBtn=document.getElementById("mCancel");
+  if(cancelBtn&&el&&modalWrap.classList.contains("on")) cancelBtn.textContent=on?"Cerrar":"Cancelar";
   if(cb) cb.style.display=on?"none":"";
   if(db) db.style.display=on?"":"none";
   if(nb) nb.style.display=on?"":"none";
