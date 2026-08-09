@@ -2414,25 +2414,42 @@ function ensureGis(){
       else if(++n>60){clearInterval(t);rej(new Error("no-gis"));} },100);
   });
 }
+/* Google avisa el resultado por dos vías distintas: "callback" cuando todo salió
+   bien y "error_callback" cuando la ventana no se pudo abrir o la cerraste. Si
+   solo se escucha la primera, un popup bloqueado deja la promesa colgada para
+   siempre y la app se queda en "Conectando…". Por eso se atienden las dos, y
+   además hay un tiempo límite como último seguro. */
+let tokenPending=null;
+function resolverToken(ok,valor){
+  const p=tokenPending; tokenPending=null;
+  if(!p) return;
+  clearTimeout(p.timer);
+  ok?p.resolve(valor):p.reject(valor);
+}
 async function initTokenClient(){
   await ensureGis();
   if(!tokenClient){
     tokenClient=google.accounts.oauth2.initTokenClient({
-      client_id:GOOGLE_CLIENT_ID, scope:DRIVE_SCOPE, callback:()=>{} });
+      client_id:GOOGLE_CLIENT_ID, scope:DRIVE_SCOPE,
+      callback:(resp)=>{
+        if(!resp||resp.error) return resolverToken(false,resp||{type:"sin_respuesta"});
+        accessToken=resp.access_token;
+        tokenExpiry=Date.now()+((resp.expires_in||3600)*1000)-60000;
+        resolverToken(true,accessToken);
+      },
+      error_callback:(err)=>resolverToken(false,err||{type:"popup_failed_to_open"})
+    });
   }
 }
 function requestToken(interactive){
   return new Promise((resolve,reject)=>{
+    /* Si ya había una petición esperando, se descarta: manda la nueva. */
+    if(tokenPending) resolverToken(false,{type:"reemplazada"});
     initTokenClient().then(()=>{
-      tokenClient.callback=(resp)=>{
-        if(resp&&resp.error) return reject(resp);
-        accessToken=resp.access_token;
-        tokenExpiry=Date.now()+((resp.expires_in||3600)*1000)-60000;
-        resolve(accessToken);
-      };
+      tokenPending={resolve,reject,timer:setTimeout(()=>resolverToken(false,{type:"timeout"}),90000)};
       try{ tokenClient.requestAccessToken({prompt: interactive?"consent":""}); }
-      catch(e){ reject(e); }
-    }).catch(reject);
+      catch(e){ resolverToken(false,e); }
+    }).catch(e=>{ tokenPending=null; reject(e); });
   });
 }
 function tokenValid(){ return accessToken && Date.now()<tokenExpiry; }
@@ -2659,7 +2676,7 @@ function finalizarSync(){
 /* ---- Motor principal ----
    modo: "auto" | "bajar" | "subir" | "combinar" */
 async function driveSync(interactive,modo){
-  if(driveBusy) return;
+  if(driveBusy){ toast("Ya hay una sincronización en curso"); return; }
   modo=modo||"auto";
   driveBusy=true; updateSyncUI("Conectando…");
   let preguntar=null;
@@ -2724,7 +2741,11 @@ async function driveSync(interactive,modo){
     preguntar=()=>preguntarConflicto(cloud,file,cs,ls);
   }catch(e){
     console.error(e);
-    if(e&&(e.type==="popup_closed"||e.error==="access_denied"||e.type==="popup_failed_to_open")) toast("Conexión cancelada");
+    const t=(e&&(e.type||e.error))||"";
+    if(t==="popup_closed"||t==="access_denied") toast("Conexión cancelada");
+    else if(t==="popup_failed_to_open") toast("El navegador bloqueó la ventana de Google. Permite las ventanas emergentes de este sitio.");
+    else if(t==="timeout") toast("Google no respondió. Revisa la ventana emergente e intenta de nuevo.");
+    else if(t==="reemplazada"){ /* la reemplazó otra petición: sin aviso */ }
     else toast("No se pudo conectar con Drive");
   }finally{
     driveBusy=false; updateSyncUI();
@@ -2763,6 +2784,10 @@ function preguntarConflicto(cloud,file,cs,ls){
 }
 
 function driveDisconnect(){
+  /* Desconectar también sirve de botón de emergencia: corta cualquier intento
+     de conexión que haya quedado esperando y libera el candado. */
+  resolverToken(false,{type:"reemplazada"});
+  driveBusy=false;
   store.ui.driveConnected=false; accessToken=null; tokenExpiry=0;
   persistir(); updateSyncUI(); toast("Sincronización desconectada");
 }
