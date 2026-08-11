@@ -66,4 +66,5 @@ window.FRASES = [
   ["A harmless man is not a good man. A good man is a very, very dangerous man who has that under voluntary control.", "Jordan Peterson"],
   ["A society grows great when old men plant trees in whose shade they know they shall never sit in.", "Greek Proverb"],
   ["One must imagine Sisyphus happy.", "Albert Camus"], 
+  ["Even if it’s not your fault, it’s your responsibility.", "Terry Pratchett"],
 ];
