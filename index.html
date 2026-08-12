@@ -538,6 +538,92 @@ textarea{resize:vertical;min-height:64px}
 .pend-clear:hover{color:var(--ink-soft);text-decoration:underline}
 @media(max-width:720px){ .pend-grid{grid-template-columns:1fr} }
 
+/* ---------- Billetera ---------- */
+.wl-quick{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:14px 16px 13px;box-shadow:var(--shadow-soft);margin-bottom:16px}
+.wl-amount{display:flex;align-items:center;gap:9px}
+.wl-amount .wl-cur{font-family:"Fraunces",serif;font-size:25px;color:var(--ink-faint);line-height:1;flex:0 0 auto}
+.wl-amount input{flex:1;min-width:0;font-family:"Space Mono",ui-monospace,monospace;font-size:25px;font-weight:700;
+  padding:5px 6px;border:none;border-bottom:2px solid var(--line);background:transparent;color:var(--ink)}
+.wl-amount input::placeholder{color:var(--ink-faint);opacity:.5}
+.wl-amount input:focus{outline:none;border-bottom-color:var(--accent)}
+.wl-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
+.wl-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);
+  border-left:4px solid var(--c,#3b6ea5);background:var(--bg-2);border-radius:9px;padding:7px 11px;
+  font-family:inherit;font-size:13px;color:var(--ink);cursor:pointer;transition:transform .1s,border-color .15s,background .15s}
+.wl-chip:hover{background:var(--panel);border-color:var(--c,#3b6ea5);border-left-color:var(--c,#3b6ea5)}
+.wl-chip:active{transform:scale(.94)}
+.wl-chip .plus{color:#2a8f4e;font-weight:700}
+[data-theme="dark"] .wl-chip .plus{color:#6fce8e}
+.wl-chip-add{border-left-color:var(--line);color:var(--ink-faint);border-style:dashed}
+.wl-hint{font-size:12px;color:var(--ink-faint);margin-top:11px;line-height:1.45}
+.wl-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.wl-stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:13px 15px;box-shadow:var(--shadow-soft);min-width:0}
+.wl-stat .lbl{font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-faint)}
+.wl-stat .num{font-family:"Fraunces",serif;font-size:23px;font-weight:600;margin-top:5px;line-height:1.15;
+  word-break:break-word}
+.wl-stat .sub{font-size:11.5px;color:var(--ink-faint);margin-top:5px;line-height:1.35}
+.wl-neg{color:#c0392b}.wl-pos{color:#2a8f4e}
+[data-theme="dark"] .wl-neg{color:#f08a8a}[data-theme="dark"] .wl-pos{color:#6fce8e}
+.wl-bars{display:flex;align-items:flex-end;gap:2px;height:82px;margin:2px 0 7px}
+.wl-bars .b{flex:1;min-width:0;background:var(--line-2);border-radius:2px 2px 0 0;min-height:2px}
+.wl-bars .b.has{background:var(--accent)}
+.wl-bars .b.top{background:#c0392b}
+.wl-bars .b.today{box-shadow:0 0 0 1.5px var(--ink-faint)}
+.wl-axis{display:flex;justify-content:space-between;font-family:"Space Mono",monospace;
+  font-size:10px;color:var(--ink-faint)}
+.wl-budrow{display:flex;align-items:center;gap:9px;font-size:13.5px;margin-bottom:9px}
+.wl-budrow .emo{font-size:16px;flex:0 0 auto}
+.wl-budrow .nm{flex:0 0 30%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wl-budrow .sumbar{flex:1}
+.wl-budrow .sumbar i{background:var(--c,#3b6ea5)}
+.wl-budrow.over .sumbar i{background:#c0392b}
+.wl-budrow .amt{font-family:"Space Mono",monospace;font-size:11.5px;color:var(--ink-soft);
+  white-space:nowrap;flex:0 0 auto;text-align:right;min-width:112px}
+.wl-budrow.over .amt{color:#c0392b}
+[data-theme="dark"] .wl-budrow.over .amt{color:#f08a8a}
+.wl-freerow{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-soft);
+  padding:5px 0;border-top:1px dashed var(--line-2)}
+.wl-freerow .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wl-freerow .amt{font-family:"Space Mono",monospace;font-size:12px}
+.wl-daylbl{display:flex;align-items:center;gap:10px;margin:16px 0 7px;
+  font-family:"Space Mono",monospace;font-size:11px;color:var(--ink-faint);letter-spacing:.05em}
+.wl-daylbl .ln{flex:1;height:1px;background:var(--line)}
+.wl-tx{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--panel);
+  border:1px solid var(--line);border-left:4px solid var(--c,#3b6ea5);border-radius:9px;margin-bottom:6px}
+.wl-tx .emo{font-size:17px;flex:0 0 auto}
+.wl-tx .info{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.wl-tx .cat{display:block;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wl-tx .note{display:block;font-size:12px;color:var(--ink-faint);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wl-tx .val{font-family:"Space Mono",monospace;font-size:14px;font-weight:700;white-space:nowrap;flex:0 0 auto}
+.wl-tx .acts{display:flex;gap:2px;flex:0 0 auto;opacity:0;transition:opacity .12s}
+.wl-tx:hover .acts{opacity:1}
+.wl-tx.wl-due{border-style:dashed;border-left-style:solid;background:var(--bg-2)}
+.wl-tx.wl-due .acts{opacity:1}
+.wl-empty{text-align:center;color:var(--ink-faint);padding:34px 20px;font-size:13.5px;line-height:1.5;
+  background:var(--panel);border:1px dashed var(--line);border-radius:var(--radius)}
+.wl-budinput{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.wl-budinput .emo{font-size:16px}
+.wl-budinput .nm{flex:1;min-width:0;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wl-budinput input{width:118px;flex:0 0 auto;text-align:right;font-family:"Space Mono",monospace}
+.wl-tipo{font-size:10.5px;font-family:"Space Mono",monospace;color:var(--ink-faint);
+  border:1px solid var(--line);border-radius:20px;padding:2px 7px;flex:0 0 auto}
+@media(max-width:720px){
+  .wl-stats{grid-template-columns:1fr 1fr;gap:9px}
+  .wl-stat.wl-wide{grid-column:1/-1}
+  .wl-stat .num{font-size:20px}
+  .wl-tx .acts{opacity:1}
+  /* en pantalla chica: nombre y lo que queda arriba, barra completa abajo.
+     El "gastado / tope" se esconde — la barra ya muestra esa proporción. */
+  .wl-budrow{flex-wrap:wrap;gap:7px;margin-bottom:12px}
+  .wl-budrow .nm{flex:1 1 auto}
+  .wl-budrow .amt{min-width:0;font-size:11.5px;flex:0 0 auto}
+  .wl-budrow .sumbar{order:3;flex:0 0 100%;height:7px}
+  .wl-budrow .wl-full{display:none}
+}
+
 /* ---------- Notas y su red ---------- */
 .nsub-view{display:none} .nsub-view.active{display:block}
 .nt-bar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
@@ -675,6 +761,10 @@ textarea{resize:vertical;min-height:64px}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12l2 2 4-4"/></svg>
       <span class="tab-lbl">Pendientes</span>
     </button>
+    <button class="tab" data-view="billetera">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 012-2h11a2 2 0 012 2v1"/><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2v-6a2 2 0 00-2-2H5a2 2 0 01-2-2z"/><circle cx="17" cy="14" r="1.4"/></svg>
+      <span class="tab-lbl">Billetera</span>
+    </button>
     <button class="tab" data-view="recuerdos">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 012-2h12a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><circle cx="9" cy="9" r="2"/><path d="M4 17l5-5 4 4 3-3 4 4"/></svg>
       <span class="tab-lbl">Recuerdos</span>
@@ -765,6 +855,45 @@ textarea{resize:vertical;min-height:64px}
       </button>
     </div>
     <div class="pend-grid" id="pendGrid"></div>
+  </section>
+
+  <!-- ============ BILLETERA ============ -->
+  <section class="view" id="view-billetera">
+    <div class="view-head">
+      <div class="title-wrap">
+        <div class="eyebrow">Lo que entra y sale</div>
+        <h2>Billetera</h2>
+        <p class="view-sub">Anota el gasto apenas ocurre: escribe el monto y toca una categoría. Los totales, las barras y el avance del presupuesto se calculan solos.</p>
+      </div>
+      <button class="btn" id="wlBtnCats">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4l-7.2 7.2a2 2 0 01-2.8 0l-7.2-7.2a2 2 0 01-.6-1.4V5a2 2 0 012-2h7a2 2 0 011.4.6l7.4 7.4a2 2 0 010 2.4z"/><circle cx="7.5" cy="7.5" r="1.3"/></svg>
+        Categorías
+      </button>
+      <button class="btn btn-ghost" id="wlBtnCsv" title="Bajar todos los movimientos como planilla">Exportar .csv</button>
+    </div>
+
+    <div class="wl-quick">
+      <div class="wl-amount">
+        <span class="wl-cur">$</span>
+        <input id="wlAmount" type="text" inputmode="decimal" placeholder="0" autocomplete="off" aria-label="Monto">
+        <button class="btn btn-ghost" id="wlBtnFull" title="Con fecha, nota…">Detalle</button>
+      </div>
+      <div class="wl-chips" id="wlChips"></div>
+      <div class="wl-hint">Escribe el monto y toca una categoría: se guarda con la fecha de hoy. Para otra fecha o una nota, usa “Detalle”.</div>
+    </div>
+
+    <div class="month-bar">
+      <button class="nav-btn" id="wlPrev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="month-title" id="wlTitle"></div>
+      <button class="nav-btn" id="wlNext"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+      <button class="btn btn-ghost" id="wlToday">Hoy</button>
+    </div>
+
+    <div class="wl-stats" id="wlStats"></div>
+    <div id="wlChart"></div>
+    <div id="wlBudget"></div>
+    <div id="wlPorPagar"></div>
+    <div id="wlList"></div>
   </section>
 
   <!-- ============ RECUERDOS ============ -->
@@ -1053,6 +1182,7 @@ function seed(){
         {id:uid(),text:"Renovar el carnet",done:false,ts:Date.now()},
       ]},
     ],
+    wallet:{cats:wlCatsPorDefecto(),tx:[],budgets:{},iniciado:true},
     notes:[
       {id:uid(),created:Date.now(),ts:Date.now(),type:"Nota",source:"",tags:["método"],
        title:"Cómo tomo apuntes",
@@ -1082,6 +1212,7 @@ function normalizarStore(){
   if(!store.monthly) store.monthly={};
   if(!Array.isArray(store.pending)) store.pending=[];
   if(!Array.isArray(store.notes)) store.notes=[];
+  normalizarWallet();
 }
 normalizarStore();
 
@@ -1830,6 +1961,536 @@ function initPendingEvents(){
 }
 
 /* ============================================================
+   Billetera — lo que entra y lo que sale
+
+   A diferencia del resto de la app, aquí los datos tienen que
+   cuadrar: por eso lo único que se guarda es una lista plana de
+   movimientos. Los totales, las barras y el avance del
+   presupuesto NO se guardan nunca — se calculan al vuelo desde
+   esa lista. Así nada puede quedar "descuadrado" entre lo
+   anotado y lo mostrado.
+
+     wallet.tx      [{id,date,amount,cat,note,ts,evId}]
+                    amount < 0 es gasto, > 0 es ingreso
+     wallet.cats    [{id,name,emoji,color,tipo}]  tipo: gasto|ingreso
+     wallet.budgets {"2026-08":{catId: tope}}     topes por mes
+   ============================================================ */
+const WL_COLORS=["#3b6ea5","#2a8f4e","#7048b6","#c77d1a","#d1495b","#2a8f8f","#c0399a","#5a6b7b","#4a8b3a","#c9a227"];
+const ICO_MONEY='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></svg>';
+const ICO_MONEY_ON='<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5" fill="var(--panel)"/></svg>';
+let wlView={y:new Date().getFullYear(),m:new Date().getMonth()};
+
+/* Categorías con las que parte cualquiera. Se pueden borrar todas. */
+function wlCatsPorDefecto(){
+  return [
+    {id:uid(),name:"Supermercado",emoji:"🛒",color:"#2a8f4e",tipo:"gasto"},
+    {id:uid(),name:"Comida fuera",emoji:"🍜",color:"#c77d1a",tipo:"gasto"},
+    {id:uid(),name:"Transporte",emoji:"🚌",color:"#3b6ea5",tipo:"gasto"},
+    {id:uid(),name:"Cuentas y servicios",emoji:"🧾",color:"#5a6b7b",tipo:"gasto"},
+    {id:uid(),name:"Arriendo",emoji:"🏠",color:"#7048b6",tipo:"gasto"},
+    {id:uid(),name:"Salud",emoji:"💊",color:"#d1495b",tipo:"gasto"},
+    {id:uid(),name:"Ocio",emoji:"🎬",color:"#c0399a",tipo:"gasto"},
+    {id:uid(),name:"Compras",emoji:"🛍️",color:"#2a8f8f",tipo:"gasto"},
+    {id:uid(),name:"Otro gasto",emoji:"✳️",color:"#8a8f98",tipo:"gasto"},
+    {id:uid(),name:"Sueldo",emoji:"💼",color:"#2a8f4e",tipo:"ingreso"},
+    {id:uid(),name:"Otro ingreso",emoji:"➕",color:"#4a8b3a",tipo:"ingreso"}
+  ];
+}
+function normalizarWallet(){
+  if(!store.wallet||typeof store.wallet!=="object") store.wallet={};
+  const w=store.wallet;
+  if(!Array.isArray(w.tx)) w.tx=[];
+  if(!Array.isArray(w.cats)) w.cats=[];
+  if(!w.budgets||typeof w.budgets!=="object") w.budgets={};
+  /* Solo la primera vez: si nunca ha habido nada, parte con categorías
+     sugeridas. Si el usuario las borra todas, no vuelven a aparecer. */
+  if(!w.iniciado&&!w.cats.length&&!w.tx.length){ w.cats=wlCatsPorDefecto(); w.iniciado=true; }
+  return w;
+}
+function wallet(){ return normalizarWallet(); }
+function wlCat(id){
+  return wallet().cats.find(c=>c.id===id)||null;
+}
+function wlCatSafe(id){
+  return wlCat(id)||{id:null,name:"Sin categoría",emoji:"•",color:"#8a8f98",tipo:"gasto"};
+}
+function wlKey(){ return ymKeyOf(wlView.y,wlView.m); }
+function wlTxOf(k){ return wallet().tx.filter(t=>t&&typeof t.date==="string"&&t.date.slice(0,7)===k); }
+function wlHoy(){ return fmt(new Date()); }
+function wlEsMesActual(){ const h=new Date(); return h.getFullYear()===wlView.y&&h.getMonth()===wlView.m; }
+
+/* ---- Dinero: se muestra sin decimales (pesos) y se lee con tolerancia:
+   "12.500", "12500", "$12.500" y "1500,5" son todos válidos. ---- */
+function wlMoney(n){
+  const neg=n<0, abs=Math.abs(Math.round(n));
+  return (neg?"−":"")+"$"+abs.toLocaleString("es-CL");
+}
+function wlParse(s){
+  s=String(s==null?"":s).replace(/[^\d.,-]/g,"");
+  if(!s) return null;
+  s=s.replace(/\./g,"").replace(",",".");
+  const n=parseFloat(s);
+  return isFinite(n)?n:null;
+}
+function wlPlural(n,sing){ return n+" "+sing+(n===1?"":"s"); }
+function wlDiaLbl(iso){
+  const d=parse(iso);
+  return DOW[d.getDay()].slice(0,3)+" "+d.getDate();
+}
+/* Categorías ordenadas por uso reciente: lo que más anotas queda primero,
+   que es lo que hace que registrar un gasto sean dos toques. */
+function wlCatsOrdenadas(){
+  const uso={};
+  wallet().tx.slice(-150).forEach(t=>{ if(t&&t.cat) uso[t.cat]=(uso[t.cat]||0)+1; });
+  return wallet().cats.slice().sort((a,b)=>{
+    const ai=a.tipo==="ingreso", bi=b.tipo==="ingreso";
+    if(ai!==bi) return ai?1:-1;
+    return (uso[b.id]||0)-(uso[a.id]||0);
+  });
+}
+
+/* ============ Render ============ */
+function renderWallet(){
+  normalizarWallet();
+  const t=document.getElementById("wlTitle"); if(t) t.textContent=monthTitle(wlView.y,wlView.m);
+  renderWlChips(); renderWlStats(); renderWlChart();
+  renderWlBudget(); renderWlPorPagar(); renderWlList();
+}
+
+function renderWlChips(){
+  const box=document.getElementById("wlChips"); if(!box) return;
+  const cats=wlCatsOrdenadas();
+  box.innerHTML=cats.map(c=>
+    '<button class="wl-chip'+(c.tipo==="ingreso"?" wl-in":"")+'" style="--c:'+(c.color||"#3b6ea5")+
+    '" data-cat="'+c.id+'" title="Registrar '+(c.tipo==="ingreso"?"ingreso":"gasto")+' en '+esc(c.name)+'">'+
+    '<span>'+(c.emoji||"•")+'</span>'+esc(c.name)+
+    (c.tipo==="ingreso"?'<span class="plus">+</span>':'')+'</button>').join("")+
+    '<button class="wl-chip wl-chip-add" data-newcat="1">＋ Categoría</button>';
+}
+
+function renderWlStats(){
+  const box=document.getElementById("wlStats"); if(!box) return;
+  const tx=wlTxOf(wlKey());
+  let ing=0,gas=0;
+  tx.forEach(t=>{ const a=Number(t.amount)||0; if(a>=0) ing+=a; else gas+=-a; });
+  const bal=ing-gas;
+  const N=daysInMonth(wlView.y,wlView.m);
+  const actual=wlEsMesActual();
+  const dias=actual?new Date().getDate():N;
+  const prom=dias?gas/dias:0;
+  const proy=Math.round(prom*N);
+  const balCls=bal<0?"wl-neg":(bal>0?"wl-pos":"");
+  box.innerHTML=
+    '<div class="wl-stat"><div class="lbl">Entró</div><div class="num wl-pos">'+wlMoney(ing)+'</div>'+
+      '<div class="sub">'+wlPlural(tx.filter(t=>(Number(t.amount)||0)>=0).length,"movimiento")+'</div></div>'+
+    '<div class="wl-stat"><div class="lbl">Salió</div><div class="num wl-neg">'+wlMoney(gas)+'</div>'+
+      '<div class="sub">'+(gas?"prom. "+wlMoney(Math.round(prom))+" al día":"nada anotado aún")+'</div></div>'+
+    '<div class="wl-stat wl-wide"><div class="lbl">Balance del mes</div><div class="num '+balCls+'">'+
+      (bal>0?"+":"")+wlMoney(bal)+'</div>'+
+      '<div class="sub">'+(actual&&gas
+        ? "A este ritmo cierras el mes con "+wlMoney(proy)+" de gastos."
+        : (actual?"Anota tu primer movimiento del mes.":"Mes cerrado."))+'</div></div>';
+}
+
+function renderWlChart(){
+  const box=document.getElementById("wlChart"); if(!box) return;
+  const N=daysInMonth(wlView.y,wlView.m);
+  const per=new Array(N).fill(0);
+  wlTxOf(wlKey()).forEach(t=>{
+    const a=Number(t.amount)||0; if(a>=0) return;
+    const d=Number(String(t.date).slice(8,10));
+    if(d>=1&&d<=N) per[d-1]+=-a;
+  });
+  const max=Math.max.apply(null,per.concat([1]));
+  if(max<=1){ box.innerHTML=""; return; }
+  const hoy=wlHoy();
+  const bars=per.map((v,i)=>{
+    const iso=isoOf(wlView.y,wlView.m,i+1);
+    const h=v>0?Math.max(6,Math.round(v/max*100)):2;
+    const cls="b"+(v>0?" has":"")+(v===max&&v>0?" top":"")+(iso===hoy?" today":"");
+    return '<div class="'+cls+'" style="height:'+h+'%" title="'+(i+1)+" · "+wlMoney(-v)+'"></div>';
+  }).join("");
+  const diaMax=per.indexOf(max)+1;
+  box.innerHTML='<div class="rt-card"><div class="rt-cardhead"><h3>Día a día</h3>'+
+    '<span class="rt-hint" style="margin-left:auto">más alto: '+diaMax+' · '+wlMoney(-max)+'</span></div>'+
+    '<div class="wl-bars">'+bars+'</div>'+
+    '<div class="wl-axis"><span>1</span><span>'+Math.round(N/2)+'</span><span>'+N+'</span></div></div>';
+}
+
+function renderWlBudget(){
+  const box=document.getElementById("wlBudget"); if(!box) return;
+  const k=wlKey(), bud=wallet().budgets[k]||{};
+  const gastado={};
+  wlTxOf(k).forEach(t=>{ const a=Number(t.amount)||0; if(a<0) gastado[t.cat]=(gastado[t.cat]||0)+(-a); });
+  const cats=wallet().cats.filter(c=>c.tipo!=="ingreso");
+  const conTope=cats.filter(c=>Number(bud[c.id])>0);
+  const btn='<button class="btn btn-ghost" id="wlSetBud" style="margin-left:auto">'+
+    (conTope.length?"Ajustar topes":"Poner topes")+'</button>';
+
+  if(!conTope.length){
+    box.innerHTML='<div class="rt-card"><div class="rt-cardhead"><h3>Presupuesto</h3>'+btn+'</div>'+
+      '<div class="rt-hint">Ponle un tope mensual a las categorías que quieras vigilar y aquí verás cuánto llevas de cada una. '+
+      'No es obligatorio: sin topes, la Billetera igual te muestra todo lo que gastaste.</div></div>';
+    wireWlBudget(); return;
+  }
+  let topeTot=0, gastoTope=0;
+  const rows=conTope.map(c=>{
+    const tope=Number(bud[c.id])||0, g=gastado[c.id]||0;
+    topeTot+=tope; gastoTope+=g;
+    const pct=tope?Math.round(g/tope*100):0;
+    const over=g>tope;
+    return '<div class="wl-budrow'+(over?" over":"")+'" style="--c:'+(c.color||"#3b6ea5")+'">'+
+      '<span class="emo">'+(c.emoji||"•")+'</span>'+
+      '<span class="nm">'+esc(c.name)+'</span>'+
+      '<span class="sumbar"><i style="width:'+Math.min(100,pct)+'%"></i></span>'+
+      '<span class="amt"><span class="wl-full">'+wlMoney(g)+' / '+wlMoney(tope)+' · </span>'+
+        (over?wlMoney(g-tope)+' de más':'quedan '+wlMoney(tope-g))+'</span></div>';
+  }).join("");
+  /* categorías sin tope pero con gasto: no se esconden, solo van aparte */
+  const sueltas=cats.filter(c=>!Number(bud[c.id])&&gastado[c.id]);
+  const sueltasHtml=sueltas.length
+    ? '<div style="margin-top:12px">'+sueltas.map(c=>'<div class="wl-freerow">'+
+        '<span>'+(c.emoji||"•")+'</span><span class="nm">'+esc(c.name)+'</span>'+
+        '<span class="amt">'+wlMoney(gastado[c.id])+'</span></div>').join("")+
+      '<div class="rt-hint" style="margin-top:6px">Sin tope este mes.</div></div>'
+    : "";
+  const pctTot=topeTot?Math.round(gastoTope/topeTot*100):0;
+  box.innerHTML='<div class="rt-card"><div class="rt-cardhead"><h3>Presupuesto</h3>'+btn+
+    '<span class="bignum" style="margin-left:12px">'+pctTot+'%</span></div>'+
+    rows+sueltasHtml+
+    '<div class="rt-hint" style="margin-top:10px">'+wlMoney(gastoTope)+' de '+wlMoney(topeTot)+
+    ' con tope'+(gastoTope>topeTot?' — te pasaste por '+wlMoney(gastoTope-topeTot):'')+'.</div></div>';
+  wireWlBudget();
+}
+function wireWlBudget(){
+  const b=document.getElementById("wlSetBud"); if(b) b.onclick=openWlBudgetForm;
+}
+
+/* Puente con la Agenda: los eventos de categoría "Pago / Cuenta" de este
+   mes que todavía no tienen movimiento asociado. Lo agendado y lo pagado
+   son el mismo hecho escrito una sola vez. */
+function wlCuentasDelMes(){
+  const k=wlKey();
+  return store.events
+    .filter(e=>e.cat==="Pago / Cuenta"&&String(e.start||"").slice(0,7)===k&&!wlTxDeEvento(e))
+    .sort((a,b)=>a.start.localeCompare(b.start));
+}
+function wlTxDeEvento(ev){
+  if(!ev||!ev.wlId) return null;
+  return wallet().tx.find(t=>t.id===ev.wlId)||null;
+}
+function renderWlPorPagar(){
+  const box=document.getElementById("wlPorPagar"); if(!box) return;
+  const evs=wlCuentasDelMes();
+  if(!evs.length){ box.innerHTML=""; return; }
+  const hoy=wlHoy();
+  box.innerHTML='<div class="rt-card"><div class="rt-cardhead"><h3>Cuentas de tu agenda</h3></div>'+
+    '<div class="rt-hint" style="margin-bottom:10px">Lo que agendaste como “Pago / Cuenta” este mes y aún no registras aquí. '+
+    'Toca 💵 para anotarlo sin volver a escribirlo.</div>'+
+    evs.map(e=>{
+      const vencida=e.start<=hoy;
+      return '<div class="wl-tx wl-due" style="--c:'+(EVENT_CATS["Pago / Cuenta"]||"#c77d1a")+'">'+
+        '<span class="emo">📅</span>'+
+        '<span class="info"><span class="cat">'+esc(e.title)+'</span>'+
+        '<span class="note">'+(vencida?"venció el ":"vence el ")+wlDiaLbl(e.start)+
+          (e.place?" · "+esc(e.place):"")+'</span></span>'+
+        '<span class="acts"><button class="mini-btn" data-wlev="'+e.id+'" title="Registrar el pago">'+ICO_MONEY+'</button></span>'+
+      '</div>';
+    }).join("")+'</div>';
+  box.querySelectorAll("[data-wlev]").forEach(b=>b.onclick=()=>wlDesdeEvento(b.dataset.wlev));
+}
+/* Abre el formulario ya cargado con lo del evento; al guardar quedan enlazados. */
+function wlDesdeEvento(evId){
+  const e=store.events.find(x=>x.id===evId); if(!e) return;
+  const cuentas=wallet().cats.find(c=>c.tipo!=="ingreso"&&/cuenta|servicio/i.test(c.name));
+  openWlForm(null,{date:e.start,note:e.title,cat:cuentas?cuentas.id:null,evId:e.id});
+}
+
+function renderWlList(){
+  const box=document.getElementById("wlList"); if(!box) return;
+  const tx=wlTxOf(wlKey()).slice().sort((a,b)=>
+    a.date===b.date ? (Number(b.ts)||0)-(Number(a.ts)||0) : (a.date<b.date?1:-1));
+  if(!tx.length){
+    box.innerHTML='<div class="wl-empty">Ningún movimiento en '+monthTitle(wlView.y,wlView.m)+'.<br>'+
+      'Escribe un monto arriba y toca una categoría.</div>';
+    return;
+  }
+  let html='', dia=null;
+  tx.forEach(t=>{
+    if(t.date!==dia){
+      dia=t.date;
+      const total=tx.filter(x=>x.date===dia).reduce((a,x)=>a+(Number(x.amount)||0),0);
+      html+='<div class="wl-daylbl"><span>'+wlDiaLbl(dia)+'</span><span class="ln"></span><span>'+
+        (total>0?"+":"")+wlMoney(total)+'</span></div>';
+    }
+    const c=wlCatSafe(t.cat), a=Number(t.amount)||0, ing=a>=0;
+    const ev=t.evId?store.events.find(x=>x.id===t.evId):null;
+    html+='<div class="wl-tx" style="--c:'+(c.color||"#8a8f98")+'">'+
+      '<span class="emo">'+(c.emoji||"•")+'</span>'+
+      '<span class="info"><span class="cat">'+esc(c.name)+'</span>'+
+      ((t.note||ev)?'<span class="note">'+(ev?"📅 ":"")+esc(t.note||(ev?ev.title:""))+'</span>':'')+'</span>'+
+      '<span class="val '+(ing?"wl-pos":"")+'">'+(ing?"+":"")+wlMoney(a)+'</span>'+
+      '<span class="acts">'+
+        '<button class="mini-btn" data-wledit="'+t.id+'" title="Editar">'+ICO_EDIT+'</button>'+
+        '<button class="mini-btn" data-wldel="'+t.id+'" title="Borrar">'+ICO_DEL+'</button>'+
+      '</span></div>';
+  });
+  box.innerHTML=html;
+  box.querySelectorAll("[data-wledit]").forEach(b=>b.onclick=()=>openWlForm(b.dataset.wledit));
+  box.querySelectorAll("[data-wldel]").forEach(b=>b.onclick=()=>wlDelete(b.dataset.wldel));
+}
+
+function wlDelete(id){
+  const t=wallet().tx.find(x=>x.id===id); if(!t) return;
+  const c=wlCatSafe(t.cat);
+  if(!confirm("¿Borrar este movimiento?\n"+c.name+" · "+wlMoney(Number(t.amount)||0))) return;
+  store.events.forEach(e=>{ if(e.wlId===id) delete e.wlId; });
+  wallet().tx=wallet().tx.filter(x=>x.id!==id);
+  saveStore(); renderWallet(); if(panelDate) renderPanelBody();
+  toast("Movimiento borrado");
+}
+
+/* ============ Entrada rápida ============ */
+function wlQuickAdd(catId){
+  const inp=document.getElementById("wlAmount");
+  const v=wlParse(inp.value);
+  if(v===null||v===0){ toast("Escribe primero el monto"); inp.focus(); return; }
+  const c=wlCat(catId); if(!c) return;
+  const monto=Math.abs(v)*(c.tipo==="ingreso"?1:-1);
+  const hoy=new Date();
+  wallet().tx.push({id:uid(),date:fmt(hoy),amount:monto,cat:c.id,note:"",ts:Date.now(),evId:null});
+  inp.value="";
+  /* si estabas mirando otro mes, salta al de hoy para que veas lo que anotaste */
+  if(!wlEsMesActual()) wlView={y:hoy.getFullYear(),m:hoy.getMonth()};
+  saveStore(); renderWallet();
+  toast((c.emoji||"")+" "+c.name+" · "+wlMoney(monto));
+}
+
+/* ============ Formulario de movimiento ============ */
+function wlCatOptions(sel){
+  const g=wallet().cats.filter(c=>c.tipo!=="ingreso"), i=wallet().cats.filter(c=>c.tipo==="ingreso");
+  const op=c=>'<option value="'+c.id+'" '+(c.id===sel?"selected":"")+'>'+esc((c.emoji||"")+" "+c.name)+'</option>';
+  return (g.length?'<optgroup label="Gastos">'+g.map(op).join("")+'</optgroup>':'')+
+         (i.length?'<optgroup label="Ingresos">'+i.map(op).join("")+'</optgroup>':'');
+}
+function openWlForm(id,preset){
+  normalizarWallet();
+  if(!wallet().cats.length){ toast("Primero crea una categoría"); openWlCats(); return; }
+  const t=id?wallet().tx.find(x=>x.id===id):null;
+  const base=preset||{};
+  const fecha=t?t.date:(base.date||wlHoy());
+  const catSel=t?t.cat:(base.cat||wlCatsOrdenadas()[0].id);
+  const monto=t?Math.abs(Number(t.amount)||0):(base.amount||"");
+  const nota=t?(t.note||""):(base.note||"");
+  const evLink=t?t.evId:(base.evId||null);
+  const ev=evLink?store.events.find(x=>x.id===evLink):null;
+  openModal(t?"Editar movimiento":"Nuevo movimiento",
+    '<div class="field row2">'+
+      '<div class="field"><label>Monto</label><input id="f_amount" type="text" inputmode="decimal" value="'+
+        (monto===""?"":monto)+'" placeholder="0"></div>'+
+      '<div class="field"><label>Fecha</label><input type="date" id="f_date" value="'+fecha+'"></div>'+
+    '</div>'+
+    '<div class="field"><label>Categoría</label><select id="f_cat">'+wlCatOptions(catSel)+'</select>'+
+      '<div class="hint">El signo lo pone la categoría: las de ingreso suman, las de gasto restan.</div></div>'+
+    '<div class="field"><label>Nota (opcional)</label><input id="f_note" value="'+esc(nota)+'" placeholder="Ej: feria del domingo"></div>'+
+    (ev?'<div class="hint">📅 Queda enlazado con el evento “'+esc(ev.title)+'” de tu agenda.</div>':'')+
+    (t?'<hr style="border:none;border-top:1px solid var(--line);margin:2px 0">'+
+       '<button class="btn btn-ghost" id="wlDelBtn" style="justify-content:center;color:#d1495b">Borrar movimiento</button>':''),
+  ()=>{
+    const v=wlParse(val("f_amount"));
+    if(v===null||v===0){ toast("Escribe un monto"); return; }
+    const fechaV=val("f_date"); if(!fechaV){ toast("Falta la fecha"); return; }
+    const c=wlCat(val("f_cat")); if(!c){ toast("Elige una categoría"); return; }
+    const monto2=Math.abs(v)*(c.tipo==="ingreso"?1:-1);
+    if(t){
+      t.amount=monto2; t.date=fechaV; t.cat=c.id; t.note=val("f_note").trim(); t.ts=Date.now();
+    }else{
+      const nuevo={id:uid(),date:fechaV,amount:monto2,cat:c.id,note:val("f_note").trim(),ts:Date.now(),evId:evLink||null};
+      wallet().tx.push(nuevo);
+      if(ev){ ev.wlId=nuevo.id; }
+    }
+    /* muestra el mes del movimiento, no vaya a "desaparecer" al guardar */
+    const [yy,mm]=fechaV.split("-").map(Number); wlView={y:yy,m:mm-1};
+    saveStore(); closeModal(); renderWallet();
+    if(currentView!=="billetera") refreshCurrent();
+    if(panelDate) renderPanelBody();
+    toast(t?"Movimiento actualizado":"Movimiento guardado");
+  });
+  const db=document.getElementById("wlDelBtn");
+  if(db) db.onclick=()=>{ closeModal(); wlDelete(t.id); };
+  setTimeout(()=>{ const a=document.getElementById("f_amount"); if(a&&!monto) a.focus(); },60);
+}
+
+/* ============ Topes del mes ============ */
+function wlMesPrevioConTopes(){
+  const ks=Object.keys(wallet().budgets).filter(k=>k<wlKey()&&Object.keys(wallet().budgets[k]||{}).length);
+  ks.sort(); return ks.length?ks[ks.length-1]:null;
+}
+function openWlBudgetForm(){
+  const k=wlKey();
+  const cats=wallet().cats.filter(c=>c.tipo!=="ingreso");
+  if(!cats.length){ toast("Primero crea categorías de gasto"); openWlCats(); return; }
+  const prev=wlMesPrevioConTopes();
+  const pinta=()=>{
+    const bud=wallet().budgets[k]||{};
+    return (prev?'<button class="btn btn-ghost" id="wlCopyBud" style="width:100%;justify-content:center;margin-bottom:10px">'+
+        'Copiar los topes de '+MONTHS[Number(prev.slice(5,7))-1]+' '+prev.slice(0,4)+'</button>':'')+
+      '<div class="hint" style="margin-bottom:10px">Deja en blanco (o en 0) las categorías que no quieras vigilar este mes.</div>'+
+      cats.map(c=>'<div class="wl-budinput"><span class="emo">'+(c.emoji||"•")+'</span>'+
+        '<span class="nm">'+esc(c.name)+'</span>'+
+        '<input type="text" inputmode="decimal" data-bud="'+c.id+'" value="'+
+        (Number(bud[c.id])>0?Number(bud[c.id]):"")+'" placeholder="sin tope"></div>').join("");
+  };
+  openModal("Topes de "+monthTitle(wlView.y,wlView.m),pinta(),()=>{
+    const bud={};
+    document.querySelectorAll("[data-bud]").forEach(inp=>{
+      const v=wlParse(inp.value);
+      if(v&&v>0) bud[inp.dataset.bud]=Math.abs(v);
+    });
+    if(Object.keys(bud).length) wallet().budgets[k]=bud; else delete wallet().budgets[k];
+    saveStore(); closeModal(); renderWallet(); toast("Topes guardados");
+  });
+  const cp=document.getElementById("wlCopyBud");
+  if(cp) cp.onclick=()=>{
+    const src=wallet().budgets[prev]||{};
+    document.querySelectorAll("[data-bud]").forEach(inp=>{
+      const v=Number(src[inp.dataset.bud])||0; inp.value=v>0?v:"";
+    });
+    toast("Topes copiados — revisa y guarda");
+  };
+}
+
+/* ============ Categorías ============ */
+function openWlCats(){
+  let editId=null;
+  normalizarWallet();
+  openModal("Categorías de la billetera","",addNew);
+  function colorSelect(id,sel){
+    return '<select id="'+id+'">'+WL_COLORS.map(c=>'<option value="'+c+'" '+(c===sel?"selected":"")+'>'+c+'</option>').join("")+'</select>';
+  }
+  function tipoSelect(id,sel){
+    return '<select id="'+id+'"><option value="gasto" '+(sel!=="ingreso"?"selected":"")+'>Gasto (resta)</option>'+
+      '<option value="ingreso" '+(sel==="ingreso"?"selected":"")+'>Ingreso (suma)</option></select>';
+  }
+  function addNew(){
+    const name=val("f_name").trim(); if(!name){ toast("Ponle un nombre"); return; }
+    wallet().cats.push({id:uid(),name,emoji:val("f_emoji")||"•",color:val("f_color"),tipo:val("f_tipo")});
+    wallet().iniciado=true;
+    saveStore(); renderWallet(); paint(); toast("Categoría creada");
+  }
+  function paint(){
+    const cats=wallet().cats;
+    const rows=cats.map((c,i)=>{
+      if(c.id===editId){
+        return '<div class="mgr-editrow"><div class="mgr-editlbl">Editando</div>'+
+          '<div class="field row2"><div class="field"><label>Emoji</label>'+
+            '<input id="e_emoji" value="'+esc(c.emoji||"•")+'" maxlength="4" style="text-align:center;font-size:20px"></div>'+
+          '<div class="field"><label>Nombre</label><input id="e_name" value="'+esc(c.name)+'"></div></div>'+
+          '<div class="field row2"><div class="field"><label>Tipo</label>'+tipoSelect("e_tipo",c.tipo)+'</div>'+
+          '<div class="field"><label>Color</label>'+colorSelect("e_color",c.color)+'</div></div>'+
+          '<div class="rt-hint" style="margin-bottom:6px">Si cambias el tipo, los movimientos que ya anotaste cambian de signo.</div>'+
+          '<div style="display:flex;gap:8px"><button class="btn btn-primary" data-savee="'+c.id+
+            '" style="flex:1;justify-content:center">Guardar cambios</button>'+
+          '<button class="btn btn-ghost" data-cancele="1" style="justify-content:center">Cancelar</button></div></div>';
+      }
+      const n=wallet().tx.filter(t=>t.cat===c.id).length;
+      return '<div class="mgr-row" style="border-left:4px solid '+(c.color||"#3b6ea5")+'">'+
+        '<span class="mgr-move">'+
+          '<button class="mgr-mv" data-up="'+c.id+'" '+(i===0?"disabled":"")+' title="Subir">'+ICO_UP+'</button>'+
+          '<button class="mgr-mv" data-down="'+c.id+'" '+(i===cats.length-1?"disabled":"")+' title="Bajar">'+ICO_DOWN+'</button>'+
+        '</span>'+
+        '<span class="mgr-emo">'+(c.emoji||"•")+'</span><span class="mgr-name">'+esc(c.name)+'</span>'+
+        '<span class="wl-tipo">'+(c.tipo==="ingreso"?"ingreso":"gasto")+'</span>'+
+        '<span class="mgr-freq">'+(n?n+(n===1?" mov.":" movs."):"")+'</span>'+
+        '<span class="mgr-acts"><button class="mini-btn" data-edit="'+c.id+'" title="Editar">'+ICO_EDIT+'</button>'+
+        '<button class="mini-btn" data-del="'+c.id+'" title="Borrar">'+ICO_DEL+'</button></span></div>';
+    }).join("")||'<div class="rt-hint">Todavía no tienes categorías.</div>';
+
+    document.getElementById("mBody").innerHTML=
+      '<div class="rt-hint" style="margin-bottom:8px">El orden de aquí es el de respaldo; en la pantalla, las chips se ordenan solas '+
+      'poniendo adelante lo que más usas.</div>'+
+      '<div class="mgr-list">'+rows+'</div>'+
+      '<hr style="border:none;border-top:1px solid var(--line);margin:10px 0 4px">'+
+      '<div class="mgr-editlbl" style="color:var(--ink-faint);margin-bottom:2px">Agregar nueva</div>'+
+      '<div class="field row2"><div class="field"><label>Emoji</label>'+
+        '<input id="f_emoji" value="🏷️" maxlength="4" style="text-align:center;font-size:20px"></div>'+
+      '<div class="field"><label>Nombre</label><input id="f_name" placeholder="Ej: Mascota"></div></div>'+
+      '<div class="field row2"><div class="field"><label>Tipo</label>'+tipoSelect("f_tipo","gasto")+'</div>'+
+      '<div class="field"><label>Color</label>'+colorSelect("f_color",WL_COLORS[0])+'</div></div>';
+    document.getElementById("mSave").style.display=editId?"none":"";
+    wire();
+  }
+  function wire(){
+    const mb=document.getElementById("mBody");
+    mb.querySelectorAll("[data-up]").forEach(b=>b.onclick=()=>{
+      if(moveArr(wallet().cats,b.dataset.up,-1)){ saveStore(); renderWallet(); paint(); } });
+    mb.querySelectorAll("[data-down]").forEach(b=>b.onclick=()=>{
+      if(moveArr(wallet().cats,b.dataset.down,1)){ saveStore(); renderWallet(); paint(); } });
+    mb.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>{ editId=b.dataset.edit; paint(); });
+    mb.querySelectorAll("[data-cancele]").forEach(b=>b.onclick=()=>{ editId=null; paint(); });
+    mb.querySelectorAll("[data-savee]").forEach(b=>b.onclick=()=>{
+      const c=wlCat(b.dataset.savee); const name=val("e_name").trim();
+      if(!name){ toast("Ponle un nombre"); return; }
+      const tipoNuevo=val("e_tipo");
+      if(tipoNuevo!==c.tipo){
+        /* el signo lo manda la categoría: hay que corregir lo ya anotado */
+        wallet().tx.forEach(t=>{ if(t.cat===c.id){
+          const a=Math.abs(Number(t.amount)||0); t.amount=tipoNuevo==="ingreso"?a:-a; } });
+      }
+      c.name=name; c.emoji=val("e_emoji")||"•"; c.color=val("e_color"); c.tipo=tipoNuevo;
+      editId=null; saveStore(); renderWallet(); paint(); toast("Categoría actualizada");
+    });
+    mb.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{
+      const c=wlCat(b.dataset.del); if(!c) return;
+      const n=wallet().tx.filter(t=>t.cat===c.id).length;
+      const msg=n?'"'+c.name+'" tiene '+wlPlural(n,"movimiento")+'.\n\nSe borra la categoría pero NO los movimientos: quedan como “Sin categoría” y siguen sumando en los totales. ¿Continuar?'
+                 :'¿Borrar la categoría "'+c.name+'"?';
+      if(!confirm(msg)) return;
+      wallet().cats=wallet().cats.filter(x=>x.id!==c.id);
+      Object.values(wallet().budgets).forEach(b2=>{ delete b2[c.id]; });
+      if(editId===c.id) editId=null;
+      saveStore(); renderWallet(); paint();
+    });
+  }
+  paint();
+}
+
+/* ============ Exportar a planilla ============ */
+function exportarWalletCsv(){
+  const tx=wallet().tx.slice().sort((a,b)=>a.date.localeCompare(b.date));
+  if(!tx.length){ toast("Todavía no hay movimientos"); return; }
+  const q=s=>'"'+String(s==null?"":s).replace(/"/g,'""')+'"';
+  const lineas=[["Fecha","Tipo","Categoría","Monto","Nota"].map(q).join(",")];
+  tx.forEach(t=>{
+    const c=wlCatSafe(t.cat), a=Number(t.amount)||0;
+    lineas.push([q(t.date),q(a>=0?"Ingreso":"Gasto"),q(c.name),q(Math.abs(a)),q(t.note||"")].join(","));
+  });
+  /* BOM para que Excel en español no rompa las tildes */
+  downloadBlob(new Blob(["\ufeff"+lineas.join("\r\n")],{type:"text/csv;charset=utf-8"}),"mi-billetera.csv");
+  toast("Movimientos exportados");
+}
+
+/* ============ Eventos de la vista ============ */
+function initWalletEvents(){
+  const chips=document.getElementById("wlChips");
+  if(chips) chips.addEventListener("click",e=>{
+    const nc=e.target.closest("[data-newcat]"); if(nc){ openWlCats(); return; }
+    const b=e.target.closest("[data-cat]"); if(b) wlQuickAdd(b.dataset.cat);
+  });
+  const amt=document.getElementById("wlAmount");
+  if(amt) amt.addEventListener("keydown",e=>{
+    if(e.key==="Enter"){ e.preventDefault(); openWlForm(null,{amount:wlParse(amt.value)||""}); }
+  });
+  const g=(id,fn)=>{ const el=document.getElementById(id); if(el) el.addEventListener("click",fn); };
+  g("wlBtnCats",openWlCats);
+  g("wlBtnCsv",exportarWalletCsv);
+  g("wlBtnFull",()=>openWlForm(null,{amount:wlParse(document.getElementById("wlAmount").value)||""}));
+  g("wlPrev",()=>{ shift(wlView,-1); renderWallet(); });
+  g("wlNext",()=>{ shift(wlView,1); renderWallet(); });
+  g("wlToday",()=>{ const t=new Date(); wlView={y:t.getFullYear(),m:t.getMonth()}; renderWallet(); });
+}
+
+/* ============================================================
    Day panel (detalle del día)
    ============================================================ */
 function openPanel(iso,mode){
@@ -1896,6 +2557,8 @@ async function renderPanelBody(){
   body.querySelectorAll("[data-done]").forEach(b=>b.addEventListener("click",()=>toggleDone(b.dataset.done)));
   body.querySelectorAll("[data-mkmem]").forEach(b=>b.addEventListener("click",()=>memFromEvent(b.dataset.mkmem)));
   body.querySelectorAll("[data-openmem]").forEach(b=>b.addEventListener("click",()=>openMemForm(b.dataset.openmem)));
+  body.querySelectorAll("[data-mkwl]").forEach(b=>b.addEventListener("click",()=>wlDesdeEvento(b.dataset.mkwl)));
+  body.querySelectorAll("[data-openwl]").forEach(b=>b.addEventListener("click",()=>openWlForm(b.dataset.openwl)));
 }
 function grpLabel(t){ const d=document.createElement("div"); d.className="grp-label"; d.textContent=t; return d; }
 function emptyBlock(a,b){ return `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg><div>${a}</div><div style="font-size:12.5px;margin-top:4px">${b}</div></div>`; }
@@ -1925,6 +2588,12 @@ function evRow(e){
   const memBtn = lm
     ? `<button class="mini-btn mk-mem" data-openmem="${lm.id}" title="Ver el recuerdo guardado">${ICO_STAR_ON}</button>`
     : (past?`<button class="mini-btn mk-mem" data-mkmem="${e.id}" title="Guardar como recuerdo">${ICO_STAR}</button>`:"");
+  /* Las cuentas por pagar se registran en la Billetera sin reescribirlas */
+  const ltx = e.cat==="Pago / Cuenta" ? wlTxDeEvento(e) : null;
+  const payBtn = e.cat!=="Pago / Cuenta" ? ""
+    : (ltx
+      ? `<button class="mini-btn mk-mem" data-openwl="${ltx.id}" title="Ver el movimiento (${wlMoney(Number(ltx.amount)||0)})">${ICO_MONEY_ON}</button>`
+      : `<button class="mini-btn mk-mem" data-mkwl="${e.id}" title="Registrar el pago en la Billetera">${ICO_MONEY}</button>`);
   const div=document.createElement("div"); div.className="ev";
   div.innerHTML=`<div class="rail" style="--c:${c}"></div>
     <div class="ev-main">
@@ -1936,8 +2605,10 @@ function evRow(e){
       </div>
       ${e.notes?`<div class="ev-notes">${esc(e.notes)}</div>`:""}
       ${lm?`<div class="ev-link">★ Guardado en Recuerdos</div>`:""}
+      ${ltx?`<div class="ev-link">💵 ${wlMoney(Number(ltx.amount)||0)} anotado en la Billetera</div>`:""}
     </div>
     <div class="ev-acts">
+      ${payBtn}
       ${memBtn}
       <button class="mini-btn" data-done="${e.id}" title="Marcar hecho">${done?
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>':
@@ -1951,6 +2622,7 @@ function toggleDone(id){ const e=store.events.find(x=>x.id===id); if(!e)return;
   e.status=e.status==="Hecho"?"Pendiente":"Hecho"; saveStore(); renderPanelBody(); refreshCurrent(); }
 function delEvent(id){ if(!confirm("¿Eliminar este evento?"))return;
   store.memories.forEach(m=>{ if(m.fromEvent===id) delete m.fromEvent; });
+  wallet().tx.forEach(t=>{ if(t.evId===id) t.evId=null; });
   store.events=store.events.filter(e=>e.id!==id); saveStore(); renderPanelBody(); refreshCurrent(); }
 async function delMemory(id){ if(!confirm("¿Eliminar este recuerdo?"))return;
   const m=store.memories.find(x=>x.id===id); if(m&&m.photos) m.photos.forEach(delPhoto);
@@ -3081,6 +3753,7 @@ function refreshCurrent(){
   if(currentView==="agenda") renderAgenda();
   else if(currentView==="rutina") renderRoutine();
   else if(currentView==="pendientes") renderPending();
+  else if(currentView==="billetera") renderWallet();
   else if(currentView==="diario") renderJournal();
   else if(currentView==="notas"){ renderNotes(); if(netVisible()) mostrarRed(); }
   else { renderMemCal(); }
@@ -3143,6 +3816,7 @@ document.getElementById("pAdd").addEventListener("click",()=>{
 document.getElementById("fab").addEventListener("click",()=>{
   if(currentView==="rutina") openHabitsManager();
   else if(currentView==="pendientes") openGroupForm(null);
+  else if(currentView==="billetera") openWlForm(null);
   else if(currentView==="recuerdos") openMemForm(null);
   else if(currentView==="diario") openEntryForm(null);
   else if(currentView==="notas") openNoteForm(null);
@@ -3414,6 +4088,7 @@ function contarStore(s){
     ["notas",(s.notes||[]).length],
     ["hábitos",(s.routines||[]).length],
     ["pendientes",(s.pending||[]).reduce((a,g)=>a+((g.items||[]).length),0)],
+    ["movimientos",((s.wallet||{}).tx||[]).length],
     ["días de rutina",Object.keys(s.routineLog||{}).length],
     ["meses con notas",Object.keys(s.monthly||{}).length]
   ];
@@ -3486,6 +4161,21 @@ function unirMeses(a,b,bGana){
   });
   return out;
 }
+/* La billetera se une igual que el resto: movimientos y categorías por id,
+   y los topes mes por mes (si los dos lados pusieron tope a la misma
+   categoría el mismo mes, gana el lado más reciente). */
+function unirWallet(a,b,bGana){
+  a=a||{}; b=b||{};
+  const budgets={};
+  const ks=new Set(Object.keys(a.budgets||{}).concat(Object.keys(b.budgets||{})));
+  ks.forEach(k=>{
+    const base=bGana?Object.assign({},(a.budgets||{})[k],(b.budgets||{})[k])
+                    :Object.assign({},(b.budgets||{})[k],(a.budgets||{})[k]);
+    if(Object.keys(base).length) budgets[k]=base;
+  });
+  return { tx:unirPorId(a.tx,b.tx,bGana), cats:unirPorId(a.cats,b.cats,bGana),
+           budgets, iniciado:!!(a.iniciado||b.iniciado) };
+}
 function combinarStores(local,nube){
   const bGana=((nube.ui&&nube.ui.updatedAt)||0)>=((local.ui&&local.ui.updatedAt)||0);
   return {
@@ -3499,6 +4189,7 @@ function combinarStores(local,nube){
     monthly:    unirMeses(local.monthly,nube.monthly,bGana),
     pending:    unirPendientes(local.pending,nube.pending,bGana),
     notes:      unirPorId(local.notes,nube.notes,bGana),
+    wallet:     unirWallet(local.wallet,nube.wallet,bGana),
     ui: Object.assign({},nube.ui||{},local.ui||{},{
       monthSetsV2: !!(((local.ui||{}).monthSetsV2)||((nube.ui||{}).monthSetsV2))
     })
@@ -3735,8 +4426,10 @@ function updateSyncUI(msg){
   renderMemCal();
   renderJournal();
   renderPending();
+  renderWallet();
   renderNotes();
   initPendingEvents();
+  initWalletEvents();
   if(memoryOnly) toast("Vista previa: los cambios no se guardarán aquí");
 })();
 </script>
