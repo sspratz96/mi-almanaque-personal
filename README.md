@@ -1,11 +1,12 @@
 # Mi almanaque
 
-App web personal para organizar tu tiempo en seis secciones: **Agenda** (lo que se
+App web personal para organizar tu tiempo en siete secciones: **Agenda** (lo que se
 viene), **Rutina** (tu tracker mensual de hábitos), **Pendientes** (tus listas por tema,
-como notas que te mandas a ti mismo), **Recuerdos** (lo que ya viviste, con fotos y un
+como notas que te mandas a ti mismo), **Billetera** (en qué se te va la plata, con
+presupuesto por categoría), **Recuerdos** (lo que ya viviste, con fotos y un
 globo con mapa mundi), **Diario** (entradas de texto) y **Notas** (apuntes enlazados
-entre sí, con su mapa de conexiones). La Agenda y los Recuerdos están
-conectados, para no escribir la misma salida dos veces. Incluye tema claro/oscuro, diseño
+entre sí, con su mapa de conexiones). La Agenda está conectada con los Recuerdos y con
+la Billetera, para no escribir lo mismo dos veces. Incluye tema claro/oscuro, diseño
 responsive y sincronización opcional con Google Drive.
 
 Son archivos estáticos (`index.html` + `frases.js`), sin backend y sin instalación.
@@ -35,7 +36,7 @@ con Drive (ver más abajo). Por eso:
 - **Cargar eventos (.csv):** solo *agrega* eventos a la Agenda desde la hoja "Eventos" de
   la planilla de Excel. No reemplaza nada.
 
-## Las seis secciones
+## Las siete secciones
 
 - **Agenda:** vista de mes con colores según cuántas cosas hay cada día. Toca un día para
   ver el detalle ordenado por hora (los de "todo el día" primero). Botón "Ver el año" con
@@ -53,6 +54,11 @@ con Drive (ver más abajo). Por eso:
   ti mismo. Crea "grupos" (Trabajo, Casa, Personal… los que quieras, con su emoji y color) y
   dentro de cada uno anota lo que tengas que hacer. Marca cada pendiente como hecho, edítalo
   tocándolo, bórralo, limpia los completados de una vez, y reordena los grupos con ↑/↓.
+- **Billetera:** en qué se te va la plata. Escribe el monto, toca una categoría y listo
+  — el movimiento queda anotado con la fecha de hoy. Ponle un tope mensual a las
+  categorías que quieras vigilar y verás cuánto llevas de cada una, más el total del mes,
+  el promedio diario y un gráfico de barras del día a día. Las cuentas que agendaste
+  como "Pago / Cuenta" se registran desde aquí con un toque (ver más abajo).
 - **Recuerdos:** lo que ya pasó, por categoría y color, con fotos. Botón "Ver el año" con
   las 12 miniaturas del año (y flechas para saltar a años anteriores). Los días con algo
   pendiente de rescatar desde tu agenda salen marcados con un recuadro punteado 📅. La
@@ -85,6 +91,67 @@ en Recuerdos cuando ya había pasado. Ahora las dos secciones están conectadas.
   el recuerdo se queda: lo vivido no se pierde.
 
 Los eventos **futuros** no aparecen en Recuerdos, solo los que ya pasaron.
+
+## La billetera
+
+Es la sección más distinta de todas, porque es la única donde los datos tienen que
+*cuadrar*. Por eso está armada al revés que un Excel: **lo único que se guarda son los
+movimientos**. Los totales, las barras, el promedio diario y el avance del presupuesto no
+se guardan en ninguna parte — se calculan cada vez que abres la sección. Así es imposible
+que lo anotado y lo mostrado se desincronicen.
+
+### Anotar
+
+La barra de arriba es toda la sección, en realidad: escribe el monto, toca la categoría y
+el gasto queda con la fecha de hoy. Dos toques, sin formularios. Es a propósito: una
+planilla de gastos no muere porque le falten gráficos, muere porque anotar el café de
+$2.500 cuesta demasiado.
+
+- El monto se lee como lo escribas: `12500`, `12.500` y `$12.500` son lo mismo.
+- **El signo lo pone la categoría**, no tú. Las de tipo *gasto* restan y las de tipo
+  *ingreso* suman. Por eso "Sueldo" aparece con un `+` en su ficha.
+- Las categorías se ordenan solas: adelante queda lo que más anotas.
+- El botón **Detalle** abre el formulario completo, para poner otra fecha o una nota.
+- Toca un movimiento de la lista para editarlo o borrarlo.
+
+Las categorías se gestionan con el botón **Categorías**: puedes crear las tuyas, cambiar
+nombre, emoji, color y tipo, y reordenarlas. Si le cambias el tipo a una categoría, los
+movimientos que ya tenía cambian de signo solos. Si borras una categoría que tenía
+movimientos, **los movimientos no se borran**: quedan como "Sin categoría" y siguen
+sumando en los totales.
+
+### El presupuesto
+
+Con **Poner topes** le asignas un máximo mensual a las categorías que quieras vigilar.
+No es obligatorio ni tiene que ser para todas: las que no tengan tope igual aparecen
+listadas aparte con lo que llevas gastado. Los topes son **de cada mes**, y hay un botón
+para copiar los del mes anterior en vez de escribirlos de nuevo. Cuando te pasas de un
+tope, esa barra se pone roja y te dice por cuánto.
+
+### De la Agenda a la Billetera
+
+Igual que la ★ que pasa un evento a Recuerdos, los eventos de categoría **"Pago / Cuenta"**
+tienen un botón **💵** para registrar el pago sin volver a escribirlo.
+
+- En la Billetera aparece el bloque *"Cuentas de tu agenda"* con lo que agendaste este mes
+  y todavía no registras, indicando si ya venció.
+- Al tocar 💵 se abre el formulario con la fecha y el nombre de la cuenta puestos; solo
+  escribes el monto.
+- Una vez registrado, el evento muestra en la agenda cuánto pagaste y desaparece de la
+  lista de pendientes por registrar: no se ofrece dos veces.
+- Si borras el evento, el movimiento se queda (la plata igual salió). Si borras el
+  movimiento, la cuenta vuelve a ofrecerse.
+
+### Sacar los datos
+
+El botón **Exportar .csv** baja todos tus movimientos como planilla (fecha, tipo,
+categoría, monto, nota), lista para abrir en Excel o Google Sheets si quieres hacer tus
+propias tablas dinámicas. Los movimientos viajan también en el respaldo `.json` y en la
+sincronización con Drive, igual que todo lo demás.
+
+> Ojo con esto: desde ahora tu respaldo `.json` contiene tu sueldo y tus gastos. Los datos
+> siguen siendo solo tuyos y nunca salen del navegador, pero al archivo de respaldo trátalo
+> con más cuidado que antes — no lo dejes en una carpeta compartida.
 
 ## Cada mes puede seguir cosas distintas
 
@@ -220,7 +287,8 @@ La app **nunca decide sola** cuál versión sobrevive. Al sincronizar puede pasa
   de cada lado (cuántos eventos, recuerdos, entradas de diario…) y tres opciones:
   **Combinar** (recomendado), **Dejar lo de Drive** o **Dejar lo de este dispositivo**.
 
-Combinar junta eventos, recuerdos, diario, hábitos, métricas y pendientes de ambos lados;
+Combinar junta eventos, recuerdos, diario, hábitos, métricas, pendientes y movimientos de
+la billetera de ambos lados;
 si algo existe en los dos, se queda la versión más reciente. Lo único que combinar no
 propaga son los **borrados**: si eliminaste algo en un dispositivo y el otro todavía lo
 tenía, puede reaparecer. Es a propósito — es preferible que vuelva algo de más a que
