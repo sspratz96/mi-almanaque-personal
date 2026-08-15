@@ -11,6 +11,15 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%96%3C/text%3E%3C/svg%3E">
 <!-- Icono para la pantalla de inicio del telefono: libro dibujado, con los colores de la app -->
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='38' fill='%231f3864'/%3E%3Cg fill='none' stroke='%23e0a92e' stroke-width='9' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M90 58C78 48 62 45 46 47v72c16-2 32 1 44 11 12-10 28-13 44-11V47c-16-2-32 1-44 11z'/%3E%3Cpath d='M90 58v72'/%3E%3C/g%3E%3C/svg%3E">
+<!-- ===== PWA: instalable en la pantalla de inicio ===== -->
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1f3864" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1526" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -4433,5 +4442,95 @@ function updateSyncUI(msg){
   if(memoryOnly) toast("Vista previa: los cambios no se guardarán aquí");
 })();
 </script>
+<!-- ===== PWA: service worker, aviso de versión nueva y accesos directos ===== -->
+<script>
+(function () {
+
+  /* --- 1. Registrar el service worker --------------------------------- */
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("sw.js").then(function (reg) {
+
+        if (reg.waiting) avisarVersionNueva(reg);
+
+        reg.addEventListener("updatefound", function () {
+          var nuevo = reg.installing;
+          if (!nuevo) return;
+          nuevo.addEventListener("statechange", function () {
+            if (nuevo.state === "installed" && navigator.serviceWorker.controller) {
+              avisarVersionNueva(reg);
+            }
+          });
+        });
+
+        // Al volver a la app, revisa si hay algo nuevo publicado.
+        document.addEventListener("visibilitychange", function () {
+          if (document.visibilityState === "visible") reg.update();
+        });
+
+      }).catch(function (e) {
+        console.warn("Service worker no registrado:", e);
+      });
+    });
+
+    var recargando = false;
+    navigator.serviceWorker.addEventListener("controllerchange", function () {
+      if (recargando) return;
+      recargando = true;
+      location.reload();
+    });
+  }
+
+  /* --- 2. Aviso discreto de versión nueva ----------------------------- */
+  function avisarVersionNueva(reg) {
+    if (document.getElementById("swAviso")) return;
+
+    var barra = document.createElement("div");
+    barra.id = "swAviso";
+    barra.style.cssText =
+      "position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));" +
+      "transform:translateX(-50%);z-index:130;display:flex;align-items:center;gap:12px;" +
+      "background:var(--nav,#1f3864);color:#fff;padding:11px 14px;border-radius:12px;" +
+      "font-family:Inter,system-ui,sans-serif;font-size:13.5px;" +
+      "box-shadow:0 8px 30px rgba(0,0,0,.28);max-width:calc(100vw - 32px)";
+
+    var txt = document.createElement("span");
+    txt.textContent = "Hay una versión nueva.";
+
+    var btn = document.createElement("button");
+    btn.textContent = "Actualizar";
+    btn.style.cssText =
+      "border:none;border-radius:8px;background:var(--accent,#e0a92e);color:#241a05;" +
+      "font:inherit;font-weight:700;padding:6px 12px;cursor:pointer;flex:0 0 auto";
+    btn.onclick = function () {
+      if (reg.waiting) reg.waiting.postMessage("actualizar-ya");
+      barra.remove();
+    };
+
+    var x = document.createElement("button");
+    x.textContent = "\u00d7";
+    x.setAttribute("aria-label", "Cerrar");
+    x.style.cssText =
+      "border:none;background:none;color:rgba(255,255,255,.6);font-size:18px;" +
+      "line-height:1;cursor:pointer;padding:0 2px;flex:0 0 auto";
+    x.onclick = function () { barra.remove(); };
+
+    barra.appendChild(txt); barra.appendChild(btn); barra.appendChild(x);
+    document.body.appendChild(barra);
+  }
+
+  /* --- 3. Accesos directos: ?ir=billetera abre esa pestaña ------------- */
+  try {
+    var ir = new URLSearchParams(location.search).get("ir");
+    if (ir) {
+      var tab = document.querySelector('.tab[data-view="' + ir.replace(/[^a-z]/gi, "") + '"]');
+      if (tab) tab.click();
+      history.replaceState(null, "", location.pathname);
+    }
+  } catch (e) {}
+
+})();
+</script>
+
 </body>
 </html>
