@@ -67,4 +67,5 @@ window.FRASES = [
   ["A society grows great when old men plant trees in whose shade they know they shall never sit in.", "Greek Proverb"],
   ["One must imagine Sisyphus happy.", "Albert Camus"], 
   ["Even if it’s not your fault, it’s your responsibility.", "Terry Pratchett"],
+  ["When you know that you can be the one that you should be, you are living in Hell.", "Sathiya Sam"],
 ];
