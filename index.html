@@ -545,7 +545,61 @@ textarea{resize:vertical;min-height:64px}
 .pend-clear{font-size:11.5px;color:var(--ink-faint);background:none;border:none;cursor:pointer;
   padding:0 15px 12px;text-align:left;font-family:inherit}
 .pend-clear:hover{color:var(--ink-soft);text-decoration:underline}
-@media(max-width:720px){ .pend-grid{grid-template-columns:1fr} }
+
+/* subtareas: un solo nivel, con guía a la izquierda */
+.pend-item{position:relative}
+.pend-sub{padding-left:29px}
+.pend-sub::before{content:"";position:absolute;left:10px;top:0;bottom:0;width:1.5px;
+  background:var(--line);border-radius:2px}
+.pend-sub .pend-check{width:17px;height:17px;border-radius:5px}
+.pend-sub .pend-check svg{width:10px;height:10px}
+.pend-sub .pend-txt{font-size:13px;color:var(--ink-soft)}
+.pend-sub.done .pend-txt{color:var(--ink-faint)}
+.pend-subcount{display:inline-block;margin-left:7px;font-family:"Space Mono",ui-monospace,monospace;
+  font-size:10.5px;color:var(--ink-faint);border:1px solid var(--line);border-radius:20px;padding:0 6px}
+.pend-item.done .pend-subcount{opacity:.6}
+.pend-subadd{padding-left:29px}
+.pend-subadd input{flex:1;font-size:13px;padding:5px 8px;border:1px solid var(--line);border-radius:7px;
+  background:var(--bg-2);color:var(--ink);font-family:inherit}
+.pend-subadd input:focus{outline:none;border-color:var(--gc,#3b6ea5)}
+.pend-mini{flex:0 0 auto;width:24px;height:24px;border:none;background:none;color:var(--ink-faint);
+  cursor:pointer;border-radius:6px;display:grid;place-items:center;opacity:0;transition:opacity .12s}
+.pend-item:hover .pend-mini{opacity:1}
+.pend-mini:hover{color:var(--ink);background:var(--bg-2)}
+.pend-mini svg{width:14px;height:14px}
+
+/* marcas de prioridad */
+.pend-dot{flex:0 0 auto;width:14px;height:14px;border-radius:50%;padding:0;cursor:pointer;margin-top:4px;
+  border:1.7px solid var(--pc,var(--ink-faint));background:var(--pc,transparent);transition:transform .1s,opacity .12s}
+.pend-sub .pend-dot{width:11px;height:11px;margin-top:4px}
+.pend-dot.none{background:transparent;border-style:dashed;opacity:.3}
+.pend-item:hover .pend-dot.none{opacity:.75}
+.pend-dot:hover{transform:scale(1.2)}
+.pend-item.done .pend-dot{opacity:.35}
+.pend-item.p-urgente:not(.done) .pend-txt{font-weight:600}
+.pend-add .pend-dot{margin-top:0;align-self:center;width:15px;height:15px;opacity:.55}
+.pend-add .pend-dot:hover{opacity:1}
+.pend-filters{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:15px}
+.pf-chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--panel);
+  border-radius:20px;padding:5px 12px;font-size:12.5px;color:var(--ink-soft);cursor:pointer;font-family:inherit}
+.pf-chip:hover{border-color:var(--ink-faint);color:var(--ink)}
+.pf-chip.on{border-color:var(--pc,var(--ink));color:var(--ink);font-weight:600;
+  background:color-mix(in srgb,var(--pc,var(--ink)) 12%,transparent)}
+.pf-dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto;
+  border:1.6px solid var(--pc,var(--ink-faint));background:var(--pc,transparent)}
+.pf-n{font-family:"Space Mono",ui-monospace,monospace;font-size:11px;color:var(--ink-faint)}
+.prio-pop{position:fixed;z-index:130;background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  box-shadow:0 14px 34px rgba(0,0,0,.2);padding:6px;width:238px}
+.prio-pop button{display:flex;align-items:center;gap:10px;width:100%;border:none;background:none;cursor:pointer;
+  padding:7px 9px;border-radius:8px;font-family:inherit;font-size:13px;color:var(--ink);text-align:left}
+.prio-pop button:hover{background:var(--bg-2)}
+.prio-pop button.on{background:var(--bg-2)}
+.prio-pop button.on .pp-lbl{font-weight:700}
+.prio-pop .pp-dot{width:12px;height:12px;border-radius:50%;flex:0 0 auto;
+  border:1.7px solid var(--pc,var(--ink-faint));background:var(--pc,transparent)}
+.prio-pop .pp-hint{display:block;font-size:11px;color:var(--ink-faint);line-height:1.3;margin-top:1px}
+@media(max-width:720px){ .pend-grid{grid-template-columns:1fr}
+  .pend-x,.pend-mini{opacity:1} .pend-dot.none{opacity:.6} }
 
 /* ---------- Billetera ---------- */
 .wl-quick{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
@@ -856,13 +910,14 @@ textarea{resize:vertical;min-height:64px}
       <div class="title-wrap">
         <div class="eyebrow">Por hacer</div>
         <h2>Pendientes</h2>
-        <p class="view-sub">Tus listas por tema, como esas notas que te mandas a ti mismo. Crea grupos (trabajo, casa, personal…) y anota lo que tengas que hacer en cada uno.</p>
+        <p class="view-sub">Tus listas por tema, como esas notas que te mandas a ti mismo. Crea grupos (trabajo, casa, personal…) y anota lo que tengas que hacer en cada uno. Cada tarea acepta subtareas (botón ⤷) y una marca de color según lo apurado que sea: toca el círculo de la derecha para elegirla.</p>
       </div>
       <button class="btn btn-primary" id="addGroup">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
         Nuevo grupo
       </button>
     </div>
+    <div class="pend-filters" id="pendFilters"></div>
     <div class="pend-grid" id="pendGrid"></div>
   </section>
 
@@ -1220,6 +1275,15 @@ function normalizarStore(){
   if(!store.metricLog) store.metricLog={};
   if(!store.monthly) store.monthly={};
   if(!Array.isArray(store.pending)) store.pending=[];
+  /* pendientes viejos: se les agrega subtareas vacías y prioridad "sin marcar" */
+  store.pending.forEach(g=>{
+    if(!Array.isArray(g.items)) g.items=[];
+    g.items.forEach(it=>{
+      if(typeof it.prio!=="string") it.prio="";
+      if(!Array.isArray(it.subs)) it.subs=[];
+      it.subs.forEach(sb=>{ if(typeof sb.prio!=="string") sb.prio=""; });
+    });
+  });
   if(!Array.isArray(store.notes)) store.notes=[];
   normalizarWallet();
 }
@@ -1868,28 +1932,121 @@ function openMetricsManager(){
 
 /* ============================================================
    Pendientes — grupos de notas por tema (como chats contigo mismo)
+
+   Cada grupo tiene una lista de pendientes, y cada pendiente puede
+   tener subtareas (un solo nivel: tarea 1 → 1.a, 1.b) y una marca
+   de prioridad por color.
+
+     store.pending  [{id,name,emoji,color,items:[...]}]
+     item           {id,text,done,prio,ts,subs:[{id,text,done,prio,ts}]}
+     prio           "" | "urgente" | "semana" | "seguimiento" | "backlog"
+
+   Regla de las subtareas: marcar la tarea madre marca todas sus
+   subtareas; cuando se marcan todas las subtareas, la madre queda
+   hecha sola. La lista se ordena por prioridad y lo hecho baja al
+   final, así lo urgente siempre queda arriba sin tener que moverlo.
    ============================================================ */
 const PEND_COLORS=["#3b6ea5","#2a8f4e","#7048b6","#c77d1a","#d1495b","#2a8f8f","#c0399a","#5a6b7b"];
+
+/* El orden de esta lista es el orden en que se muestran los pendientes. */
+const PEND_PRIOS=[
+  {k:"urgente",     lbl:"Urgente",     hint:"para hoy o mañana",                 c:"#d1495b"},
+  {k:"semana",      lbl:"Esta semana", hint:"tiene que salir en estos días",     c:"#e0842a"},
+  {k:"seguimiento", lbl:"Seguimiento", hint:"revisar seguido: depende de otros", c:"#c9a227"},
+  {k:"",            lbl:"Sin marcar",  hint:"normal, cuando se pueda",           c:""},
+  {k:"backlog",     lbl:"Backlog",     hint:"que no se olvide, sin apuro",       c:"#3b6ea5"}
+];
+function prioInfo(k){ return PEND_PRIOS.find(p=>p.k===(k||""))||PEND_PRIOS[3]; }
+function prioRank(k){ const i=PEND_PRIOS.findIndex(p=>p.k===(k||"")); return i<0?3:i; }
+
+let pendFilter="";       // "" = mostrar todo
+let pendSubDraft=null;   // id del pendiente al que se le está escribiendo una subtarea
+const pendNewPrio={};    // prioridad elegida para lo próximo que se agregue, por grupo
+
+const ICO_SUBADD='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5v7a3 3 0 003 3h9"/><path d="M15 15v6M12 18h6"/></svg>';
+const ICO_CHECKMARK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg>';
+const ICO_XMARK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+
+/* orden: primero lo no hecho, dentro de eso por prioridad, y a igualdad
+   se respeta el orden en que se escribió */
+function pendSort(list){
+  return (list||[]).map((it,i)=>({it,i}))
+    .sort((a,b)=> (a.it.done?1:0)-(b.it.done?1:0)
+               || prioRank(a.it.prio)-prioRank(b.it.prio)
+               || a.i-b.i)
+    .map(x=>x.it);
+}
+function pendMatch(it){ return !pendFilter || (it.prio||"")===pendFilter; }
+/* con un filtro puesto sólo se ven cosas por hacer: la tarea madre aparece
+   si ella misma calza o si tiene alguna subtarea que calce */
+function pendVisible(it){
+  if(!pendFilter) return true;
+  if(it.done) return false;
+  return pendMatch(it)||(it.subs||[]).some(sb=>!sb.done&&pendMatch(sb));
+}
+function pendCounts(){
+  const n={total:0}; PEND_PRIOS.forEach(p=>n[p.k]=0);
+  (store.pending||[]).forEach(g=>(g.items||[]).forEach(it=>{
+    const mirar=x=>{ if(x.done) return; n.total++; n[(x.prio||"")]=(n[(x.prio||"")]||0)+1; };
+    mirar(it); (it.subs||[]).forEach(mirar);
+  }));
+  return n;
+}
+
+function renderPendFilters(){
+  const bar=document.getElementById("pendFilters"); if(!bar) return;
+  const n=pendCounts();
+  if(!n.total && !pendFilter){ bar.innerHTML=""; return; }
+  const chip=(k,lbl,cant,color)=>
+    '<button class="pf-chip'+(pendFilter===k?" on":"")+'" data-pf="'+k+'"'+(color?' style="--pc:'+color+'"':'')+'>'+
+      (color?'<span class="pf-dot" style="--pc:'+color+'"></span>':'')+
+      esc(lbl)+'<span class="pf-n">'+cant+'</span></button>';
+  bar.innerHTML=chip("__all","Todo",n.total,"")+
+    PEND_PRIOS.filter(p=>p.k).map(p=>chip(p.k,p.lbl,n[p.k]||0,p.c)).join("");
+}
+
+function pendItemHtml(it,parentId){
+  const esSub=!!parentId, p=it.prio||"", inf=prioInfo(p);
+  /* las subtareas NO se reordenan: son pasos de una misma tarea (1.a, 1.b…)
+     y cambiarlas de lugar al marcarlas confunde más de lo que ayuda */
+  const subs=esSub?[]:(it.subs||[]).filter(sb=>!pendFilter||pendMatch(it)||(!sb.done&&pendMatch(sb)));
+  const hechas=(it.subs||[]).filter(sb=>sb.done).length;
+  let h='<li class="pend-item'+(it.done?" done":"")+(esSub?" pend-sub":"")+(p?" p-"+p:"")+
+      '" data-i="'+it.id+'"'+(esSub?' data-parent="'+parentId+'"':'')+'>'+
+    '<button class="pend-check" data-toggle="1" title="Marcar hecho">'+ICO_CHECKMARK+'</button>'+
+    '<span class="pend-txt" data-edittxt="1" title="Toca para editar">'+esc(it.text)+
+      (!esSub&&(it.subs||[]).length?'<span class="pend-subcount">'+hechas+'/'+it.subs.length+'</span>':'')+'</span>'+
+    '<button class="pend-dot'+(p?"":" none")+'" data-prio="1"'+(inf.c?' style="--pc:'+inf.c+'"':'')+
+      ' title="Prioridad: '+esc(inf.lbl)+'"></button>'+
+    (esSub?'':'<button class="pend-mini" data-addsub="1" title="Agregar subtarea">'+ICO_SUBADD+'</button>')+
+    '<button class="pend-x" data-delitem="1" title="Borrar">'+ICO_XMARK+'</button>'+
+  '</li>';
+  h+=subs.map(sb=>pendItemHtml(sb,it.id)).join("");
+  if(!esSub&&pendSubDraft===it.id)
+    h+='<li class="pend-item pend-sub pend-subadd"><input type="text" data-newsub="'+it.id+'" placeholder="Subtarea…"></li>';
+  return h;
+}
 
 function renderPending(){
   const grid=document.getElementById("pendGrid"); if(!grid) return;
   if(!store.pending) store.pending=[];
+  renderPendFilters();
   if(!store.pending.length){
     grid.innerHTML='<div class="pend-empty">'+
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>'+
       'Aún no tienes grupos.<br>Crea uno con “Nuevo grupo” — por ejemplo Trabajo, Casa o Personal.</div>';
     return;
   }
-  grid.innerHTML=store.pending.map((g,gi)=>{
+  const cards=store.pending.map((g,gi)=>{
     const c=g.color||"#3b6ea5", items=g.items||[];
-    const pend=items.filter(it=>!it.done).length, doneCount=items.filter(it=>it.done).length;
-    const itemsHtml=items.length? items.map(it=>
-      '<li class="pend-item'+(it.done?" done":"")+'" data-i="'+it.id+'">'+
-        '<button class="pend-check" data-toggle="1" title="Marcar hecho"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></button>'+
-        '<span class="pend-txt" data-edittxt="1" title="Toca para editar">'+esc(it.text)+'</span>'+
-        '<button class="pend-x" data-delitem="1" title="Borrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>'+
-      '</li>').join("")
+    const pend=items.filter(it=>!it.done).length;
+    const doneCount=items.filter(it=>it.done).length+
+      items.filter(it=>!it.done).reduce((a,it)=>a+(it.subs||[]).filter(sb=>sb.done).length,0);
+    const visibles=pendSort(items).filter(pendVisible);
+    if(pendFilter&&!visibles.length) return "";
+    const itemsHtml=visibles.length? visibles.map(it=>pendItemHtml(it,null)).join("")
       : '<li class="pend-item" style="border:none"><span class="pend-txt" style="color:var(--ink-faint);cursor:default">Sin pendientes 🎉</span></li>';
+    const np=prioInfo(pendNewPrio[g.id]||"");
     return '<div class="pend-card" style="--gc:'+c+'" data-g="'+g.id+'">'+
       '<div class="pend-head"><span class="pemo">'+(g.emoji||"📌")+'</span>'+
         '<span class="pname">'+esc(g.name)+'</span><span class="pcount">'+pend+'</span>'+
@@ -1900,36 +2057,98 @@ function renderPending(){
         '</span></div>'+
       '<ul class="pend-items">'+itemsHtml+'</ul>'+
       (doneCount?'<button class="pend-clear" data-clear="1">Borrar '+doneCount+' completada'+(doneCount>1?"s":"")+'</button>':'')+
-      '<div class="pend-add"><input type="text" placeholder="Agregar pendiente…" data-newitem="1">'+
+      '<div class="pend-add">'+
+        '<button class="pend-dot'+(np.k?"":" none")+'" data-prio="new"'+(np.c?' style="--pc:'+np.c+'"':'')+
+          ' title="Prioridad de lo que agregues: '+esc(np.lbl)+'"></button>'+
+        '<input type="text" placeholder="Agregar pendiente…" data-newitem="1">'+
         '<button data-additem="1" title="Agregar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>'+
     '</div>';
-  }).join("");
+  }).filter(Boolean);
+  grid.innerHTML=cards.length? cards.join("")
+    : '<div class="pend-empty">Nada con esta marca por ahora.</div>';
+  if(pendSubDraft){ const el=grid.querySelector('[data-newsub="'+pendSubDraft+'"]'); if(el) el.focus(); }
 }
 
 function pGroupOf(el){ const card=el.closest(".pend-card"); return card?store.pending.find(g=>g.id===card.dataset.g):null; }
-function pItemOf(el,g){ const li=el.closest(".pend-item"); return (li&&g)?(g.items||[]).find(x=>x.id===li.dataset.i):null; }
+/* devuelve {item,parent}: sirve igual para una tarea como para una subtarea */
+function pRefOf(el,g){
+  const li=el.closest(".pend-item"); if(!li||!g) return null;
+  const pid=li.dataset.parent;
+  if(pid){
+    const p=(g.items||[]).find(x=>x.id===pid); if(!p) return null;
+    const sb=(p.subs||[]).find(x=>x.id===li.dataset.i);
+    return sb?{item:sb,parent:p}:null;
+  }
+  const it=(g.items||[]).find(x=>x.id===li.dataset.i);
+  return it?{item:it,parent:null}:null;
+}
+/* al tocar algo hay que refrescar el ts de la tarea madre: así al combinar
+   dos respaldos gana la versión que de verdad se editó después */
+function pTouch(ref){ const t=Date.now(); ref.item.ts=t; if(ref.parent) ref.parent.ts=t; }
 
 function addPendItem(g,input){
   const v=(input.value||"").trim(); if(!v) return;
-  g.items=g.items||[]; g.items.push({id:uid(),text:v,done:false,ts:Date.now()});
+  g.items=g.items||[];
+  g.items.push({id:uid(),text:v,done:false,prio:pendNewPrio[g.id]||"",ts:Date.now(),subs:[]});
+  input.value="";
   saveStore(); renderPending();
   const el=document.querySelector('.pend-card[data-g="'+g.id+'"] [data-newitem]'); if(el) el.focus();
 }
+function addPendSub(g,parent,input){
+  const v=(input.value||"").trim(); if(!v) return false;
+  parent.subs=parent.subs||[];
+  parent.subs.push({id:uid(),text:v,done:false,prio:"",ts:Date.now()});
+  parent.done=false;              // si aparece algo nuevo por hacer, la madre vuelve a estar pendiente
+  parent.ts=Date.now();
+  saveStore(); return true;
+}
 
 function startEditItem(span){
-  const g=pGroupOf(span); const it=pItemOf(span,g); if(!it) return;
+  const g=pGroupOf(span); const ref=pRefOf(span,g); if(!ref) return;
+  const it=ref.item;
   const inp=document.createElement("textarea");
   inp.className="pend-txt-edit"; inp.value=it.text; inp.rows=1;
   span.replaceWith(inp); inp.focus(); inp.setSelectionRange(inp.value.length,inp.value.length);
   const grow=()=>{ inp.style.height="auto"; inp.style.height=inp.scrollHeight+"px"; }; grow();
   let done=false;
-  const commit=save=>{ if(done)return; done=true; if(save){ const v=inp.value.trim(); if(v)it.text=v; saveStore(); } renderPending(); };
+  const commit=save=>{ if(done)return; done=true;
+    if(save){ const v=inp.value.trim(); if(v){ it.text=v; pTouch(ref); } saveStore(); }
+    renderPending(); };
   inp.addEventListener("blur",()=>commit(true));
   inp.addEventListener("input",grow);
   inp.addEventListener("keydown",ev=>{
     if(ev.key==="Enter"&&!ev.shiftKey){ ev.preventDefault(); commit(true); }
     else if(ev.key==="Escape"){ ev.preventDefault(); commit(false); }
   });
+}
+
+/* ---- menú de prioridad ---- */
+function closePrioPop(){ const p=document.getElementById("prioPop"); if(p) p.remove(); }
+function openPrioPop(btn,actual,elegir){
+  closePrioPop();
+  const pop=document.createElement("div");
+  pop.className="prio-pop"; pop.id="prioPop";
+  pop.innerHTML=PEND_PRIOS.map(p=>
+    '<button data-k="'+p.k+'"'+((p.k===(actual||""))?' class="on"':'')+'>'+
+      '<span class="pp-dot"'+(p.c?' style="--pc:'+p.c+'"':'')+'></span>'+
+      '<span><span class="pp-lbl">'+esc(p.lbl)+'</span>'+
+      '<span class="pp-hint">'+esc(p.hint)+'</span></span></button>').join("");
+  document.body.appendChild(pop);
+  const r=btn.getBoundingClientRect(), w=pop.offsetWidth, h=pop.offsetHeight;
+  let x=Math.min(Math.max(8,r.left-8), innerWidth-w-8);
+  let y=r.bottom+6; if(y+h>innerHeight-8) y=Math.max(8,r.top-h-6);
+  pop.style.left=x+"px"; pop.style.top=y+"px";
+  pop.addEventListener("click",ev=>{
+    const b=ev.target.closest("button[data-k]"); if(!b) return;
+    ev.stopPropagation(); closePrioPop(); elegir(b.dataset.k);
+  });
+  setTimeout(()=>{
+    const fuera=()=>{ closePrioPop(); document.removeEventListener("click",fuera); };
+    document.addEventListener("click",fuera);
+    document.addEventListener("keydown",function esc(ev){
+      if(ev.key==="Escape"){ closePrioPop(); document.removeEventListener("keydown",esc); }
+    });
+  },0);
 }
 
 function openGroupForm(g){
@@ -1952,20 +2171,103 @@ function openGroupForm(g){
 }
 
 function initPendingEvents(){
+  const bar=document.getElementById("pendFilters");
+  if(bar) bar.addEventListener("click",e=>{
+    const b=e.target.closest("[data-pf]"); if(!b) return;
+    const k=b.dataset.pf==="__all"?"":b.dataset.pf;
+    pendFilter=(pendFilter===k)?"":k; renderPending();
+  });
+
   const grid=document.getElementById("pendGrid"); if(!grid) return;
   grid.addEventListener("click",e=>{
     const t=e.target;
+
     if(t.closest("[data-additem]")){ const g=pGroupOf(t); const inp=t.closest(".pend-card").querySelector("[data-newitem]"); if(g)addPendItem(g,inp); return; }
-    if(t.closest("[data-toggle]")){ const g=pGroupOf(t); const it=pItemOf(t,g); if(it){ it.done=!it.done; saveStore(); renderPending(); } return; }
-    if(t.closest("[data-delitem]")){ const g=pGroupOf(t); const li=t.closest(".pend-item"); if(g){ g.items=(g.items||[]).filter(x=>x.id!==li.dataset.i); saveStore(); renderPending(); } return; }
-    if(t.closest("[data-clear]")){ const g=pGroupOf(t); const n=(g.items||[]).filter(x=>x.done).length;
-      if(n&&confirm("¿Borrar "+n+" pendiente"+(n>1?"s":"")+" completado"+(n>1?"s":"")+"?")){ g.items=g.items.filter(x=>!x.done); saveStore(); renderPending(); } return; }
+
+    if(t.closest("[data-toggle]")){
+      const g=pGroupOf(t); const ref=pRefOf(t,g); if(!ref) return;
+      const it=ref.item; it.done=!it.done;
+      if(!ref.parent) (it.subs||[]).forEach(sb=>{ sb.done=it.done; sb.ts=Date.now(); });
+      else{
+        const subs=ref.parent.subs||[];
+        ref.parent.done = subs.length? subs.every(sb=>sb.done) : ref.parent.done;
+      }
+      pTouch(ref); saveStore(); renderPending(); return;
+    }
+
+    if(t.closest("[data-addsub]")){
+      const li=t.closest(".pend-item");
+      pendSubDraft=(pendSubDraft===li.dataset.i)?null:li.dataset.i;
+      renderPending(); return;
+    }
+
+    const dot=t.closest("[data-prio]");
+    if(dot){
+      e.stopPropagation();
+      const g=pGroupOf(t); if(!g) return;
+      if(dot.dataset.prio==="new"){
+        openPrioPop(dot,pendNewPrio[g.id]||"",k=>{ pendNewPrio[g.id]=k; renderPending();
+          const el=document.querySelector('.pend-card[data-g="'+g.id+'"] [data-newitem]'); if(el) el.focus(); });
+      }else{
+        const ref=pRefOf(dot,g); if(!ref) return;
+        openPrioPop(dot,ref.item.prio||"",k=>{ ref.item.prio=k; pTouch(ref); saveStore(); renderPending(); });
+      }
+      return;
+    }
+
+    if(t.closest("[data-delitem]")){
+      const g=pGroupOf(t); const li=t.closest(".pend-item"); if(!g) return;
+      const pid=li.dataset.parent;
+      if(pid){
+        const p=(g.items||[]).find(x=>x.id===pid);
+        if(p){ p.subs=(p.subs||[]).filter(x=>x.id!==li.dataset.i); p.ts=Date.now(); }
+      }else{
+        g.items=(g.items||[]).filter(x=>x.id!==li.dataset.i);
+        if(pendSubDraft===li.dataset.i) pendSubDraft=null;
+      }
+      saveStore(); renderPending(); return;
+    }
+
+    if(t.closest("[data-clear]")){
+      const g=pGroupOf(t);
+      const n=(g.items||[]).filter(x=>x.done).length+
+        (g.items||[]).filter(x=>!x.done).reduce((a,it)=>a+(it.subs||[]).filter(sb=>sb.done).length,0);
+      if(n&&confirm("¿Borrar "+n+" pendiente"+(n>1?"s":"")+" completado"+(n>1?"s":"")+"?")){
+        g.items=g.items.filter(x=>!x.done);
+        g.items.forEach(it=>{ if((it.subs||[]).some(sb=>sb.done)){ it.subs=it.subs.filter(sb=>!sb.done); it.ts=Date.now(); } });
+        saveStore(); renderPending();
+      } return;
+    }
+
     if(t.closest("[data-editg]")){ openGroupForm(pGroupOf(t)); return; }
     const mv=t.closest("[data-mvg]"); if(mv){ const g=pGroupOf(t); if(moveArr(store.pending,g.id,mv.dataset.mvg==="up"?-1:1)){ saveStore(); renderPending(); } return; }
     const span=t.closest("[data-edittxt]"); if(span){ startEditItem(span); return; }
   });
+
   grid.addEventListener("keydown",e=>{
-    if(e.target.matches("[data-newitem]")&&e.key==="Enter"){ e.preventDefault(); const g=pGroupOf(e.target); if(g)addPendItem(g,e.target); }
+    if(e.target.matches("[data-newitem]")&&e.key==="Enter"){
+      e.preventDefault(); const g=pGroupOf(e.target); if(g)addPendItem(g,e.target); return; }
+    if(e.target.matches("[data-newsub]")){
+      if(e.key==="Enter"){
+        e.preventDefault();
+        const g=pGroupOf(e.target); const p=(g&&g.items||[]).find(x=>x.id===e.target.dataset.newsub);
+        if(p&&addPendSub(g,p,e.target)) renderPending();   // el borrador queda abierto para seguir agregando
+      }else if(e.key==="Escape"){
+        e.preventDefault(); pendSubDraft=null; renderPending();
+      }
+    }
+  });
+
+  /* si se sale del campo de subtarea, se guarda lo escrito y se cierra */
+  grid.addEventListener("focusout",e=>{
+    if(!e.target.matches("[data-newsub]")) return;
+    const g=pGroupOf(e.target); const p=(g&&g.items||[]).find(x=>x.id===e.target.dataset.newsub);
+    const hab=p&&addPendSub(g,p,e.target);
+    setTimeout(()=>{
+      if(document.activeElement&&document.activeElement.matches("[data-newsub]")) return;
+      if(pendSubDraft){ pendSubDraft=null; renderPending(); }
+      else if(hab) renderPending();
+    },0);
   });
 }
 
@@ -4096,7 +4398,7 @@ function contarStore(s){
     ["entradas de diario",(s.journal||[]).length],
     ["notas",(s.notes||[]).length],
     ["hábitos",(s.routines||[]).length],
-    ["pendientes",(s.pending||[]).reduce((a,g)=>a+((g.items||[]).length),0)],
+    ["pendientes",(s.pending||[]).reduce((a,g)=>a+((g.items||[]).reduce((b,it)=>b+1+((it.subs||[]).length),0)),0)],
     ["movimientos",((s.wallet||{}).tx||[]).length],
     ["días de rutina",Object.keys(s.routineLog||{}).length],
     ["meses con notas",Object.keys(s.monthly||{}).length]
@@ -4136,8 +4438,15 @@ function unirPendientes(a,b,bGana){
   const ib=new Map((b||[]).map(g=>[String(g.id),g]));
   return grupos.map(g=>{
     const ga=ia.get(String(g.id)), gb=ib.get(String(g.id));
-    if(ga&&gb) return Object.assign({},g,{items:unirPorId(ga.items,gb.items,bGana)});
-    return g;
+    if(!(ga&&gb)) return g;
+    const items=unirPorId(ga.items,gb.items,bGana);
+    /* las subtareas se juntan igual que todo lo demás: una por una, por id */
+    const sa=new Map((ga.items||[]).map(x=>[String(x.id),x]));
+    const sb=new Map((gb.items||[]).map(x=>[String(x.id),x]));
+    return Object.assign({},g,{items:items.map(it=>{
+      const xa=sa.get(String(it.id)), xb=sb.get(String(it.id));
+      return (xa&&xb)?Object.assign({},it,{subs:unirPorId(xa.subs,xb.subs,bGana)}):it;
+    })});
   });
 }
 /* routineLog y metricLog son {fecha:{id:valor}} — se juntan día por día */
