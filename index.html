@@ -777,6 +777,17 @@ textarea{resize:vertical;min-height:64px}
 .net-legend i{width:9px;height:9px;border-radius:50%;background:var(--c);font-size:0}
 .net-legend i.ghost{background:transparent;border:1.5px dashed var(--ink-faint)}
 
+/* barra de formato del editor de notas (negrita/cursiva/tachado/link) */
+.nt-toolbar{display:flex;gap:6px;margin:2px 0 8px}
+.nt-toolbar button{min-width:30px;height:30px;padding:0 9px;border-radius:7px;border:1px solid var(--line);
+  background:var(--bg-2);color:var(--ink-soft);cursor:pointer;font-size:13.5px;
+  font-family:"Inter";display:grid;place-items:center;line-height:1}
+.nt-toolbar button:hover{color:var(--ink);border-color:var(--ink-faint)}
+.nt-toolbar button b{font-weight:800}
+.nt-toolbar button i{font-style:italic}
+.nt-toolbar button s{text-decoration:line-through}
+.nt-toolbar button svg{width:15px;height:15px}
+
 /* autocompletar [[ ]] en el editor */
 .nt-acwrap{position:relative}
 .nt-ac{position:absolute;left:0;right:0;top:100%;z-index:5;background:var(--panel);
@@ -3616,9 +3627,17 @@ function openNoteForm(id,tituloPrevio){
     <div class="field"><label>Etiquetas (separadas por coma)</label>
       <input id="f_ntags" value="${n?esc((n.tags||[]).join(", ")):""}" placeholder="lectura, productividad"></div>
     <div class="field nt-acwrap"><label>Apuntes</label>
+      <div class="nt-toolbar" id="ntToolbar">
+        <button type="button" data-fmt="bold" title="Negrita"><b>N</b></button>
+        <button type="button" data-fmt="italic" title="Cursiva"><i>C</i></button>
+        <button type="button" data-fmt="strike" title="Tachado"><s>T</s></button>
+        <button type="button" data-fmt="link" title="Insertar link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007 0l3-3a5 5 0 00-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 00-7 0l-3 3a5 5 0 007 7l1.5-1.5"/></svg>
+        </button>
+      </div>
       <textarea id="f_nbody" style="min-height:260px" placeholder="Escribe aquí. Usa [[Título de otra nota]] para enlazar, # para títulos, - para listas y #etiqueta donde quieras.">${n?esc(n.body||""):""}</textarea>
       <div class="nt-ac" id="ntAc"></div>
-      <div class="hint">Escribe <span class="mono">[[</span> y aparecen tus notas para elegir. Si el título no existe, el enlace queda en gris hasta que crees esa nota.</div>
+      <div class="hint">Escribe <span class="mono">[[</span> y aparecen tus notas para elegir. Si el título no existe, el enlace queda en gris hasta que crees esa nota. Selecciona texto y toca N/C/T para darle formato, o el ícono de link para insertar uno.</div>
     </div>
   `,()=>{
     const title=val("f_ntitle").trim();
@@ -3645,6 +3664,43 @@ function openNoteForm(id,tituloPrevio){
   });
   const modal=document.querySelector(".modal"); if(modal) modal.classList.add("wide");
   montarAutocompletado();
+  montarBarraFormato();
+}
+/* Barra de formato del cuerpo de la nota: negrita, cursiva, tachado y link,
+   con la misma lógica de WhatsApp — seleccionas texto y tocas el botón para
+   envolverlo. Si no hay nada seleccionado, se inserta un texto de ejemplo
+   ya seleccionado para que lo puedas reemplazar escribiendo encima. */
+function montarBarraFormato(){
+  const ta=document.getElementById("f_nbody"), barra=document.getElementById("ntToolbar");
+  if(!ta||!barra) return;
+  const envolver=(izq,der,marcador)=>{
+    const ini=ta.selectionStart, fin=ta.selectionEnd;
+    const val=ta.value, sel=val.slice(ini,fin);
+    const texto=sel||marcador;
+    ta.value=val.slice(0,ini)+izq+texto+der+val.slice(fin);
+    const desde=ini+izq.length, hasta=desde+texto.length;
+    ta.focus(); ta.setSelectionRange(desde,hasta);
+  };
+  const insertarLink=()=>{
+    const ini=ta.selectionStart, fin=ta.selectionEnd;
+    const sel=ta.value.slice(ini,fin);
+    let url=window.prompt("¿A qué dirección lleva el link?\nEj: https://ejemplo.com");
+    if(url===null) return;
+    url=url.trim(); if(!url) return;
+    if(!/^https?:\/\//i.test(url)) url="https://"+url;
+    const texto=sel||"texto del link";
+    const val=ta.value;
+    ta.value=val.slice(0,ini)+"["+texto+"]("+url+")"+val.slice(fin);
+    const desde=ini+1, hasta=desde+texto.length;
+    ta.focus(); ta.setSelectionRange(desde,hasta);
+  };
+  barra.onclick=e=>{
+    const b=e.target.closest("[data-fmt]"); if(!b) return;
+    if(b.dataset.fmt==="bold") envolver("**","**","negrita");
+    else if(b.dataset.fmt==="italic") envolver("*","*","cursiva");
+    else if(b.dataset.fmt==="strike") envolver("~~","~~","tachado");
+    else if(b.dataset.fmt==="link") insertarLink();
+  };
 }
 function renombrarEnlaces(viejo,nuevo){
   const k=normTitle(viejo);
