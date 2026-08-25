@@ -199,9 +199,17 @@ aparecen tus notas para elegir de la lista.
 ### Escribir
 
 El cuerpo acepta Markdown básico: `#` para títulos, `-` para listas, `- [ ]` para tareas,
-`> ` para citas, `**negrita**`, `*cursiva*`, `` `código` ``, `==destacado==` y bloques con
-triple acento grave. Cualquier `#etiqueta` suelta en el texto se vuelve un chip: al tocarlo
-se filtran todas las notas que la usan. También puedes escribir etiquetas en su propio campo.
+`> ` para citas, `**negrita**`, `*cursiva*`, `~~tachado~~`, `` `código` ``, `==destacado==`,
+`[texto](https://...)` para links y bloques con triple acento grave. Un link "pelado"
+(`https://...` suelto en el texto, sin corchetes) también se vuelve clickeable solo.
+Cualquier `#etiqueta` suelta en el texto se vuelve un chip: al tocarlo se filtran todas las
+notas que la usan. También puedes escribir etiquetas en su propio campo.
+
+Arriba del cuerpo hay una pequeña barra (**N** / *C* / ~~T~~ / 🔗), al estilo WhatsApp:
+selecciona un texto y toca el botón para envolverlo en negrita, cursiva o tachado; con el
+ícono de link te pregunta la dirección y arma el `[texto](link)` por ti. Si no seleccionas
+nada, se inserta una palabra de ejemplo ya marcada para que la reemplaces escribiendo
+encima.
 
 ### La red
 
