@@ -70,4 +70,6 @@ window.FRASES = [
   ["When you know that you can be the one that you should be, you are living in Hell.", "Sathiya Sam"],
   ["Sometimes you sing lead, and sometimes you're on tambourine. And if you're on tambourine, play it right. Play it with a smile. Because nobody wants to see a mad tambourine player.", "Chris Rock"],
   ["People only get to know you as much as they know themselves.", "Dylan Banks"],
+  ["The man who can walk away from what he desires for the sake of what he must become is a man no one can own.", "Epictetus"],
+  ["If you are so sure, then burn the ships.", "Hernan Cortes"], 
 ];
