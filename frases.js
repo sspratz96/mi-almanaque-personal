@@ -73,4 +73,5 @@ window.FRASES = [
   ["The man who can walk away from what he desires for the sake of what he must become is a man no one can own.", "Epictetus"],
   ["If you are so sure, then burn the ships.", "Hernan Cortes"], 
   ["Trying to make things idiot proof, but they keep making better idiots.", "Anónimo"], 
+  ["How do you spell 'love'? T-I-M-E.", "Michael Smoak"] 
 ];
