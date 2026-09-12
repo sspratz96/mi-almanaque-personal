@@ -61,7 +61,7 @@ window.FRASES = [
   ["One way to increase the probability that things will unfold for you properly is to not lie.", "Jordan Peterson"],
   ["Figure out what you want. Block out the noise. Then do so much work that it would be unreasonable that you fail.", "Alex Hormozi"],
   ["Then I heard the voice of the Lord saying, 'Whom shall I send? And who will go for us?' And I said, 'Here am I. Send me!", "Isaiah 6:8"],
-  ["Oh Heavenly Father, bear witness as I show you the strength of your creation.", "Anónimo"],
+  ["Oh Heavenly Father, bear witness as I show you the strength of your creation.", "Anonimous"],
   ["If you have a problem with me, text me. And if you don't have my number, you don't know me well enough to have a problem with me.", "Tom Holland"],
   ["A harmless man is not a good man. A good man is a very, very dangerous man who has that under voluntary control.", "Jordan Peterson"],
   ["A society grows great when old men plant trees in whose shade they know they shall never sit in.", "Greek Proverb"],
@@ -72,6 +72,10 @@ window.FRASES = [
   ["People only get to know you as much as they know themselves.", "Dylan Banks"],
   ["The man who can walk away from what he desires for the sake of what he must become is a man no one can own.", "Epictetus"],
   ["If you are so sure, then burn the ships.", "Hernan Cortes"], 
-  ["Trying to make things idiot proof, but they keep making better idiots.", "Anónimo"], 
-  ["How do you spell 'love'? T-I-M-E.", "Michael Smoak"] 
+  ["Trying to make things idiot proof, but they keep making better idiots.", "Anonimous"], 
+  ["How do you spell 'love'? T-I-M-E.", "Michael Smoak"],
+  ["I think a man only needs one thing in life. He just needs someone to love. If you can't give him that, then give him something to hope for. And if you can't give him that, just give him something to do.", "Scott Campbell as James Liddle, in The Flight of the Phoenix"],
+  ["Give a man a purpose and the ability to achieve it, and he will crawl over broken glass with a smile.", "Adam Lane Smith"],
+  ["'I can't see a way through', said the boy.'Can you see your next step?' said the horse.'Yes.''Just take that.'", "Charlie Mackesy on The Boy, the Mole, the Fox and the Horse"],
+  ["'Your loss', sweetheart, you lied to your people so they would hate me, I lied to my people so they would like you.","Anonymous"], 
 ];
