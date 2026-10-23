@@ -2498,7 +2498,17 @@ function wlMoney(n){
 function wlParse(s){
   s=String(s==null?"":s).replace(/[^\d.,-]/g,"");
   if(!s) return null;
-  s=s.replace(/\./g,"").replace(",",".");
+  const i=s.lastIndexOf("."), j=s.lastIndexOf(",");
+  if(i>=0&&j>=0){
+    /* vienen los dos separadores: el ÚLTIMO es el decimal. Así "1.500,5"
+       (formato local) y "1,500.50" (planilla en inglés) se leen bien;
+       antes "1,500.50" se interpretaba en silencio como 1.5005 */
+    if(i>j) s=s.replace(/,/g,"");
+    else    s=s.replace(/\./g,"").replace(",",".");
+  } else {
+    /* uno solo: lectura local — el punto agrupa miles, la coma es decimal */
+    s=s.replace(/\./g,"").replace(",",".");
+  }
   const n=parseFloat(s);
   return isFinite(n)?n:null;
 }
@@ -4454,21 +4464,32 @@ function importCSV(text){
   const iStart=idx("inicio")>=0?idx("inicio"):idx("fecha");
   const iEnd=idx("fin"), iTime=idx("hora"), iTitle=idx("evento")>=0?idx("evento"):idx("titulo"),
     iCat=idx("categor"), iPlace=idx("lugar"), iNotes=idx("nota"), iStat=idx("estado");
-  let added=0;
+  let added=0, omitidas=0;
   for(let r=1;r<rows.length;r++){
     const c=rows[r]; const title=(c[iTitle]||"").trim(); const start=normDate(c[iStart]);
-    if(!title||!start) continue;
+    if(!title) continue;
+    if(!start){ omitidas++; continue; }
     store.events.push({id:uid(),start,end:normDate(c[iEnd]),time:normTime(c[iTime]),
       title,cat:(c[iCat]||"Otro").trim()||"Otro",place:(c[iPlace]||"").trim(),
       notes:(c[iNotes]||"").trim(),status:(c[iStat]||"Pendiente").trim()||"Pendiente"});
     added++;
   }
-  saveStore(); refreshCurrent(); closeModal(); toast(`${added} eventos importados`);
+  saveStore(); refreshCurrent(); closeModal();
+  toast(added+" eventos importados"+(omitidas?" · "+omitidas+(omitidas===1?" fila omitida":" filas omitidas")+" por fecha inválida":""));
 }
 function normDate(s){ if(!s)return""; s=s.trim(); if(!s)return"";
-  if(/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0,10);
+  const iso=s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if(iso) return (+iso[2]>=1&&+iso[2]<=12&&+iso[3]>=1&&+iso[3]<=31)?iso[0]:"";
   const m=s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{2,4})/);
-  if(m){ let[_,d,mo,y]=m; if(y.length===2)y="20"+y; return `${y}-${mo.padStart(2,"0")}-${d.padStart(2,"0")}`; }
+  if(m){
+    let[_,d,mo,y]=m; if(y.length===2)y="20"+y;
+    const dn=+d, mn=+mo;
+    /* el formato esperado es D/M/A; si el "mes" es >12, la fila viene en
+       M/D/A (planilla en inglés) o corrupta — mejor omitirla que guardar
+       una fecha corrida sin aviso */
+    if(mn<1||mn>12||dn<1||dn>31) return "";
+    return `${y}-${String(mn).padStart(2,"0")}-${String(dn).padStart(2,"0")}`;
+  }
   return"";
 }
 function normTime(s){ if(!s)return""; s=s.trim(); const m=s.match(/(\d{1,2}):(\d{2})/); return m?`${m[1].padStart(2,"0")}:${m[2]}`:""; }

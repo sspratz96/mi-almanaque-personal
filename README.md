@@ -15,6 +15,8 @@ Son archivos estáticos (`index.html` + `frases.js`), sin backend y sin instalac
 
 - **`index.html`** — la app completa. Súbelo siempre.
 - **`frases.js`** — la lista de frases inspiradoras (editable, ver más abajo). Súbelo junto al index.
+- **`three.min.js`** — la librería del globo 3D, autoalojada para que funcione sin internet. Súbela junto al index.
+- **`sw.js`, `manifest.json` y los `icon-*.png`** — lo que hace que la app sea instalable y abra sin conexión. Súbelos también.
 - **`README.md`** — esta guía (opcional).
 
 ## Dónde se guardan tus datos
@@ -241,16 +243,16 @@ puntos de color (el de su categoría) sobre el lugar donde ocurrieron. Arrastra 
 toca un punto para ver de qué recuerdo se trata.
 
 El mapa va **dentro de `index.html`**: son los contornos de Natural Earth (escala 1:110m,
-dominio público) simplificados y comprimidos a unos 20 KB. Por eso el globo se ve completo
-**sin conexión** y sin depender de ninguna imagen externa. Se redibuja solo al cambiar entre
-tema claro y oscuro.
+dominio público) simplificados y comprimidos a unos 20 KB. La librería 3D (`three.min.js`)
+también viaja con la app, así que el globo se ve completo **sin conexión** y sin depender
+de ningún servidor externo. Se redibuja solo al cambiar entre tema claro y oscuro.
 
 Recuerda que un recuerdo solo aparece en el globo si tiene **latitud y longitud**.
 
 ## Subirlo a GitHub Pages
 
 1. Crea un repositorio en GitHub (público está bien).
-2. Sube `index.html` y `frases.js` a la raíz del repo.
+2. Sube todos los archivos del proyecto a la raíz del repo (`index.html`, `frases.js`, `three.min.js`, `sw.js`, `manifest.json` y los íconos).
 3. En el repo: **Settings → Pages**.
 4. En *Source* elige la rama `main` y la carpeta `/ (root)`. Guarda.
 5. Espera ~1 minuto. Tu app queda en `https://TU-USUARIO.github.io/NOMBRE-REPO/`.
@@ -295,19 +297,22 @@ La app **nunca decide sola** cuál versión sobrevive. Al sincronizar puede pasa
   de cada lado (cuántos eventos, recuerdos, entradas de diario…) y tres opciones:
   **Combinar** (recomendado), **Dejar lo de Drive** o **Dejar lo de este dispositivo**.
 
-Combinar junta eventos, recuerdos, diario, hábitos, métricas, pendientes y movimientos de
-la billetera de ambos lados;
-si algo existe en los dos, se queda la versión más reciente. Lo único que combinar no
+Combinar junta eventos, recuerdos, diario, hábitos, métricas, pendientes, notas y
+movimientos de la billetera de ambos lados; si algo existe en los dos, se queda la
+versión editada más recientemente (según el reloj de cada dispositivo — si un equipo
+tiene la hora muy corrida, puede elegir mal). Lo único que combinar no
 propaga son los **borrados**: si eliminaste algo en un dispositivo y el otro todavía lo
 tenía, puede reaparecer. Es a propósito — es preferible que vuelva algo de más a que
 desaparezca algo que querías.
 
 ### La red de seguridad
 
-Antes de reemplazar el archivo de Drive, la app guarda el contenido anterior en
-`mi-calendario-datos-anterior.json`, en tu mismo Drive. Si algo sale mal, ese archivo tiene
-la versión previa. Además Google Drive guarda su propio historial de versiones: clic derecho
-sobre el archivo → **Gestionar versiones**.
+Cuando una sincronización va a **reemplazar** el contenido de Drive (al combinar o al
+elegir "Dejar lo de este dispositivo"), la app guarda primero el contenido anterior en
+`mi-calendario-datos-anterior.json`, en tu mismo Drive. Las subidas automáticas del día a
+día no necesitan esa copia: solo ocurren cuando Drive no ha cambiado desde la última vez
+que este dispositivo lo vio, así que no pisan nada ajeno. Además Google Drive guarda su
+propio historial de versiones: clic derecho sobre el archivo → **Gestionar versiones**.
 
 Consejo: aunque uses Drive, baja un respaldo `.json` de vez en cuando y guárdalo aparte.
 La regla mental: el navegador es tu día a día, Drive es la sincronización, el `.json` es tu seguro.
