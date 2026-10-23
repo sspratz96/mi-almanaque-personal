@@ -4542,10 +4542,21 @@ async function dfetch(url,opts){
 function nubeValida(cloud){
   return !!(cloud && typeof cloud==="object" && cloud.store && typeof cloud.store==="object");
 }
+let driveDupAvisado=false;
 async function driveFindNamed(name){
   const q=encodeURIComponent("name='"+name+"' and trashed=false");
-  const r=await dfetch("https://www.googleapis.com/drive/v3/files?q="+q+"&spaces=drive&fields=files(id,modifiedTime)");
-  const d=await r.json(); return (d.files&&d.files[0])||null;
+  /* Drive permite varios archivos con el mismo nombre (p. ej. dos dispositivos
+     creando su copia casi a la vez). Sin orden, cada sync podía leer uno
+     distinto y los datos "aparecían y desaparecían". Con orderBy se usa
+     SIEMPRE el más reciente, y si hay duplicados se avisa para limpiarlos. */
+  const r=await dfetch("https://www.googleapis.com/drive/v3/files?q="+q+"&spaces=drive&orderBy=modifiedTime%20desc&fields=files(id,modifiedTime)");
+  const d=await r.json();
+  const files=(d&&d.files)||[];
+  if(files.length>1 && name===DRIVE_FILE_NAME && !driveDupAvisado){
+    driveDupAvisado=true;
+    toast("Hay "+files.length+" archivos \""+name+"\" en tu Drive. Se usa el más reciente — borra los demás para evitar confusiones.");
+  }
+  return files[0]||null;
 }
 async function driveFind(){ return driveFindNamed(DRIVE_FILE_NAME); }
 async function driveMeta(id){
