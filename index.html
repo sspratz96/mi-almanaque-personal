@@ -1546,18 +1546,32 @@ function renderLegend(id){
 }
 
 /* ---- Panel del año en miniatura ---- */
+/* Índice {fecha: cuántos eventos} para un año completo, en UNA pasada por
+   los eventos (expandiendo rangos acotados al año). Antes la vista de año
+   filtraba la lista completa de eventos por cada una de las ~420 celdas. */
+function conteoEventosAno(y){
+  const ini=y+"-01-01", fin=y+"-12-31", out={};
+  store.events.forEach(e=>{
+    if(!e.start||e.status==="Cancelado") return;
+    let a=e.start, b=(e.end&&e.end>e.start)?e.end:e.start;
+    if(b<ini||a>fin) return;
+    if(a<ini)a=ini; if(b>fin)b=fin;
+    for(let d=a; d<=b; d=addDays(d,1)) out[d]=(out[d]||0)+1;
+  });
+  return out;
+}
 function renderYear(){
   const g=document.getElementById("yearGrid"); g.innerHTML="";
+  const conteo=conteoEventosAno(agView.y);
   for(let m=0;m<12;m++){
     const cells=monthCells(agView.y,m);
-    let cnt=0;
+    let monthTotal=0;
     const inner=cells.map(d=>{
       const iso=fmt(d),inMonth=d.getMonth()===m;
       if(!inMonth) return '<i class="out"></i>';
-      const c=pendingCountOn(iso); if(c) cnt++;
+      const c=conteo[iso]||0; if(c) monthTotal+=c;
       return `<i class="${densClass(c)}${iso===todayISO?' today':''}"></i>`;
     }).join("");
-    const monthTotal=cells.filter(d=>d.getMonth()===m).reduce((s,d)=>s+pendingCountOn(fmt(d)),0);
     const box=document.createElement("div");
     box.className="mini"+(m===agView.m?" cur":"");
     box.innerHTML=`<h4>${MONTHS[m]} <b>${monthTotal}</b></h4><div class="mini-grid">${inner}</div>`;
@@ -1611,6 +1625,26 @@ function renderMemYear(){
   if(rmYear===null) rmYear=rmView.y;
   document.getElementById("rmYearTitle").textContent=rmYear;
   const g=document.getElementById("rmYearGrid"); g.innerHTML="";
+  /* índices del año en una pasada, en vez de filtrar recuerdos y eventos
+     por cada celda: {fecha: [recuerdos]} y {fecha: hay candidato ★} */
+  const memsPorDia={};
+  store.memories.forEach(mm=>{
+    if(mm.date&&mm.date.slice(0,4)===String(rmYear)) (memsPorDia[mm.date]=memsPorDia[mm.date]||[]).push(mm);
+  });
+  const memIds=new Set(store.memories.map(mm=>mm.id));
+  const candPorDia={};
+  {
+    const ini=rmYear+"-01-01";
+    const fin=(rmYear+"-12-31")<todayISO ? rmYear+"-12-31" : todayISO;
+    store.events.forEach(e=>{
+      if(!e.start||e.status==="Cancelado") return;
+      if(e.memId&&memIds.has(e.memId)) return;   /* ya convertido */
+      let a=e.start, b=(e.end&&e.end>e.start)?e.end:e.start;
+      if(b<ini||a>fin) return;
+      if(a<ini)a=ini; if(b>fin)b=fin;
+      for(let d=a; d<=b; d=addDays(d,1)) candPorDia[d]=true;
+    });
+  }
   let total=0;
   for(let m=0;m<12;m++){
     const cells=monthCells(rmYear,m);
@@ -1618,10 +1652,10 @@ function renderMemYear(){
     const inner=cells.map(d=>{
       const iso=fmt(d),inMonth=d.getMonth()===m;
       if(!inMonth) return '<i class="out"></i>';
-      const mems=memoriesOn(iso);
+      const mems=memsPorDia[iso]||[];
       const isTod=iso===todayISO?" today":"";
       if(!mems.length){
-        return memCandidatesOn(iso).length
+        return candPorDia[iso]
           ? `<i class="${isTod}" style="box-shadow:inset 0 0 0 1px var(--ink-faint)"></i>`
           : `<i class="${isTod}"></i>`;
       }
@@ -2654,11 +2688,15 @@ function renderWlList(){
       'Escribe un monto arriba y toca una categoría.</div>';
     return;
   }
+  /* total por día en una pasada; antes se refiltraba la lista completa
+     por cada movimiento (O(n²) en meses con muchos movimientos) */
+  const totalDia={};
+  tx.forEach(t=>{ totalDia[t.date]=(totalDia[t.date]||0)+(Number(t.amount)||0); });
   let html='', dia=null;
   tx.forEach(t=>{
     if(t.date!==dia){
       dia=t.date;
-      const total=tx.filter(x=>x.date===dia).reduce((a,x)=>a+(Number(x.amount)||0),0);
+      const total=totalDia[dia];
       html+='<div class="wl-daylbl"><span>'+wlDiaLbl(dia)+'</span><span class="ln"></span><span>'+
         (total>0?"+":"")+wlMoney(total)+'</span></div>';
     }
@@ -5021,13 +5059,9 @@ setInterval(refrescarDia,60000);
   migrarMesesV2();
   applyTheme();
   renderQuote();
-  renderAgenda();
-  renderRoutine();
-  renderMemCal();
-  renderJournal();
-  renderPending();
-  renderWallet();
-  renderNotes();
+  /* solo se renderiza la vista activa; las demás se pintan al visitarlas
+     (el click de cada pestaña ya llama refreshCurrent) */
+  refreshCurrent();
   initPendingEvents();
   initWalletEvents();
   if(memoryOnly) toast("Vista previa: los cambios no se guardarán aquí");
