@@ -4482,7 +4482,18 @@ async function dfetch(url,opts){
   let r=await fetch(url,opts);
   if(r.status===401){ accessToken=null; await requestToken(false);
     opts.headers.Authorization="Bearer "+accessToken; r=await fetch(url,opts); }
+  /* Un 403/429/500 NO es una respuesta usable: si se deja pasar, el error de
+     la API se interpreta como contenido y aguas abajo parece "Drive vacío". */
+  if(!r.ok){
+    const err=new Error("drive-http-"+r.status);
+    err.type="drive-http"; err.status=r.status;
+    throw err;
+  }
   return r;
+}
+/* Un payload de Drive es usable solo si trae un store adentro. */
+function nubeValida(cloud){
+  return !!(cloud && typeof cloud==="object" && cloud.store && typeof cloud.store==="object");
 }
 async function driveFindNamed(name){
   const q=encodeURIComponent("name='"+name+"' and trashed=false");
@@ -4698,7 +4709,8 @@ async function combinarConNube(cloud){
 
 /* ---- Escritura en Drive, siempre con copia de lo anterior ---- */
 async function respaldarNube(cloudPrevio){
-  if(!cloudPrevio) return;
+  /* nunca pisar la red de seguridad con algo que no sea un payload real */
+  if(!nubeValida(cloudPrevio)) return;
   try{
     const payload=JSON.stringify(cloudPrevio);
     const f=await driveFindNamed(DRIVE_BAK_NAME);
@@ -4744,7 +4756,11 @@ async function driveSync(interactive,modo){
 
     store.ui.driveFileId=file.id;
     const cloud=await driveDownload(file.id);
-    const cs=contarStore(cloud&&cloud.store), ls=contarStore(store);
+    /* El archivo existe: si su contenido no es un payload válido (corrupto o
+       truncado), no se decide NADA — sobre todo no tratarlo como "Drive
+       vacío", que era la ruta que terminaba sobrescribiéndolo. */
+    if(!nubeValida(cloud)){ const err=new Error("nube-invalida"); err.type="nube-invalida"; throw err; }
+    const cs=contarStore(cloud.store), ls=contarStore(store);
 
     if(modo==="bajar"){
       await applyCloud(cloud); marcarNubeVista(cloud,file);
@@ -4795,6 +4811,8 @@ async function driveSync(interactive,modo){
     else if(t==="popup_failed_to_open") toast("El navegador bloqueó la ventana de Google. Permite las ventanas emergentes de este sitio.");
     else if(t==="timeout") toast("Google no respondió. Revisa la ventana emergente e intenta de nuevo.");
     else if(t==="reemplazada"){ /* la reemplazó otra petición: sin aviso */ }
+    else if(t==="nube-invalida") toast("El archivo de Drive no se pudo leer. No se tocó nada — revisa mi-calendario-datos.json en tu Drive antes de volver a sincronizar.");
+    else if(t==="drive-http") toast("Drive respondió con un error ("+(e.status||"?")+"). No se tocó nada; intenta más tarde.");
     else toast("No se pudo conectar con Drive");
   }finally{
     driveBusy=false; updateSyncUI();
