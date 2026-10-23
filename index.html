@@ -1242,7 +1242,7 @@ function delPhoto(id){
 /* ============================================================
    Datos por defecto (ejemplos, se pueden borrar)
    ============================================================ */
-const todayISO=fmt(new Date());
+let todayISO=fmt(new Date()); /* se refresca al cambiar el día: ver refrescarDia() */
 function seed(){
   return {
     events:[
@@ -4946,6 +4946,24 @@ function updateSyncUI(msg){
   if(pl) pl.style.display=on?"":"none";
   if(ph) ph.style.display=on?"":"none";
 }
+
+/* ---- El "hoy" no puede quedar congelado ----
+   Es una PWA que vive días abierta en el teléfono: al cruzar la medianoche
+   (o al volver tras días suspendida), la estrella ★ de eventos pasados, la
+   fila "hoy" del tracker, las fechas por defecto de los formularios y la
+   frase del día quedaban pegadas en el día de la carga. */
+function refrescarDia(){
+  const hoy=fmt(new Date());
+  if(hoy===todayISO) return;
+  todayISO=hoy;
+  quoteIdx=dayOfYear(new Date())%FRASES.length;
+  renderQuote();
+  refreshCurrent();
+  if(panelDate) renderPanelBody();
+}
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") refrescarDia(); });
+/* respaldo para pestañas que quedan visibles (escritorio): chequeo barato cada minuto */
+setInterval(refrescarDia,60000);
 
 (async function init(){
   await openDB();
