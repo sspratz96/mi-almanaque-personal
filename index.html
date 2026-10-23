@@ -1459,9 +1459,6 @@ function eventsOn(iso){
     return e.start<=iso && iso<=end;
   });
 }
-function pendingCountOn(iso){
-  return eventsOn(iso).filter(e=>e.status!=="Cancelado").length;
-}
 function memoriesOn(iso){ return store.memories.filter(m=>m.date===iso); }
 
 /* ============================================================
@@ -3599,11 +3596,6 @@ function tagsOf(note){
   while((m=TAG_RE.exec(note.body||""))) set.add(m[2]);
   return Array.from(set);
 }
-function allTags(){
-  const c=new Map();
-  store.notes.forEach(n=>tagsOf(n).forEach(t=>c.set(t,(c.get(t)||0)+1)));
-  return Array.from(c.entries()).sort((a,b)=>b[1]-a[1]);
-}
 function noteColor(n){ return NOTE_TYPES[n&&n.type]||NOTE_TYPES["Nota"]; }
 
 /* ---- Markdown mínimo (el que se usa al escribir apuntes) ---- */
@@ -4685,7 +4677,10 @@ function contarStore(s){
   const detalle=n.filter(x=>x[1]>0).map(x=>x[1]+" "+x[0]).join(" · ")||"sin datos";
   return {total,detalle};
 }
-function fechaCorta(ms){
+/* Con fecha Y HORA, para comparar versiones en el diálogo de conflicto.
+   Renombrada: antes se llamaba fechaCorta y, al compartir nombre con la de
+   Notas, la pisaba por hoisting — las notas mostraban hora sin querer. */
+function fechaHoraCorta(ms){
   if(!ms) return "sin fecha";
   const d=new Date(ms);
   return d.getDate()+" "+MONTHS[d.getMonth()].slice(0,3)+" "+d.getFullYear()+
@@ -4943,11 +4938,11 @@ function preguntarConflicto(cloud,file,cs,ls){
       Hay información distinta aquí y en Drive. Elige tú — no se toca nada hasta que decidas,
       y la versión anterior de Drive siempre queda guardada como copia.</p>
     <div class="field">
-      <label>En Drive · ${esc(fechaCorta(cloud&&cloud.updatedAt))}</label>
+      <label>En Drive · ${esc(fechaHoraCorta(cloud&&cloud.updatedAt))}</label>
       <div class="hint">${esc(cs.detalle)}</div>
     </div>
     <div class="field">
-      <label>En este dispositivo · ${esc(fechaCorta(store.ui&&store.ui.updatedAt))}</label>
+      <label>En este dispositivo · ${esc(fechaHoraCorta(store.ui&&store.ui.updatedAt))}</label>
       <div class="hint">${esc(ls.detalle)}</div>
     </div>
     <hr style="border:none;border-top:1px solid var(--line);margin:0">
