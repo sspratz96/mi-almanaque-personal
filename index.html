@@ -4573,13 +4573,28 @@ async function driveDownload(id){
   return await r.json();
 }
 async function collectPhotos(){
+  /* antes se leían las fotos de IndexedDB una por una, en serie: cada sync
+     tardaba proporcional al número de fotos. Ahora en paralelo. */
+  const ids=new Set();
+  store.memories.forEach(m=>(m.photos||[]).forEach(pid=>ids.add(pid)));
+  for(const k in (store.monthly||{})){ const id=store.monthly[k].img; if(id) ids.add(id); }
+  const lista=Array.from(ids);
+  const urls=await Promise.all(lista.map(getPhoto));
   const photos={};
-  for(const m of store.memories){ for(const pid of (m.photos||[])){ const u=await getPhoto(pid); if(u) photos[pid]=u; } }
-  for(const k in (store.monthly||{})){ const id=store.monthly[k].img; if(id){ const u=await getPhoto(id); if(u) photos[id]=u; } }
+  lista.forEach((pid,i)=>{ if(urls[i]) photos[pid]=urls[i]; });
   return photos;
 }
+let payloadAvisado=false;
 async function buildPayload(){
-  return JSON.stringify({v:1, updatedAt:(store.ui&&store.ui.updatedAt)||Date.now(), store, photos:await collectPhotos()});
+  const payload=JSON.stringify({v:1, updatedAt:(store.ui&&store.ui.updatedAt)||Date.now(), store, photos:await collectPhotos()});
+  /* La subida a Drive es "simple" (todo en un request): sobre ~8 MB el
+     riesgo de fallo crece. Mejor avisar temprano que descubrirlo cuando
+     la sincronización empiece a fallar. */
+  if(payload.length>8*1024*1024 && !payloadAvisado){
+    payloadAvisado=true;
+    toast("Tu copia de Drive ya pesa "+(payload.length/1048576).toFixed(1)+" MB (sobre todo fotos). Si la sincronización falla, reduce fotos o baja respaldos locales.");
+  }
+  return payload;
 }
 async function driveCreate(payload,name){
   const boundary="mcal"+Date.now();
