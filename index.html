@@ -1154,7 +1154,14 @@ textarea{resize:vertical;min-height:64px}
    IndexedDB para fotos). Nada viaja a ningún servidor ni repo.
    ============================================================ */
 const LS_KEY="miCalendario.v1";
+/* memoryOnly: SOLO si la CARGA falló (localStorage inaccesible o JSON
+   corrupto). En ese caso no se escribe nunca, para no pisar con los datos
+   de ejemplo lo que haya guardado y aún sea rescatable. */
 let memoryOnly=false;
+/* saveFailing: el ÚLTIMO intento de guardar falló (típicamente cuota llena).
+   A diferencia de antes, cada guardado se REINTENTA: si liberas espacio
+   (borrando fotos), el siguiente cambio vuelve a guardarse solo. */
+let saveFailing=false;
 function loadStore(){
   try{
     const raw=localStorage.getItem(LS_KEY);
@@ -1162,13 +1169,31 @@ function loadStore(){
   }catch(e){ memoryOnly=true; }
   return null;
 }
+/* Aviso persistente (no un toast de 2 segundos) mientras el guardado falle. */
+function avisoGuardado(on){
+  let b=document.getElementById("saveWarn");
+  if(!on){ if(b) b.remove(); return; }
+  if(b) return;
+  b=document.createElement("div");
+  b.id="saveWarn";
+  b.style.cssText="position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top));transform:translateX(-50%);"+
+    "z-index:140;background:#d1495b;color:#fff;padding:9px 14px;border-radius:10px;"+
+    "font:500 13px Inter,system-ui,sans-serif;box-shadow:0 6px 24px rgba(0,0,0,.25);"+
+    "max-width:calc(100vw - 32px);text-align:center";
+  b.textContent="No se está pudiendo guardar (sin espacio). Borra fotos o descarga un respaldo — lo que escribas puede perderse.";
+  document.body.appendChild(b);
+}
 /* Guarda en el navegador SIN tocar la marca de tiempo ni avisarle a Drive.
    Se usa para cosas internas (migraciones, marcadores de sincronización)
    que no son cambios de contenido y por lo tanto no deben "ganarle" a Drive. */
 function persistir(){
   if(memoryOnly) return;
-  try{ localStorage.setItem(LS_KEY,JSON.stringify(store)); }
-  catch(e){ memoryOnly=true; toast("Sin espacio para guardar — revisa tus fotos"); }
+  try{
+    localStorage.setItem(LS_KEY,JSON.stringify(store));
+    if(saveFailing){ saveFailing=false; avisoGuardado(false); }
+  }catch(e){
+    if(!saveFailing){ saveFailing=true; avisoGuardado(true); }
+  }
 }
 /* Guarda un cambio real del usuario. `interno=true` evita mover la fecha
    de modificación: así abrir la app en un dispositivo viejo ya no lo hace
