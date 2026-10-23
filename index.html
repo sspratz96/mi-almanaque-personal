@@ -1275,8 +1275,38 @@ function seed(){
 let store=loadStore()||seed();
 /* Rellena lo que falte. Se usa al arrancar y también al restaurar un
    respaldo, para que un archivo viejo no deje la app a medias. */
+
+/* ---- Saneo de campos que se interpolan en HTML sin esc() ----
+   El texto libre (títulos, notas, cuerpos) ya se escapa al renderizar.
+   Esto cubre el otro camino: ids, fechas, horas, colores, emojis y mood
+   que vienen de un respaldo .json o del archivo de Drive y se insertan
+   en atributos tal cual. Lo legítimo tiene forma fija (uid(), fecha ISO,
+   HH:MM, #hex), así que estos filtros no lo alteran. */
+function saneId(v){ return typeof v==="string" ? v.replace(/[^\w-]/g,"").slice(0,32) : ""; }
+function saneDate(v){ return (typeof v==="string" && /^\d{4}-\d{2}-\d{2}$/.test(v)) ? v : ""; }
+function saneTime(v){ return (typeof v==="string" && /^\d{1,2}:\d{2}$/.test(v)) ? v : ""; }
+function saneColor(v,def){ return (typeof v==="string" && /^#[0-9a-fA-F]{3,8}$/.test(v)) ? v : def; }
+function saneCorto(v,max){ return typeof v==="string" ? v.replace(/[<>&"'`=]/g,"").slice(0,max) : ""; }
+function saneNum(v){ const n=Number(v); return isFinite(n) ? n : null; }
+/* routineLog y metricLog: {fecha ISO: {id: valor}} */
+function saneLog(log,numerico){
+  const out={};
+  Object.keys(log||{}).forEach(iso=>{
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return;
+    const dia={}, src=log[iso]||{};
+    Object.keys(src).forEach(k=>{
+      const id=saneId(k); if(!id) return;
+      if(numerico){ const n=saneNum(src[k]); if(n!=null) dia[id]=n; }
+      else if(src[k]) dia[id]=true;
+    });
+    if(Object.keys(dia).length) out[iso]=dia;
+  });
+  return out;
+}
+
 function normalizarStore(){
   if(!store.ui) store.ui={theme:"light"};
+  store.ui.theme = store.ui.theme==="dark" ? "dark" : "light";
   if(!Array.isArray(store.events)) store.events=[];
   if(!Array.isArray(store.routines)) store.routines=[];
   if(!store.routineLog) store.routineLog={};
@@ -1297,6 +1327,68 @@ function normalizarStore(){
   });
   if(!Array.isArray(store.notes)) store.notes=[];
   normalizarWallet();
+
+  /* ---- saneo de frontera (ver arriba) ---- */
+  store.events.forEach(e=>{
+    e.id=saneId(e.id)||uid();
+    e.start=saneDate(e.start); e.end=saneDate(e.end); e.time=saneTime(e.time);
+    if(e.memId!=null) e.memId=saneId(e.memId);
+    if(e.wlId!=null) e.wlId=saneId(e.wlId);
+  });
+  store.memories.forEach(m=>{
+    m.id=saneId(m.id)||uid();
+    m.date=saneDate(m.date);
+    if(m.fromEvent!=null) m.fromEvent=saneId(m.fromEvent);
+    m.lat = m.lat==null ? null : saneNum(m.lat);
+    m.lng = m.lng==null ? null : saneNum(m.lng);
+    m.photos=(Array.isArray(m.photos)?m.photos:[]).map(saneId).filter(Boolean);
+  });
+  store.journal.forEach(e=>{
+    e.id=saneId(e.id)||uid(); e.date=saneDate(e.date); e.mood=saneCorto(e.mood||"",8);
+  });
+  store.routines.forEach(r=>{ r.id=saneId(r.id)||uid(); r.emoji=saneCorto(r.emoji||"",8); });
+  store.metrics.forEach(x=>{ x.id=saneId(x.id)||uid(); x.color=saneColor(x.color,"#3b6ea5"); });
+  store.routineLog=saneLog(store.routineLog,false);
+  store.metricLog=saneLog(store.metricLog,true);
+  const mensual={};
+  Object.keys(store.monthly).forEach(k=>{
+    if(!/^\d{4}-\d{2}$/.test(k)) return;
+    const md=store.monthly[k]; if(!md||typeof md!=="object") return;
+    md.img=saneId(md.img||"");
+    md.habits=(Array.isArray(md.habits)?md.habits:[]).map(saneId).filter(Boolean);
+    md.metrics=(Array.isArray(md.metrics)?md.metrics:[]).map(saneId).filter(Boolean);
+    mensual[k]=md;
+  });
+  store.monthly=mensual;
+  store.pending.forEach(g=>{
+    g.id=saneId(g.id)||uid(); g.color=saneColor(g.color,"#3b6ea5"); g.emoji=saneCorto(g.emoji||"",8);
+    g.items.forEach(it=>{
+      it.id=saneId(it.id)||uid(); it.prio=saneId(it.prio);
+      it.subs.forEach(sb=>{ sb.id=saneId(sb.id)||uid(); sb.prio=saneId(sb.prio); });
+    });
+  });
+  store.notes.forEach(n=>{ n.id=saneId(n.id)||uid(); });
+  const w=store.wallet;
+  w.cats.forEach(c=>{
+    c.id=saneId(c.id)||uid(); c.color=saneColor(c.color,"#8a8f98");
+    c.emoji=saneCorto(c.emoji||"",8); c.tipo = c.tipo==="ingreso" ? "ingreso" : "gasto";
+  });
+  w.tx.forEach(t=>{
+    t.id=saneId(t.id)||uid(); t.date=saneDate(t.date); t.cat=saneId(t.cat);
+    if(t.evId!=null) t.evId=saneId(t.evId)||null;
+    t.amount=Number(t.amount)||0;
+  });
+  const topes={};
+  Object.keys(w.budgets).forEach(k=>{
+    if(!/^\d{4}-\d{2}$/.test(k)) return;
+    const mes={}, src=w.budgets[k]||{};
+    Object.keys(src).forEach(cid=>{
+      const id=saneId(cid), n=saneNum(src[cid]);
+      if(id && n!=null) mes[id]=n;
+    });
+    if(Object.keys(mes).length) topes[k]=mes;
+  });
+  w.budgets=topes;
 }
 normalizarStore();
 
