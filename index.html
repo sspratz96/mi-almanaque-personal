@@ -3300,6 +3300,12 @@ function latLngToVec(lat,lng,r){
 }
 function initGlobe(){
   if(globeReady) return;
+  /* three.min.js ahora viaja con la app, pero si el archivo falta o no
+     cargó, antes esto reventaba con un ReferenceError sin manejo */
+  if(typeof THREE==="undefined"){
+    toast("El globo no pudo cargar su librería (three.min.js). Verifica que el archivo esté junto a index.html.");
+    return;
+  }
   const canvas=document.getElementById("globe");
   const w=canvas.clientWidth||600,h=canvas.clientHeight||420;
   scene=new THREE.Scene();
@@ -3338,7 +3344,7 @@ function initGlobe(){
 
   globeReady=true;
   rebuildMarkers();
-  animate();
+  animarGlobo();
   window.addEventListener("resize",resizeGlobe);
 }
 /* el mapa se redibuja al cambiar entre tema claro y oscuro */
@@ -3399,11 +3405,25 @@ async function showGlobeCard(m){
   if(m.photos&&m.photos.length){ const url=await getPhoto(m.photos[0]); if(url){ const img=new Image(); img.src=url; card.appendChild(img);} }
 }
 function hideGlobeCard(){ document.getElementById("globeCard").classList.remove("on"); }
+let globeRAF=null;
+function globoVisible(){
+  if(document.visibilityState!=="visible") return false;
+  const v=document.getElementById("sub-globe");
+  return !!(v && v.classList.contains("active") && currentView==="recuerdos");
+}
 function animate(){
-  requestAnimationFrame(animate);
+  /* Si el globo dejó de verse (otro sub-tab, otra pestaña de la app o la app
+     en segundo plano), el loop se detiene solo: antes seguía renderizando
+     WebGL a 60 fps para siempre. animarGlobo() lo retoma al volver. */
+  if(!globoVisible()){ globeRAF=null; return; }
+  globeRAF=requestAnimationFrame(animate);
   if(!dragging){ globeGroup.rotation.y+=rotSpeed+velX*0.9; velX*=0.94; velY*=0.94; globeGroup.rotation.x+=velY*0.9; }
   renderer.render(scene,camera);
 }
+function animarGlobo(){
+  if(globeReady && globeRAF===null && globoVisible()) globeRAF=requestAnimationFrame(animate);
+}
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") animarGlobo(); });
 
 /* ============================================================
    Frase del día — lista local en español (siempre funciona,
@@ -4245,7 +4265,7 @@ function refreshCurrent(){
   else if(currentView==="billetera") renderWallet();
   else if(currentView==="diario") renderJournal();
   else if(currentView==="notas"){ renderNotes(); if(netVisible()) mostrarRed(); }
-  else { renderMemCal(); }
+  else { renderMemCal(); animarGlobo(); }
 }
 document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
   document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
@@ -4261,7 +4281,7 @@ document.querySelectorAll(".subtab").forEach(s=>s.addEventListener("click",()=>{
   document.querySelectorAll(".sub-view").forEach(x=>x.classList.remove("active"));
   s.classList.add("active");
   document.getElementById("sub-"+s.dataset.sub).classList.add("active");
-  if(s.dataset.sub==="globe"){ initGlobe(); setTimeout(resizeGlobe,60); }
+  if(s.dataset.sub==="globe"){ initGlobe(); animarGlobo(); setTimeout(resizeGlobe,60); }
 }));
 
 document.getElementById("agPrev").addEventListener("click",()=>{ shift(agView,-1); renderAgenda(); });
