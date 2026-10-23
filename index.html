@@ -4864,23 +4864,40 @@ function scheduleDrivePush(){
   if(!store.ui||!store.ui.driveConnected||!store.ui.driveFileId) return;
   if(!tokenValid()){ updateSyncUI("Conéctate para sincronizar los cambios"); return; }
   clearTimeout(pushTimer);
-  pushTimer=setTimeout(async ()=>{
-    if(driveBusy) return;
-    try{
-      /* Si el archivo de Drive cambió desde la última vez que lo vimos,
-         puede traer cosas de otro dispositivo: no se pisa. */
-      const meta=await driveMeta(store.ui.driveFileId);
-      if(store.ui.lastCloudModified && meta.modifiedTime && meta.modifiedTime!==store.ui.lastCloudModified){
-        updateSyncUI("Hay cambios nuevos en Drive — toca “Sincronizar ahora”");
-        return;
-      }
-      await driveUpdate(store.ui.driveFileId,await buildPayload());
-      const m2=await driveMeta(store.ui.driveFileId);
-      store.ui.lastCloudAt=store.ui.updatedAt||Date.now();
-      store.ui.lastCloudModified=m2.modifiedTime||"";
-      store.ui.lastSync=Date.now(); persistir(); updateSyncUI();
-    }catch(e){ /* se reintenta al próximo cambio */ }
-  },2500);
+  pushTimer=setTimeout(empujarANube,2500);
+}
+async function empujarANube(){
+  /* Usa el mismo candado que driveSync: nunca dos escrituras en vuelo.
+     Si está ocupado, se vuelve a agendar en vez de perder el cambio. */
+  if(driveBusy){ scheduleDrivePush(); return; }
+  driveBusy=true;
+  try{
+    /* Si el archivo de Drive cambió desde la última vez que lo vimos,
+       puede traer cosas de otro dispositivo: no se pisa. (Queda una ventana
+       pequeña entre esta lectura y la escritura — la API de Drive no ofrece
+       escritura condicional — pero el candado elimina las carreras propias.) */
+    const meta=await driveMeta(store.ui.driveFileId);
+    if(store.ui.lastCloudModified && meta.modifiedTime && meta.modifiedTime!==store.ui.lastCloudModified){
+      updateSyncUI("Hay cambios nuevos en Drive — toca “Sincronizar ahora”");
+      return;
+    }
+    /* Se fija QUÉ versión local se está subiendo: si el usuario sigue
+       editando durante la subida, al terminar se agenda otro empujón en vez
+       de marcar como subido algo que no viajó. */
+    const subido=store.ui.updatedAt||Date.now();
+    await driveUpdate(store.ui.driveFileId,await buildPayload());
+    const m2=await driveMeta(store.ui.driveFileId);
+    store.ui.lastCloudAt=subido;
+    store.ui.lastCloudModified=m2.modifiedTime||"";
+    store.ui.lastSync=Date.now(); persistir(); updateSyncUI();
+    if((store.ui.updatedAt||0)>subido) scheduleDrivePush();
+  }catch(e){
+    /* antes se tragaba el error y la UI seguía diciendo "Conectado" */
+    console.warn("No se pudo subir a Drive",e);
+    updateSyncUI("Cambios sin subir a Drive — toca “Sincronizar ahora”");
+  }finally{
+    driveBusy=false;
+  }
 }
 function updateSyncUI(msg){
   const el=document.getElementById("syncStatus");
