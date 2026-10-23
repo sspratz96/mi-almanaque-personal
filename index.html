@@ -2874,10 +2874,13 @@ function exportarWalletCsv(){
   const tx=wallet().tx.slice().sort((a,b)=>a.date.localeCompare(b.date));
   if(!tx.length){ toast("Todavía no hay movimientos"); return; }
   const q=s=>'"'+String(s==null?"":s).replace(/"/g,'""')+'"';
+  /* texto libre: si empieza con un carácter que Excel lee como fórmula
+     (=, +, -, @, tab, CR), se antepone un apóstrofo para forzarlo a texto */
+  const qt=s=>{ s=String(s==null?"":s); if(/^[=+\-@\t\r]/.test(s)) s="'"+s; return q(s); };
   const lineas=[["Fecha","Tipo","Categoría","Monto","Nota"].map(q).join(",")];
   tx.forEach(t=>{
     const c=wlCatSafe(t.cat), a=Number(t.amount)||0;
-    lineas.push([q(t.date),q(a>=0?"Ingreso":"Gasto"),q(c.name),q(Math.abs(a)),q(t.note||"")].join(","));
+    lineas.push([q(t.date),q(a>=0?"Ingreso":"Gasto"),qt(c.name),q(Math.abs(a)),qt(t.note||"")].join(","));
   });
   /* BOM para que Excel en español no rompa las tildes */
   downloadBlob(new Blob(["\ufeff"+lineas.join("\r\n")],{type:"text/csv;charset=utf-8"}),"mi-billetera.csv");
