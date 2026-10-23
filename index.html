@@ -1874,7 +1874,7 @@ function openHabitsManager(){
   openModal("Hábitos de "+monthTitle(rtView.y,rtView.m),"",addNew);
   function addNew(){
     const name=val("f_name").trim(); if(!name){ toast("Ponle un nombre"); return; }
-    const nuevo={id:uid(),name,emoji:val("f_emoji")||"✅",freq:val("f_freq")};
+    const nuevo={id:uid(),name,emoji:val("f_emoji")||"✅",freq:val("f_freq"),ts:Date.now()};
     store.routines.push(nuevo); md.habits.push(nuevo.id);
     saveStore(); renderRoutine(); paint(); toast("Hábito agregado a este mes");
   }
@@ -1928,7 +1928,7 @@ function openHabitsManager(){
     mb.querySelectorAll("[data-savee]").forEach(b=>b.onclick=()=>{
       const r=store.routines.find(x=>x.id===b.dataset.savee); const name=val("e_name").trim();
       if(!name){ toast("Ponle un nombre"); return; }
-      r.name=name; r.emoji=val("e_emoji")||"✅"; r.freq=val("e_freq"); editId=null;
+      r.name=name; r.emoji=val("e_emoji")||"✅"; r.freq=val("e_freq"); r.ts=Date.now(); editId=null;
       saveStore(); renderRoutine(); paint(); toast("Hábito actualizado");
     });
     mb.querySelectorAll("[data-out]").forEach(b=>b.onclick=()=>{
@@ -1961,7 +1961,7 @@ function openMetricsManager(){
   function colorSelect(id,sel){ return '<select id="'+id+'">'+colors.map(c=>'<option value="'+c+'" '+(c===sel?"selected":"")+'>'+c+'</option>').join("")+'</select>'; }
   function addNew(){
     const name=val("f_name").trim(); if(!name){ toast("Ponle un nombre"); return; }
-    const nueva={id:uid(),name,unit:val("f_unit").trim(),color:val("f_color")};
+    const nueva={id:uid(),name,unit:val("f_unit").trim(),color:val("f_color"),ts:Date.now()};
     store.metrics.push(nueva); md.metrics.push(nueva.id);
     saveStore(); renderRoutine(); paint(); toast("Métrica agregada a este mes");
   }
@@ -2008,7 +2008,7 @@ function openMetricsManager(){
     mb.querySelectorAll("[data-savee]").forEach(b=>b.onclick=()=>{
       const mt=store.metrics.find(x=>x.id===b.dataset.savee); const name=val("e_name").trim();
       if(!name){ toast("Ponle un nombre"); return; }
-      mt.name=name; mt.unit=val("e_unit").trim(); mt.color=val("e_color"); editId=null;
+      mt.name=name; mt.unit=val("e_unit").trim(); mt.color=val("e_color"); mt.ts=Date.now(); editId=null;
       saveStore(); renderRoutine(); paint(); toast("Métrica actualizada");
     });
     mb.querySelectorAll("[data-out]").forEach(b=>b.onclick=()=>{
@@ -2721,7 +2721,7 @@ function openWlForm(id,preset){
     }else{
       const nuevo={id:uid(),date:fechaV,amount:monto2,cat:c.id,note:val("f_note").trim(),ts:Date.now(),evId:evLink||null};
       wallet().tx.push(nuevo);
-      if(ev){ ev.wlId=nuevo.id; }
+      if(ev){ ev.wlId=nuevo.id; ev.ts=Date.now(); }
     }
     /* muestra el mes del movimiento, no vaya a "desaparecer" al guardar */
     const [yy,mm]=fechaV.split("-").map(Number); wlView={y:yy,m:mm-1};
@@ -2788,7 +2788,7 @@ function openWlCats(){
   }
   function addNew(){
     const name=val("f_name").trim(); if(!name){ toast("Ponle un nombre"); return; }
-    wallet().cats.push({id:uid(),name,emoji:val("f_emoji")||"•",color:val("f_color"),tipo:val("f_tipo")});
+    wallet().cats.push({id:uid(),name,emoji:val("f_emoji")||"•",color:val("f_color"),tipo:val("f_tipo"),ts:Date.now()});
     wallet().iniciado=true;
     saveStore(); renderWallet(); paint(); toast("Categoría creada");
   }
@@ -2849,9 +2849,9 @@ function openWlCats(){
       if(tipoNuevo!==c.tipo){
         /* el signo lo manda la categoría: hay que corregir lo ya anotado */
         wallet().tx.forEach(t=>{ if(t.cat===c.id){
-          const a=Math.abs(Number(t.amount)||0); t.amount=tipoNuevo==="ingreso"?a:-a; } });
+          const a=Math.abs(Number(t.amount)||0); t.amount=tipoNuevo==="ingreso"?a:-a; t.ts=Date.now(); } });
       }
-      c.name=name; c.emoji=val("e_emoji")||"•"; c.color=val("e_color"); c.tipo=tipoNuevo;
+      c.name=name; c.emoji=val("e_emoji")||"•"; c.color=val("e_color"); c.tipo=tipoNuevo; c.ts=Date.now();
       editId=null; saveStore(); renderWallet(); paint(); toast("Categoría actualizada");
     });
     mb.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{
@@ -3036,7 +3036,7 @@ function evRow(e){
   return div;
 }
 function toggleDone(id){ const e=store.events.find(x=>x.id===id); if(!e)return;
-  e.status=e.status==="Hecho"?"Pendiente":"Hecho"; saveStore(); renderPanelBody(); refreshCurrent(); }
+  e.status=e.status==="Hecho"?"Pendiente":"Hecho"; e.ts=Date.now(); saveStore(); renderPanelBody(); refreshCurrent(); }
 function delEvent(id){ if(!confirm("¿Eliminar este evento?"))return;
   store.memories.forEach(m=>{ if(m.fromEvent===id) delete m.fromEvent; });
   wallet().tx.forEach(t=>{ if(t.evId===id) t.evId=null; });
@@ -3088,7 +3088,7 @@ function openEventForm(id){
     const title=val("f_title").trim(); if(!title){ toast("Ponle un nombre al evento"); return; }
     const obj={ start:val("f_start"), end:val("f_end"), time:val("f_time"),
       title, cat:val("f_cat"), place:val("f_place").trim(), notes:val("f_notes").trim(),
-      status:e?e.status:"Pendiente" };
+      status:e?e.status:"Pendiente", ts:Date.now() };
     if(obj.end&&obj.end<obj.start){ toast("La fecha fin no puede ser antes del inicio"); return; }
     if(e) Object.assign(e,obj); else store.events.push({id:uid(),...obj});
     saveStore(); closeModal(); refreshCurrent();
@@ -3134,13 +3134,15 @@ function openMemForm(id,preset){
     for(const p of pendingPhotos){ await putPhoto(p.id,p.dataURL); }
     const photos=(m?[...(m.photos||[])]:[]).concat(pendingPhotos.map(p=>p.id));
     const obj={ date:val("f_date"), title, cat:val("f_cat"), place:val("f_place").trim(),
-      lat, lng, notes:val("f_notes").trim(), photos };
+      lat, lng, notes:val("f_notes").trim(), photos, ts:Date.now() };
     if(m) Object.assign(m,obj);
     else{
       const nuevo={id:uid(),...obj};
       if(base.fromEvent){
         const ev=store.events.find(x=>x.id===base.fromEvent);
-        if(ev){ nuevo.fromEvent=ev.id; ev.memId=nuevo.id; }
+        /* el vínculo también es una edición del evento: sin ts, un merge
+           podía resucitar la versión sin estrella y reofrecerlo */
+        if(ev){ nuevo.fromEvent=ev.id; ev.memId=nuevo.id; ev.ts=Date.now(); }
       }
       store.memories.push(nuevo);
     }
@@ -3447,7 +3449,7 @@ function openEntryForm(id){
   `,()=>{
     const body=val("f_body").trim();
     if(!body){ toast("Escribe algo antes de guardar"); return; }
-    const obj={ date:val("f_date"), title:val("f_title").trim(), mood:moodPick, body };
+    const obj={ date:val("f_date"), title:val("f_title").trim(), mood:moodPick, body, ts:Date.now() };
     if(e) Object.assign(e,obj); else store.journal.push({id:uid(),...obj});
     saveStore(); closeModal(); renderJournal(); toast(e?"Entrada actualizada":"Entrada guardada");
   });
