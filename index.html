@@ -3132,6 +3132,9 @@ function openMemForm(id,preset){
   const vPlace=m?(m.place||""):(base.place||"");
   const vNotes=m?(m.notes||""):(base.notes||"");
   pendingPhotos=[];
+  /* quitar una foto existente solo la MARCA; se borra de verdad al guardar.
+     Antes se borraba de IndexedDB al instante y cancelar no la recuperaba. */
+  const fotosAQuitar=[];
   openModal(m?"Editar recuerdo":(base.fromEvent?"Guardar como recuerdo":"Nuevo recuerdo"),`
     ${base.fromEvent?'<div class="hint" style="margin-bottom:10px">Viene de tu agenda: ya está escrito, solo revísalo y agrégale fotos o lugar. Quedan vinculados para que no aparezca dos veces.</div>':""}
     <div class="field"><label>¿Qué pasó?</label><input id="f_title" value="${esc(vTitle)}" placeholder="Ej: Cumpleaños de la Ceci"></div>
@@ -3155,9 +3158,11 @@ function openMemForm(id,preset){
     const title=val("f_title").trim(); if(!title){ toast("Ponle un título al recuerdo"); return; }
     const lat=val("f_lat")===""?null:parseFloat(val("f_lat"));
     const lng=val("f_lng")===""?null:parseFloat(val("f_lng"));
-    // guardar fotos nuevas
+    // guardar fotos nuevas y aplicar recién aquí las quitadas
     for(const p of pendingPhotos){ await putPhoto(p.id,p.dataURL); }
-    const photos=(m?[...(m.photos||[])]:[]).concat(pendingPhotos.map(p=>p.id));
+    const previas=(m?(m.photos||[]):[]).filter(pid=>!fotosAQuitar.includes(pid));
+    const photos=previas.concat(pendingPhotos.map(p=>p.id));
+    fotosAQuitar.forEach(delPhoto);
     const obj={ date:val("f_date"), title, cat:val("f_cat"), place:val("f_place").trim(),
       lat, lng, notes:val("f_notes").trim(), photos, ts:Date.now() };
     if(m) Object.assign(m,obj);
@@ -3179,7 +3184,7 @@ function openMemForm(id,preset){
   const prev=document.getElementById("phPrev");
   if(m&&m.photos) m.photos.forEach(async pid=>{
     const url=await getPhoto(pid); if(!url)return;
-    addPrev(url,()=>{ m.photos=m.photos.filter(x=>x!==pid); delPhoto(pid); });
+    addPrev(url,()=>{ if(!fotosAQuitar.includes(pid)) fotosAQuitar.push(pid); });
   });
   document.getElementById("phDrop").addEventListener("click",()=>document.getElementById("phInput").click());
   document.getElementById("phInput").addEventListener("change",e=>handlePhotos(e.target.files));
