@@ -12,7 +12,7 @@
  * Al cambiar index.html o frases.js, sube VERSION. Eso borra el cache viejo.
  */
 
-const VERSION = 'almanaque-v1';
+const VERSION = 'almanaque-v2';
 const CACHE = VERSION;
 
 // Lo minimo para que la app arranque sin conexion.
@@ -20,6 +20,7 @@ const NUCLEO = [
   './',
   './index.html',
   './frases.js',
+  './three.min.js',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',

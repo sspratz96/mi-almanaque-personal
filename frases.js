@@ -80,4 +80,5 @@ window.FRASES = [
   ["'Your loss', sweetheart, you lied to your people so they would hate me, I lied to my people so they would like you.", "Anonymous"], 
   ["No matter how isolated you are and how lonely you feel, if you do your work truly and conscientiously, unknown allies will come and seek you.", "Carl Jung"],
   ["Be the Tide that raises the ship, not the rocks that sink them.", "Tank Tolman"],
+  ["I may not have amazing victories, but I can amaze you with the defeats that I came out of alive.", "Anton Chekhov"]
 ];
